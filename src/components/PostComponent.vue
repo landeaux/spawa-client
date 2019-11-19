@@ -1,34 +1,3 @@
-<template>
-  <div id="container">
-    <h1>Latest Posts</h1>
-    <div class="create-post">
-      <label for="create-post">Say Something...</label>
-      <input
-        type="text"
-        id="create-post"
-        v-model="text"
-        placeholder="Create a post"
-      >
-      <button @click="createPost">Post!</button>
-    </div>
-    <hr>
-    <p class="error" v-if="error">{{ error }}</p>
-    <div class="posts-container">
-      <div
-        v-for="(post, index) in posts"
-        :key="post._id"
-        :item="post"
-        :index="index"
-        class="post"
-        @dblclick="deletePost(post._id)"
-      >
-        {{ post.createdAt.toDateString() }}
-        <p class="text">{{ post.text }}</p>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import PostService from '../PostService'
 
@@ -61,6 +30,46 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div id="container">
+    <h1>Latest Posts</h1>
+    <div class="create-post">
+      <label for="create-post">Say Something...</label>
+      <input
+        id="create-post"
+        v-model="text"
+        placeholder="Create a post"
+        type="text"
+      >
+      <button @click="createPost">
+        Post!
+      </button>
+    </div>
+    <hr>
+    <p
+      v-if="error"
+      class="error"
+    >
+      {{ error }}
+    </p>
+    <div class="posts-container">
+      <div
+        v-for="(post, index) in posts"
+        :key="post._id"
+        :item="post"
+        :index="index"
+        class="post"
+        @dblclick="deletePost(post._id)"
+      >
+        {{ post.createdAt.toDateString() }}
+        <p class="text">
+          {{ post.text }}
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="css">
