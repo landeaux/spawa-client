@@ -1,7 +1,14 @@
 {
-  "name": "client",
+  "name": "spawa-client",
+  "description": "StartUpNV Pitch Application Web App (Client-Side)",
   "version": "0.1.0",
+  "author": "Adam Landis",
+  "license": "MIT",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/landeaux/spawa-client.git"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
