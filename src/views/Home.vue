@@ -16,6 +16,6 @@ export default {
       alt="Vue logo"
       src="../assets/logo.png"
     >
-    <PostComponent msg="Welcome to Your Vue.js App" />
+    <PostComponent />
   </div>
 </template>
