@@ -62,18 +62,7 @@ const actions = {
     }
   },
   [UPDATE_USER] (context, payload) {
-    const { email, username, password, image, bio } = payload
-    const user = {
-      email,
-      username,
-      bio,
-      image
-    }
-    if (password) {
-      user.password = password
-    }
-
-    return ApiService.put('user', user).then(({ data }) => {
+    return ApiService.put('user', { user: payload }).then(({ data }) => {
       context.commit(SET_AUTH, data.user)
       return data
     })
