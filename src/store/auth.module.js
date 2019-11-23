@@ -44,7 +44,6 @@ const actions = {
       return data
     } catch ({ response }) {
       context.commit(SET_ERROR, response.data.errors)
-      throw response
     }
   },
   [CHECK_AUTH] (context) {
