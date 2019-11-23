@@ -11,7 +11,7 @@ export default {
         class="logo-font"
         :to="{ name: 'home', params: {} }"
       >
-        StartUpNV
+        <span style="color: red">START<b>UP</b></span><span style="color: blue"><b>NV</b></span>
       </router-link>
       <span class="attribution">
         A web application from
