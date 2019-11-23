@@ -16,7 +16,7 @@ export default {
         class="navbar-brand"
         :to="{ name: 'home' }"
       >
-        StartUpNV
+        <span style="color: red">START<b>UP</b></span><span style="color: blue"><b>NV</b></span>
       </router-link>
       <ul
         v-if="!isAuthenticated"
