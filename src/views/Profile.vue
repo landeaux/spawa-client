@@ -54,3 +54,16 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped lang="sass">
+  .profile-page .user-info
+    text-align: center
+    background: #f3f3f3
+    padding: 2rem 0 1rem
+
+  .profile-page .user-info .user-img
+    width: 100px
+    height: 100px
+    border-radius: 100px
+    margin-bottom: 1rem
+</style>
