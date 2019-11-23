@@ -18,18 +18,12 @@ export default {
   },
   methods: {
     async onSubmit () {
-      try {
-        await this.$store.dispatch(REGISTER, {
-          email: this.email,
-          password: this.password,
-          username: this.username
-        })
-        this.$router.push({ name: 'home' })
-      } catch (err) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error(err)
-        }
-      }
+      await this.$store.dispatch(REGISTER, {
+        email: this.email,
+        password: this.password,
+        username: this.username
+      })
+      this.$router.push({ name: 'home' })
     }
   }
 }
