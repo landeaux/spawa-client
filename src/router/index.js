@@ -27,6 +27,18 @@ const routes = [
     name: 'register',
     path: '/register',
     component: () => import('../views/Register')
+  },
+  // Handle child routes with a default, by giving the name to the child.
+  // SO: https://github.com/vuejs/vue-router/issues/777
+  {
+    name: 'profile',
+    path: '/@:username',
+    component: () => import('../views/Profile')
+  },
+  {
+    name: 'settings',
+    path: '/settings',
+    component: () => import('../views/Settings')
   }
 ]
 
