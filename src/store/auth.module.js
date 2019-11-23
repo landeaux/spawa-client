@@ -25,33 +25,27 @@ const getters = {
 }
 
 const actions = {
-  [LOGIN] (context, credentials) {
-    return new Promise(resolve => {
-      ApiService.post('users/login', { user: credentials })
-        .then(({ data }) => {
-          context.commit(SET_AUTH, data.user)
-          resolve(data)
-        })
-        .catch(({ response }) => {
-          context.commit(SET_ERROR, response.data.errors)
-        })
-    })
+  async [LOGIN] (context, credentials) {
+    try {
+      const { data } = await ApiService.post('users/login', { user: credentials })
+      context.commit(SET_AUTH, data.user)
+      return data
+    } catch ({ response }) {
+      context.commit(SET_ERROR, response.data.errors)
+    }
   },
   [LOGOUT] (context) {
     context.commit(PURGE_AUTH)
   },
-  [REGISTER] (context, credentials) {
-    return new Promise((resolve, reject) => {
-      ApiService.post('users', { user: credentials })
-        .then(({ data }) => {
-          context.commit(SET_AUTH, data.user)
-          resolve(data)
-        })
-        .catch(({ response }) => {
-          context.commit(SET_ERROR, response.data.errors)
-          reject(response)
-        })
-    })
+  async [REGISTER] (context, credentials) {
+    try {
+      const { data } = await ApiService.post('users', { user: credentials })
+      context.commit(SET_AUTH, data.user)
+      return data
+    } catch ({ response }) {
+      context.commit(SET_ERROR, response.data.errors)
+      throw response
+    }
   },
   [CHECK_AUTH] (context) {
     if (JwtService.getToken()) {

@@ -16,10 +16,18 @@ export default {
     })
   },
   methods: {
-    onSubmit (email, password) {
-      this.$store
-        .dispatch(LOGIN, { email, password })
-        .then(() => this.$router.push({ name: 'home' }))
+    async onSubmit (email, password) {
+      try {
+        await this.$store.dispatch(LOGIN, {
+          email,
+          password
+        })
+        this.$router.push({ name: 'home' })
+      } catch (err) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(err)
+        }
+      }
     }
   }
 }

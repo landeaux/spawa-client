@@ -17,14 +17,19 @@ export default {
     })
   },
   methods: {
-    onSubmit () {
-      this.$store
-        .dispatch(REGISTER, {
+    async onSubmit () {
+      try {
+        await this.$store.dispatch(REGISTER, {
           email: this.email,
           password: this.password,
           username: this.username
         })
-        .then(() => this.$router.push({ name: 'home' }))
+        this.$router.push({ name: 'home' })
+      } catch (err) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(err)
+        }
+      }
     }
   }
 }
