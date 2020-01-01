@@ -39,7 +39,7 @@ const actions = {
   },
   async [REGISTER] (context, credentials) {
     try {
-      const { data } = await ApiService.post('users', { user: credentials })
+      const { data } = await ApiService.post('signup', { user: credentials })
       context.commit(SET_AUTH, data.user)
       return data
     } catch ({ response }) {
