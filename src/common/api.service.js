@@ -42,7 +42,7 @@ const ApiService = {
     return Vue.axios.delete(resource).catch(error => {
       throw new Error(`ApiService ${error}`);
     });
-  }
+  },
 };
 
 export default ApiService;

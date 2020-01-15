@@ -5,7 +5,7 @@ import { LOGOUT, UPDATE_USER } from '@/store/actions.type';
 export default {
   name: 'RwvSettings',
   computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser']),
   },
   methods: {
     updateSettings () {
@@ -18,8 +18,8 @@ export default {
       this.$store.dispatch(LOGOUT).then(() => {
         this.$router.push({ name: 'home' });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

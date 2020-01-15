@@ -7,7 +7,7 @@ export default {
     return {
       posts: [],
       error: '',
-      text: ''
+      text: '',
     };
   },
   async created () {
@@ -26,8 +26,8 @@ export default {
     async deletePost (id) {
       await PostService.deletePost(id);
       this.posts = await PostService.getPosts();
-    }
-  }
+    },
+  },
 };
 </script>
 

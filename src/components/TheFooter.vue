@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: 'RwvFooter'
+  name: 'RwvFooter',
 };
 </script>
 

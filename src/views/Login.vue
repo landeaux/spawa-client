@@ -7,23 +7,23 @@ export default {
   data () {
     return {
       email: null,
-      password: null
+      password: null,
     };
   },
   computed: {
     ...mapState({
-      errors: state => state.auth.errors
-    })
+      errors: state => state.auth.errors,
+    }),
   },
   methods: {
     async onSubmit (email, password) {
       await this.$store.dispatch(LOGIN, {
         email,
-        password
+        password,
       });
       this.$router.push({ name: 'home' });
-    }
-  }
+    },
+  },
 };
 </script>
 

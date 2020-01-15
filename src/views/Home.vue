@@ -5,8 +5,8 @@ import PostComponent from '@/components/PostComponent.vue';
 export default {
   name: 'Home',
   components: {
-    PostComponent
-  }
+    PostComponent,
+  },
 };
 </script>
 

@@ -4,13 +4,13 @@ import { SET_PROFILE } from './mutations.type';
 
 const state = {
   errors: {},
-  profile: {}
+  profile: {},
 };
 
 const getters = {
   profile (state) {
     return state.profile;
-  }
+  },
 };
 
 const actions = {
@@ -25,7 +25,7 @@ const actions = {
         // #todo SET_ERROR cannot work in multiple states
         // context.commit(SET_ERROR, response.data.errors)
       });
-  }
+  },
 };
 
 const mutations = {
@@ -35,12 +35,12 @@ const mutations = {
   [SET_PROFILE] (state, profile) {
     state.profile = profile;
     state.errors = {};
-  }
+  },
 };
 
 export default {
   state,
   actions,
   mutations,
-  getters
+  getters,
 };

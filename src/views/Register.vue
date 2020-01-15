@@ -8,24 +8,24 @@ export default {
     return {
       username: '',
       email: '',
-      password: ''
+      password: '',
     };
   },
   computed: {
     ...mapState({
-      errors: state => state.auth.errors
-    })
+      errors: state => state.auth.errors,
+    }),
   },
   methods: {
     async onSubmit () {
       await this.$store.dispatch(REGISTER, {
         email: this.email,
         password: this.password,
-        username: this.username
+        username: this.username,
       });
       this.$router.push({ name: 'home' });
-    }
-  }
+    },
+  },
 };
 </script>
 

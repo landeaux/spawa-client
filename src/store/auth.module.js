@@ -5,14 +5,14 @@ import {
   LOGOUT,
   REGISTER,
   CHECK_AUTH,
-  UPDATE_USER
+  UPDATE_USER,
 } from './actions.type';
 import { SET_AUTH, PURGE_AUTH, SET_ERROR } from './mutations.type';
 
 const state = {
   errors: null,
   user: {},
-  isAuthenticated: !!JwtService.getToken()
+  isAuthenticated: !!JwtService.getToken(),
 };
 
 const getters = {
@@ -21,7 +21,7 @@ const getters = {
   },
   isAuthenticated (state) {
     return state.isAuthenticated;
-  }
+  },
 };
 
 const actions = {
@@ -65,7 +65,7 @@ const actions = {
       context.commit(SET_AUTH, data.user);
       return data;
     });
-  }
+  },
 };
 
 const mutations = {
@@ -83,12 +83,12 @@ const mutations = {
     state.user = {};
     state.errors = {};
     JwtService.destroyToken();
-  }
+  },
 };
 
 export default {
   state,
   actions,
   mutations,
-  getters
+  getters,
 };
