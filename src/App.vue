@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import RwvHeader from '@/components/TheHeader'
-import RwvFooter from '@/components/TheFooter'
+import RwvHeader from '@/components/TheHeader';
+import RwvFooter from '@/components/TheFooter';
 
 export default {
   name: 'App',
@@ -16,7 +16,7 @@ export default {
     RwvHeader,
     RwvFooter
   }
-}
+};
 </script>
 
 <style lang="sass">

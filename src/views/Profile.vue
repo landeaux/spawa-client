@@ -1,8 +1,8 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 import {
   FETCH_PROFILE
-} from '@/store/actions.type'
+} from '@/store/actions.type';
 
 export default {
   name: 'RwvProfile',
@@ -11,21 +11,21 @@ export default {
   },
   watch: {
     $route (to) {
-      this.$store.dispatch(FETCH_PROFILE, to.params)
+      this.$store.dispatch(FETCH_PROFILE, to.params);
     }
   },
   mounted () {
-    this.$store.dispatch(FETCH_PROFILE, this.$route.params)
+    this.$store.dispatch(FETCH_PROFILE, this.$route.params);
   },
   methods: {
     isCurrentUser () {
       if (this.currentUser.username && this.profile.username) {
-        return this.currentUser.username === this.profile.username
+        return this.currentUser.username === this.profile.username;
       }
-      return false
+      return false;
     }
   }
-}
+};
 </script>
 
 <template>

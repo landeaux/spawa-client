@@ -1,7 +1,7 @@
 <script>
 export default {
   name: 'RwvFooter'
-}
+};
 </script>
 
 <template>

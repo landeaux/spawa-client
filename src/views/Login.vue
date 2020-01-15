@@ -1,6 +1,6 @@
 <script>
-import { mapState } from 'vuex'
-import { LOGIN } from '@/store/actions.type'
+import { mapState } from 'vuex';
+import { LOGIN } from '@/store/actions.type';
 
 export default {
   name: 'RwvLogin',
@@ -8,7 +8,7 @@ export default {
     return {
       email: null,
       password: null
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -20,11 +20,11 @@ export default {
       await this.$store.dispatch(LOGIN, {
         email,
         password
-      })
-      this.$router.push({ name: 'home' })
+      });
+      this.$router.push({ name: 'home' });
     }
   }
-}
+};
 </script>
 
 <template>

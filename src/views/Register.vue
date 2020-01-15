@@ -1,6 +1,6 @@
 <script>
-import { mapState } from 'vuex'
-import { REGISTER } from '@/store/actions.type'
+import { mapState } from 'vuex';
+import { REGISTER } from '@/store/actions.type';
 
 export default {
   name: 'RwvRegister',
@@ -9,7 +9,7 @@ export default {
       username: '',
       email: '',
       password: ''
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -22,11 +22,11 @@ export default {
         email: this.email,
         password: this.password,
         username: this.username
-      })
-      this.$router.push({ name: 'home' })
+      });
+      this.$router.push({ name: 'home' });
     }
   }
-}
+};
 </script>
 
 <template>

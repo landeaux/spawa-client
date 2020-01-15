@@ -1,13 +1,13 @@
 <script>
 // @ is an alias to /src
-import PostComponent from '@/components/PostComponent.vue'
+import PostComponent from '@/components/PostComponent.vue';
 
 export default {
   name: 'Home',
   components: {
     PostComponent
   }
-}
+};
 </script>
 
 <template>

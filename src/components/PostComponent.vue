@@ -1,5 +1,5 @@
 <script>
-import PostService from '../PostService'
+import PostService from '../PostService';
 
 export default {
   name: 'PostComponent',
@@ -8,27 +8,27 @@ export default {
       posts: [],
       error: '',
       text: ''
-    }
+    };
   },
   async created () {
     try {
-      this.posts = await PostService.getPosts()
+      this.posts = await PostService.getPosts();
     } catch (err) {
-      this.error = err.message
+      this.error = err.message;
     }
   },
   methods: {
     async createPost () {
-      await PostService.insertPost(this.text)
-      this.posts = await PostService.getPosts()
-      this.text = ''
+      await PostService.insertPost(this.text);
+      this.posts = await PostService.getPosts();
+      this.text = '';
     },
     async deletePost (id) {
-      await PostService.deletePost(id)
-      this.posts = await PostService.getPosts()
+      await PostService.deletePost(id);
+      this.posts = await PostService.getPosts();
     }
   }
-}
+};
 </script>
 
 <template>
