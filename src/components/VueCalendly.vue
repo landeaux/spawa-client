@@ -1,22 +1,8 @@
 <script>
 import calendly from '@/assets/calendlyWidget';
 
-function isCalendlyEvent (e) {
-  return e.data.event && e.data.event.indexOf('calendly') === 0;
-}
-
-window.addEventListener(
-  'message',
-  function (e) {
-    if (isCalendlyEvent(e)) {
-      console.log(e.data);
-    }
-  }
-);
-
 export default {
   name: 'VueCalendly',
-  components: {},
   props: {
     height: {
       default: 600,
@@ -35,10 +21,12 @@ export default {
       type: Object,
     },
   },
-  data () {
-    return {};
+  created () {
+    window.addEventListener(
+      'message',
+      this.emitCalendlyEvent
+    );
   },
-  computed: {},
   mounted () {
     const vm = this;
     calendly.widget({
@@ -51,7 +39,23 @@ export default {
       utm: this.utm,
     });
   },
-  methods: {},
+  methods: {
+    isCalendlyEvent (event) {
+      return event.data.event && event.data.event.indexOf('calendly') === 0;
+    },
+    emitCalendlyEvent (event) {
+      if (this.isCalendlyEvent(event)) {
+        const key = event.data.event;
+        const events = {
+          'calendly.profile_page_viewed': 'profile-page-viewed',
+          'calendly.event_type_viewed': 'event-type-viewed',
+          'calendly.date_and_time_selected': 'date-and-time-selected',
+          'calendly.event_scheduled': 'event-scheduled',
+        };
+        this.$emit(events[key], event);
+      }
+    },
+  },
 };
 </script>
 
