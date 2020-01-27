@@ -234,16 +234,16 @@ class Calendly {
   }
 
   getUtmParams () {
-    let e = ['utmCampaign', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm'];
+    let utmCodes = ['utmCampaign', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm'];
     return this.options.utm
-      ? this._snakeCaseKeys(this._pick(this.options.utm, e))
+      ? this._snakeCaseKeys(this._pick(this.options.utm, utmCodes))
       : null;
   }
 
   getUtmParamsFromHost () {
-    let utmParams = ['utm_campaign', 'utm_source', 'utm_medium', 'utm_content', 'utm_term'];
+    let utmCodes = ['utm_campaign', 'utm_source', 'utm_medium', 'utm_content', 'utm_term'];
     let queryStringParams = this.extractQueryStringParams(window.location.href);
-    return this._pick(queryStringParams, utmParams);
+    return this._pick(queryStringParams, utmCodes);
   }
 
   inject () {
