@@ -40,6 +40,11 @@ const routes = [
     path: '/settings',
     component: () => import('../views/Settings'),
   },
+  {
+    name: 'book-pitch-date',
+    path: '/book-pitch-date',
+    component: () => import('../views/BookPitchDate'),
+  },
 ];
 
 const router = new VueRouter({
