@@ -20,18 +20,35 @@ export default {
 </script>
 
 <style lang="sass">
+@import 'assets/sass/vars'
+html, body
+  height: 100%
+body
+  margin: 0
+  display: flex
+  flex-direction: column
 #app
+  box-sizing: border-box
+  color: #2c3e50
   font-family: 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing: antialiased
+  display: flex
+  flex-direction: column
+  height: 100%
   -moz-osx-font-smoothing: grayscale
   text-align: center
-  color: #2c3e50
-
-a
-  color: #039
-  text-decoration: none
-
-  &:hover
-    color: #069
+  -webkit-font-smoothing: antialiased
+  #view
+    display: flex
+    flex-direction: column
+    align-items: center
+    width: 100%
+    height: $view-height
+    overflow-y: auto
+    top: $header-height
+  a
+    color: #039
     text-decoration: none
+    &:hover
+      color: #069
+      text-decoration: none
 </style>
