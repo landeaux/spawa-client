@@ -12,7 +12,7 @@ import Calendly from '@/assets/calendlyWidget';
  * with the new prop value(s).
  */
 export default {
-  name: 'VueCalendly',
+  name: 'CalendlyWidget',
   props: {
     /**
      * The height of the widget
@@ -61,12 +61,14 @@ export default {
           'utmContent',
           'utmTerm',
         ];
-        Object.keys(value).forEach(key => {
-          if (utmCodes.indexOf(key) === -1) return false;
-        });
-        return true;
+        return Object.keys(value).every(key => utmCodes.indexOf(key) !== -1);
       },
     },
+  },
+  data () {
+    return {
+      loaded: false,
+    };
   },
   created () {
     // Start listening for messages from Calendly
@@ -80,6 +82,7 @@ export default {
     const vm = this;
     Calendly.widget({
       onLoad (e) {
+        vm.$data.loaded = true;
         vm.$emit('load', e);
       },
       parentElement: this.$el,
@@ -124,12 +127,20 @@ export default {
 
 <template>
   <div
+    v-show="loaded"
     class="calendly"
     :style="{ 'height' : height + 'px' }"
     :data-url="url"
   ></div>
 </template>
 
-<style lang="scss">
-  .calendly {}
+<style lang="sass">
+.calendly
+  position: relative
+  height: 100%
+  display: flex
+  flex-direction: row
+  justify-content: center
+  align-items: center
+  width: 100%
 </style>
