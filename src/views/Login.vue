@@ -1,30 +1,30 @@
 <script>
-import { mapState } from 'vuex'
-import { LOGIN } from '@/store/actions.type'
+import { mapState } from 'vuex';
+import { LOGIN } from '@/store/actions.type';
 
 export default {
   name: 'RwvLogin',
   data () {
     return {
       email: null,
-      password: null
-    }
+      password: null,
+    };
   },
   computed: {
     ...mapState({
-      errors: state => state.auth.errors
-    })
+      errors: state => state.auth.errors,
+    }),
   },
   methods: {
     async onSubmit (email, password) {
       await this.$store.dispatch(LOGIN, {
         email,
-        password
-      })
-      this.$router.push({ name: 'home' })
-    }
-  }
-}
+        password,
+      });
+      this.$router.push({ name: 'home' });
+    },
+  },
+};
 </script>
 
 <template>

@@ -1,46 +1,46 @@
-import ApiService from '@/common/api.service'
-import { FETCH_PROFILE } from './actions.type'
-import { SET_PROFILE } from './mutations.type'
+import ApiService from '@/common/api.service';
+import { FETCH_PROFILE } from './actions.type';
+import { SET_PROFILE } from './mutations.type';
 
 const state = {
   errors: {},
-  profile: {}
-}
+  profile: {},
+};
 
 const getters = {
   profile (state) {
-    return state.profile
-  }
-}
+    return state.profile;
+  },
+};
 
 const actions = {
   [FETCH_PROFILE] (context, payload) {
-    const { username } = payload
+    const { username } = payload;
     return ApiService.get('profile', username)
       .then(({ data }) => {
-        context.commit(SET_PROFILE, data.profile)
-        return data
+        context.commit(SET_PROFILE, data.profile);
+        return data;
       })
       .catch(() => {
         // #todo SET_ERROR cannot work in multiple states
         // context.commit(SET_ERROR, response.data.errors)
-      })
-  }
-}
+      });
+  },
+};
 
 const mutations = {
   // [SET_ERROR] (state, error) {
   //   state.errors = error
   // },
   [SET_PROFILE] (state, profile) {
-    state.profile = profile
-    state.errors = {}
-  }
-}
+    state.profile = profile;
+    state.errors = {};
+  },
+};
 
 export default {
   state,
   actions,
   mutations,
-  getters
-}
+  getters,
+};

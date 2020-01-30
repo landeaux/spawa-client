@@ -1,21 +1,26 @@
 <script>
-// @ is an alias to /src
-import PostComponent from '@/components/PostComponent.vue'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
-  components: {
-    PostComponent
-  }
-}
+  computed: {
+    ...mapGetters(['currentUser']),
+  },
+};
 </script>
 
 <template>
-  <div class="home">
-    <img
-      alt="Vue logo"
-      src="../assets/logo.png"
+  <div id="view">
+    <router-link
+      class="nav-link"
+      :to="{ name: 'book-pitch-date' }"
     >
-    <PostComponent />
+      <button
+        type="button"
+        class="btn btn-primary"
+      >
+        Book a Pitch Date
+      </button>
+    </router-link>
   </div>
 </template>

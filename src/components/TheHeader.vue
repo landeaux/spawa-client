@@ -1,12 +1,12 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'RwvHeader',
   computed: {
-    ...mapGetters(['currentUser', 'isAuthenticated'])
-  }
-}
+    ...mapGetters(['currentUser', 'isAuthenticated']),
+  },
+};
 </script>
 
 <template>
