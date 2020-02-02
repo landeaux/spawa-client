@@ -1,8 +1,13 @@
 <script>
 import { mapGetters } from 'vuex';
+import AdminDashboard from '@/components/AdminDashboard';
+import EvaluatorDashboard from '@/components/EvaluatorDashboard';
+import FounderDashboard from '@/components/FounderDashboard';
+import ReviewerDashboard from '@/components/ReviewerDashboard';
 
 export default {
   name: 'Home',
+  components: { EvaluatorDashboard, FounderDashboard, ReviewerDashboard, AdminDashboard },
   computed: {
     ...mapGetters(['currentUser']),
   },
@@ -11,16 +16,9 @@ export default {
 
 <template>
   <div id="view">
-    <router-link
-      class="nav-link"
-      :to="{ name: 'book-pitch-date' }"
-    >
-      <button
-        type="button"
-        class="btn btn-primary"
-      >
-        Book a Pitch Date
-      </button>
-    </router-link>
+    <AdminDashboard v-if="currentUser.role === 'admin'" />
+    <EvaluatorDashboard v-else-if="currentUser.role === 'evaluator'" />
+    <ReviewerDashboard v-else-if="currentUser.role === 'reviewer'" />
+    <FounderDashboard v-else />
   </div>
 </template>
