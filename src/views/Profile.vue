@@ -18,17 +18,22 @@ export default {
     $route (to) {
       this.fetchProfile(to.params);
     },
+    currentUser () {
+      this.fetchProfile(this.$route.params);
+    },
   },
-  async mounted () {
+  mounted () {
     this.fetchProfile(this.$route.params);
   },
   methods: {
     async fetchProfile (params) {
       const { username } = params;
-      if (this.currentUser.username === username) {
-        await this.$store.dispatch(FETCH_PROFILE);
-      } else {
-        await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
+      if (this.currentUser.username) {
+        if (this.currentUser.username === username) {
+          await this.$store.dispatch(FETCH_PROFILE);
+        } else {
+          await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
+        }
       }
     },
     isCurrentUser () {
