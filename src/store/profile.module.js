@@ -1,5 +1,8 @@
 import ApiService from '@/common/api.service';
-import { FETCH_PROFILE } from './actions.type';
+import {
+  FETCH_PROFILE,
+  FETCH_PROFILE_BY_USERNAME,
+} from './actions.type';
 import { SET_PROFILE } from './mutations.type';
 
 const state = {
@@ -14,7 +17,20 @@ const getters = {
 };
 
 const actions = {
-  [FETCH_PROFILE] (context, payload) {
+  async [FETCH_PROFILE] (context) {
+    try {
+      const { data } = await ApiService.get('profile');
+      context.commit(SET_PROFILE, data.profile);
+      return data;
+    } catch (err) {
+      // #todo SET_ERROR cannot work in multiple states
+      // context.commit(SET_ERROR, response.data.errors)
+      if (process.NODE_ENV !== 'production') {
+        console.error(err);
+      }
+    }
+  },
+  [FETCH_PROFILE_BY_USERNAME] (context, payload) {
     const { username } = payload;
     return ApiService.get('profile', username)
       .then(({ data }) => {
