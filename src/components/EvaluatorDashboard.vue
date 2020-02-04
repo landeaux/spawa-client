@@ -12,7 +12,7 @@ export default {
 <template>
   <div class="greeting">
     <h1>Evaluator Dashboard</h1>
-    <p>Welcome back, {{ currentUser }}!</p>
+    <p>Welcome back, {{ currentUser.username }}!</p>
   </div>
 </template>
 

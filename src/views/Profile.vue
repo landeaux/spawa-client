@@ -2,22 +2,40 @@
 import { mapGetters } from 'vuex';
 import {
   FETCH_PROFILE,
+  FETCH_PROFILE_BY_USERNAME,
 } from '@/store/actions.type';
 
 export default {
   name: 'RwvProfile',
   computed: {
-    ...mapGetters(['currentUser', 'profile', 'isAuthenticated']),
+    ...mapGetters([
+      'currentUser',
+      'profile',
+      'isAuthenticated',
+    ]),
   },
   watch: {
     $route (to) {
-      this.$store.dispatch(FETCH_PROFILE, to.params);
+      this.fetchProfile(to.params);
+    },
+    currentUser () {
+      this.fetchProfile(this.$route.params);
     },
   },
   mounted () {
-    this.$store.dispatch(FETCH_PROFILE, this.$route.params);
+    this.fetchProfile(this.$route.params);
   },
   methods: {
+    async fetchProfile (params) {
+      const { username } = params;
+      if (this.currentUser.username) {
+        if (this.currentUser.username === username) {
+          await this.$store.dispatch(FETCH_PROFILE);
+        } else {
+          await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
+        }
+      }
+    },
     isCurrentUser () {
       if (this.currentUser.username && this.profile.username) {
         return this.currentUser.username === this.profile.username;
