@@ -48,6 +48,7 @@
     "sass": "^1.23.6",
     "sass-loader": "^8.0.0",
     "selenium-server": "^3.141.59",
+    "vue-friendly-iframe": "^0.17.0",
     "vue-template-compiler": "^2.6.10"
   },
   "gitHooks": {
