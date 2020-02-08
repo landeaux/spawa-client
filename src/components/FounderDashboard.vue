@@ -17,6 +17,17 @@ export default {
     </div>
     <router-link
       class="nav-link"
+      :to="{ name: 'submit-eapp' }"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+      >
+        Submit Eapp
+      </button>
+    </router-link>
+    <router-link
+      class="nav-link"
       :to="{ name: 'book-pitch-date' }"
     >
       <button
