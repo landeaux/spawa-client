@@ -2,18 +2,23 @@
 export default {
   name: 'HubSpotFormWidget',
   props: {
+    formBaseUrl: {
+      default: '',
+      required: true,
+      type: String,
+    },
     /**
      * The prefill options to populate in the widget
      */
     prefill: {
       default: () => ({}),
+      required: false,
       type: Object,
     },
   },
   data () {
     return {
       dev: process.env.NODE_ENV === 'development',
-      formBaseUrl: 'https://share.hsforms.com/1ktXh4Wg7TJqlpYPRbgzGIQ47uvd',
       iframeLoading: true,
     };
   },
@@ -23,12 +28,20 @@ export default {
     },
     queryString () {
       let result = '';
+
+      /*
+       * Since vue adds extra getters/setters for reactivity, and since we only
+       * want the plain key/value pairs, we need to make a copy of it first.
+       */
       const prefillCopy = { ...this.prefill };
+
+      // Generate our query string based on each prefill key/value pair
       if (Object.entries(prefillCopy).length > 0 &&
         prefillCopy.constructor === Object) {
         result += '?';
         Object.keys(prefillCopy).forEach(key => {
-          const value = prefillCopy[key];
+          let value = prefillCopy[key];
+          value = encodeURIComponent(value); // make string safe for uri
           result += `${key}=${value}&`;
         });
         result = result.slice(0, -1); // remove the last '&'
