@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     onFormSubmitted () {
-      console.log('onFormSubmitted called...');
       this.formSubmitted = true;
     },
   },
