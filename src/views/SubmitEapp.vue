@@ -14,7 +14,7 @@ export default {
         email: '',
         user_id: '',
       },
-      url: '', // #todo Need to set this equal to the base form url and pass into widget
+      formBaseUrl: 'https://share.hsforms.com/1ktXh4Wg7TJqlpYPRbgzGIQ47uvd',
       userPopulated: false,
       widgetLoaded: false,
     };
@@ -68,6 +68,7 @@ export default {
     <HubSpotFormWidget
       v-if="userPopulated"
       class="widget"
+      :form-base-url="formBaseUrl"
       :prefill="prefill"
       @form-submitted="onFormSubmitted"
     />
