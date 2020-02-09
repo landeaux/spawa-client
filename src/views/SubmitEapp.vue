@@ -14,7 +14,7 @@ export default {
         email: '',
         user_id: '',
       },
-      formBaseUrl: 'https://share.hsforms.com/1ktXh4Wg7TJqlpYPRbgzGIQ47uvd',
+      formBaseUrl: process.env.VUE_APP_HUBSPOT_EAPP_FORM_URL,
       userPopulated: false,
       widgetLoaded: false,
     };
