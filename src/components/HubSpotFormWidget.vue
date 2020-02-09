@@ -1,6 +1,11 @@
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+
 export default {
   name: 'HubSpotFormWidget',
+  components: {
+    PulseLoader,
+  },
   props: {
     /**
      * The base form url to load in the iframe
@@ -76,17 +81,12 @@ export default {
   methods: {
     /**
      * iframe onload handler
+     *
+     * Triggered after the iframe's document.onreadystatechange triggers and the
+     * documents readyState is complete.
      */
     onLoad () {
-      console.log('iframe loaded');
-
       this.iframeLoading = false;
-    },
-    /**
-     * iframe oniframeload handler
-     */
-    onIframeLoad () {
-      console.log('iframe loaded');
     },
     /**
      * Checks if the message event received form event from HubSpot
@@ -130,21 +130,20 @@ export default {
 
 <template>
   <div class="iframe-wrapper">
-    <div
-      v-if="iframeLoading"
-      class="iframe-loading"
-    >
-      iframe loading...
-    </div>
     <div v-if="dev">
       {{ iframeSrc }}
     </div>
+    <PulseLoader
+      v-if="iframeLoading"
+      class="loader"
+      color="blue"
+      size="25px"
+    />
     <vue-friendly-iframe
       ref="iframeEl"
       :style="{ 'display' : iframeLoading ? 'none' : 'block' }"
       :src="iframeSrc"
       frameborder="0"
-      @iframe-load="onIframeLoad"
       @load="onLoad"
     />
   </div>
@@ -154,6 +153,14 @@ export default {
 .iframe-wrapper
   width: 100%
   border: 0
+
+  .loader
+    position: relative
+    height: 100%
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
 
   .vue-friendly-iframe
     height: 100%
