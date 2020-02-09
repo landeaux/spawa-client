@@ -89,13 +89,12 @@ export default {
       console.log('iframe loaded');
     },
     /**
-     * Checks if the message event received is from HubSpot.
+     * Checks if the message event received form event from HubSpot
      *
      * @public
      */
-    isHubSpotEvent (event) {
-      // #todo Need to make this dynamic with the url passed in
-      return event.origin === 'https://share.hsforms.com';
+    isHubSpotFormEvent (event) {
+      return event.data.type === 'hsFormCallback';
     },
     /**
      * Emits an event to the parent component based on the event received from
@@ -105,7 +104,7 @@ export default {
      * @param event The MessageEvent object
      */
     emitHubSpotEvent (event) {
-      if (this.isHubSpotEvent(event)) {
+      if (this.isHubSpotFormEvent(event)) {
         const key = event.data.eventName;
         const events = {
           'onBeforeFormInit': 'before-form-init',
