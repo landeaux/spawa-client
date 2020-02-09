@@ -2,6 +2,9 @@
 export default {
   name: 'HubSpotFormWidget',
   props: {
+    /**
+     * The base form url to load in the iframe
+     */
     formBaseUrl: {
       default: '',
       required: true,
@@ -23,9 +26,23 @@ export default {
     };
   },
   computed: {
+    /**
+     * The iframe source url composed of the base form url and query string for
+     * pre-populating form fields.
+     *
+     * @public
+     * @returns {string}
+     */
     iframeSrc () {
       return this.formBaseUrl + this.queryString;
     },
+    /**
+     * Generates a uri encoded query string for use in pre-populating form
+     * fields.
+     *
+     * @public
+     * @returns {string}
+     */
     queryString () {
       let result = '';
 
@@ -57,14 +74,25 @@ export default {
     );
   },
   methods: {
+    /**
+     * iframe onload handler
+     */
     onLoad () {
       console.log('iframe loaded');
 
       this.iframeLoading = false;
     },
+    /**
+     * iframe oniframeload handler
+     */
     onIframeLoad () {
       console.log('iframe loaded');
     },
+    /**
+     * Checks if the message event received is from HubSpot.
+     *
+     * @public
+     */
     isHubSpotEvent (event) {
       // #todo Need to make this dynamic with the url passed in
       return event.origin === 'https://share.hsforms.com';
