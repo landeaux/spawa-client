@@ -70,10 +70,18 @@ export default {
           'onBeforeFormInit': 'before-form-init',
           'onBeforeValidationInit': 'before-validation-init',
           'onFormReady': 'form-ready',
+          'onFormFailedValidation': 'form-failed-validation',
           'onFormSubmit': 'form-submit',
           'onFormSubmitted': 'form-submitted',
         };
-        this.$emit(events[key], event);
+        try {
+          this.$emit(events[key], event);
+        } catch (error) {
+          if (this.dev) {
+            console.error(error);
+            console.warn(`Event key missing for eventName '${key}'`);
+          }
+        }
       }
     },
   },

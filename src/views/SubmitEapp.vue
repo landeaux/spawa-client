@@ -47,11 +47,15 @@ export default {
     onFormReady () {
       console.log('onFormReady called...');
     },
+    onFormFailedValidation () {
+      console.log('onFormFailedValidation called...');
+    },
     onFormSubmit () {
       console.log('onFormSubmit called...');
     },
     onFormSubmitted () {
       console.log('onFormSubmitted called...');
+      this.formSubmitted = true;
     },
   },
 };
@@ -89,6 +93,7 @@ export default {
       @before-form-init="onBeforeFormInit"
       @before-validation-init="onBeforeValidationInit"
       @form-ready="onFormReady"
+      @form-failed-validation="onFormFailedValidation"
       @form-submit="onFormSubmit"
       @form-submitted="onFormSubmitted"
     />
