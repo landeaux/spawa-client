@@ -1,10 +1,8 @@
 <script>
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-
 export default {
   name: 'HubSpotFormWidget',
   components: {
-    PulseLoader,
+    PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   props: {
     /**
