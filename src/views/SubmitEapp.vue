@@ -1,21 +1,16 @@
 <script>
 import { mapGetters } from 'vuex';
-// import CalendlyWidget from '../components/CalendlyWidget';
-// import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
 export default {
   name: 'BookPitchDate',
   components: {
     HubSpotFormWidget: () => import('@/components/HubSpotFormWidget'),
-    // CalendlyWidget,
-    // PulseLoader,
   },
   data () {
     return {
       formSubmitted: false,
-      // NOTE: These keys must be the exact same as they are for in Hubspot
+      // NOTE: These keys must be the exactly as they are in the Hubspot form
       prefill: {
-        firstname: '',
         email: '',
         user_id: '',
       },
@@ -31,28 +26,12 @@ export default {
     currentUser () {
       this.userPopulated = Object.entries(this.currentUser).length > 0;
       if (this.userPopulated) {
-        this.prefill.firstname = this.currentUser.username;
         this.prefill.email = this.currentUser.email;
         this.prefill.user_id = this.currentUser.id;
       }
     },
   },
   methods: {
-    onBeforeFormInit () {
-      console.log('onBeforeFormInit called...');
-    },
-    onBeforeValidationInit () {
-      console.log('onBeforeValidationInit called...');
-    },
-    onFormReady () {
-      console.log('onFormReady called...');
-    },
-    onFormFailedValidation () {
-      console.log('onFormFailedValidation called...');
-    },
-    onFormSubmit () {
-      console.log('onFormSubmit called...');
-    },
     onFormSubmitted () {
       console.log('onFormSubmitted called...');
       this.formSubmitted = true;
@@ -90,11 +69,6 @@ export default {
       v-if="userPopulated"
       class="widget"
       :prefill="prefill"
-      @before-form-init="onBeforeFormInit"
-      @before-validation-init="onBeforeValidationInit"
-      @form-ready="onFormReady"
-      @form-failed-validation="onFormFailedValidation"
-      @form-submit="onFormSubmit"
       @form-submitted="onFormSubmitted"
     />
   </div>
