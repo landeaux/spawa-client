@@ -31,7 +31,6 @@ export default {
     currentUser () {
       this.userPopulated = Object.entries(this.currentUser).length > 0;
       if (this.userPopulated) {
-        console.log('currentUser:', this.currentUser);
         this.prefill.firstname = this.currentUser.username;
         this.prefill.email = this.currentUser.email;
         this.prefill.user_id = this.currentUser.id;
@@ -39,10 +38,20 @@ export default {
     },
   },
   methods: {
-    loadHandler () {
-      this.$nextTick().then(() => {
-        this.widgetLoaded = true;
-      });
+    onBeforeFormInit () {
+      console.log('onBeforeFormInit called...');
+    },
+    onBeforeValidationInit () {
+      console.log('onBeforeValidationInit called...');
+    },
+    onFormReady () {
+      console.log('onFormReady called...');
+    },
+    onFormSubmit () {
+      console.log('onFormSubmit called...');
+    },
+    onFormSubmitted () {
+      console.log('onFormSubmitted called...');
     },
   },
 };
@@ -77,6 +86,11 @@ export default {
       v-if="userPopulated"
       class="widget"
       :prefill="prefill"
+      @before-form-init="onBeforeFormInit"
+      @before-validation-init="onBeforeValidationInit"
+      @form-ready="onFormReady"
+      @form-submit="onFormSubmit"
+      @form-submitted="onFormSubmitted"
     />
   </div>
 </template>

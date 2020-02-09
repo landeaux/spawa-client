@@ -40,7 +40,7 @@ export default {
     // Start listening for messages from HubSpot
     window.addEventListener(
       'message',
-      this.messageEventHandler
+      this.emitHubSpotEvent
     );
   },
   methods: {
@@ -56,10 +56,24 @@ export default {
       // #todo Need to make this dynamic with the url passed in
       return event.origin === 'https://share.hsforms.com';
     },
-    messageEventHandler (event) {
-      // #todo Need to emit the appropriate event to the parent
+    /**
+     * Emits an event to the parent component based on the event received from
+     * HubSpot.
+     *
+     * @public
+     * @param event The MessageEvent object
+     */
+    emitHubSpotEvent (event) {
       if (this.isHubSpotEvent(event)) {
-        console.log(event);
+        const key = event.data.eventName;
+        const events = {
+          'onBeforeFormInit': 'before-form-init',
+          'onBeforeValidationInit': 'before-validation-init',
+          'onFormReady': 'form-ready',
+          'onFormSubmit': 'form-submit',
+          'onFormSubmitted': 'form-submitted',
+        };
+        this.$emit(events[key], event);
       }
     },
   },
@@ -82,8 +96,6 @@ export default {
       :style="{ 'display' : iframeLoading ? 'none' : 'block' }"
       :src="iframeSrc"
       frameborder="0"
-      gesture="media"
-      allow="encrypted-media"
       @iframe-load="onIframeLoad"
       @load="onLoad"
     />
