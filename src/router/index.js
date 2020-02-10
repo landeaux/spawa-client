@@ -41,6 +41,11 @@ const routes = [
     component: () => import('../views/Settings'),
   },
   {
+    name: 'submit-eapp',
+    path: '/submit-eapp',
+    component: () => import('../views/SubmitEapp'),
+  },
+  {
     name: 'book-pitch-date',
     path: '/book-pitch-date',
     component: () => import('../views/BookPitchDate'),
