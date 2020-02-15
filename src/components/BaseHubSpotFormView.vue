@@ -44,6 +44,9 @@ export default {
   },
   computed: {
     ...mapGetters(['currentUser']),
+    showHubSpotFormWidget () {
+      return this.userPopulated && !this.formSubmitted;
+    },
   },
   watch: {
     currentUser () {
@@ -92,7 +95,7 @@ export default {
       Next
     </button>
     <HubSpotFormWidget
-      v-if="userPopulated"
+      v-if="showHubSpotFormWidget"
       class="widget"
       :form-base-url="formBaseUrl"
       :prefill="prefill"
