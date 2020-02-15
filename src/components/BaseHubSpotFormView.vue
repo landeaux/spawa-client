@@ -101,6 +101,12 @@ export default {
       :prefill="prefill"
       @form-submitted="onFormSubmitted"
     />
+    <p
+      v-if="formSubmitted"
+      class="message"
+    >
+      Thank you for submitting the form! Click 'Next' to continue.
+    </p>
   </div>
 </template>
 
@@ -109,7 +115,7 @@ export default {
 #view
   display: flex
   flex-direction: column
-  .loader
+  .loader, .message
     position: relative
     height: 100%
     display: flex
