@@ -5,7 +5,7 @@ export default {
     BaseHubSpotFormView: () => import('@/components/BaseHubSpotFormView'),
   },
   data: () => ({
-    description: 'Please fill out the Entrepreneur Form below:',
+    instructions: 'Please fill out the Entrepreneur Form below.',
     formBaseUrl: process.env.VUE_APP_HUBSPOT_EAPP_FORM_URL,
     prefillKeyMap: {
       email: 'email',
@@ -20,7 +20,7 @@ export default {
 
 <template>
   <BaseHubSpotFormView
-    :description="description"
+    :instructions="instructions"
     :form-base-url="formBaseUrl"
     :prefill-key-map="prefillKeyMap"
     :router-link-to="routerLinkTo"

@@ -7,7 +7,10 @@ export default {
     HubSpotFormWidget: () => import('@/components/HubSpotFormWidget'),
   },
   props: {
-    description: {
+    /**
+     *
+     */
+    instructions: {
       default: '',
       required: false,
       type: String,
@@ -78,7 +81,7 @@ export default {
 <template>
   <div id="view">
     <h1>{{ title }}</h1>
-    <p>{{ description }}</p>
+    <p>{{ instructions }}</p>
     <router-link
       v-if="formSubmitted"
       :to="{ name: routerLinkTo }"
