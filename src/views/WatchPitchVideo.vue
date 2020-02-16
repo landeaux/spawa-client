@@ -1,4 +1,10 @@
 <script>
+/*
+ * WATCH_THRESHOLD controls how much of the video must be watched before
+ * allowing the user to continue.
+ */
+const WATCH_THRESHOLD = 0.9;
+
 /**
  * WatchPitchVideo
  */
@@ -9,10 +15,12 @@ export default {
   },
   data: () => ({
     autoplay: 0,
+    durationInMs: 0,
     player: {},
-    showNextButton: true,
     state: 'init',
+    timer: 0,
     videoId: 'jwLZVMI3q70',
+    videoWatched: false,
   }),
   computed: {
     showLoader () {
@@ -35,12 +43,20 @@ export default {
     },
     onPlaying () {
       this.state = 'playing';
+      const durationInMs = this.player.getDuration() * 1000;
+      const currentTimeInMs = this.player.getCurrentTime() * 1000;
+      const timeout = (durationInMs * WATCH_THRESHOLD) - currentTimeInMs;
+      this.timer = setTimeout(() => {
+        this.videoWatched = true;
+      }, timeout);
     },
     onPaused () {
       this.state = 'paused';
+      clearTimeout(this.timer);
     },
     onEnded () {
       this.state = 'ended';
+      this.videoWatched = true;
     },
     onQued () {
       this.state = 'qued';
@@ -54,7 +70,7 @@ export default {
     onNextButtonClicked () {
       this.$router.push('submit-pitch-deck');
     },
-    replayVideo () {
+    onReplayButtonClicked () {
       this.autoplay = 1;
       this.state = 'init';
     },
@@ -65,7 +81,7 @@ export default {
 <template>
   <div>
     <button
-      v-if="showNextButton"
+      v-if="videoWatched"
       class="btn btn-primary"
       @click="onNextButtonClicked"
     >
@@ -92,7 +108,7 @@ export default {
     <button
       v-if="showReplayButton"
       class="btn btn-primary"
-      @click="replayVideo"
+      @click="onReplayButtonClicked"
     >
       Replay Video
     </button>
