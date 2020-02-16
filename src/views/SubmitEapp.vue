@@ -20,8 +20,8 @@ export default {
 
 <template>
   <BaseHubSpotFormView
-    :instructions="instructions"
     :form-base-url="formBaseUrl"
+    :instructions="instructions"
     :prefill-key-map="prefillKeyMap"
     :router-link-to="routerLinkTo"
     :success-message="successMessage"
