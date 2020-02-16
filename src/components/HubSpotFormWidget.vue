@@ -24,7 +24,6 @@ export default {
   },
   data () {
     return {
-      dev: process.env.NODE_ENV === 'development',
       iframeLoading: true,
     };
   },
@@ -128,9 +127,6 @@ export default {
 
 <template>
   <div class="iframe-wrapper">
-    <div v-if="dev">
-      {{ iframeSrc }}
-    </div>
     <PulseLoader
       v-if="iframeLoading"
       class="loader"
