@@ -12,6 +12,7 @@ export default {
       user_id: 'id',
     },
     routerLinkTo: 'home',
+    successMessage: 'Thank you for submitting the form! Click "Next" to continue.',
     title: 'Submit Eapp',
   }),
 };
@@ -23,6 +24,7 @@ export default {
     :form-base-url="formBaseUrl"
     :prefill-key-map="prefillKeyMap"
     :router-link-to="routerLinkTo"
+    :success-message="successMessage"
     :title="title"
   />
 </template>
