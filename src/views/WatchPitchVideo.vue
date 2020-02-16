@@ -68,7 +68,7 @@ export default {
       }
     },
     onNextButtonClicked () {
-      this.$router.push('submit-pitch-deck');
+      this.$router.push('take-pitch-quiz');
     },
     onReplayButtonClicked () {
       this.autoplay = 1;
