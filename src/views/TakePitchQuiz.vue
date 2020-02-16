@@ -10,7 +10,9 @@ export default {
   data: () => ({
     instructions: 'Please complete the pitch quiz below.',
     formBaseUrl: process.env.VUE_APP_HUBSPOT_PITCH_QUIZ_FORM_URL,
-    prefillKeyMap: {},
+    prefillKeyMap: {
+      email: 'email',
+    },
     routerLinkTo: 'submit-pitch-deck',
     successMessage: 'Thank you for taking the quiz! Click "Next" to continue.',
     title: 'Take Pitch Quiz',

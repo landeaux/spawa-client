@@ -10,7 +10,9 @@ export default {
   data: () => ({
     instructions: 'Please submit your pitch deck using the form below.',
     formBaseUrl: process.env.VUE_APP_HUBSPOT_PITCH_DECK_SUBMISSION_FORM_URL,
-    prefillKeyMap: {},
+    prefillKeyMap: {
+      email: 'email',
+    },
     routerLinkTo: 'home',
     successMessage: 'Thank you for submitting your pitch deck! Click "Next" to continue.',
     title: 'Submit Pitch Deck',
