@@ -7,8 +7,10 @@ import ApiService from './common/api.service';
 import DateFilter from './common/date.filter';
 import ErrorFilter from './common/error.filter';
 import VueFriendlyIframe from 'vue-friendly-iframe';
+import VueYouTubeEmbed from 'vue-youtube-embed';
 
 Vue.use(VueFriendlyIframe);
+Vue.use(VueYouTubeEmbed, { global: true, componentId: 'YouTubePlayer' });
 
 Vue.config.productionTip = false;
 Vue.filter('date', DateFilter);
