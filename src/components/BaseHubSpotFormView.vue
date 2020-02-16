@@ -9,7 +9,7 @@ export default {
   props: {
     description: {
       default: '',
-      required: true,
+      required: false,
       type: String,
     },
     formBaseUrl: {
@@ -24,8 +24,13 @@ export default {
       type: Object,
     },
     routerLinkTo: {
-      default: '',
+      default: 'home',
       required: true,
+      type: String,
+    },
+    successMessage: {
+      default: 'Thank you for submitting the form! Click "Next" to continue.',
+      required: false,
       type: String,
     },
     title: {
@@ -38,6 +43,7 @@ export default {
     return {
       formSubmitted: false,
       prefill: {},
+      state: 'init',
       userPopulated: false,
       widgetLoaded: false,
     };
@@ -105,7 +111,7 @@ export default {
       v-if="formSubmitted"
       class="message"
     >
-      Thank you for submitting the form! Click 'Next' to continue.
+      {{ successMessage }}
     </p>
   </div>
 </template>
