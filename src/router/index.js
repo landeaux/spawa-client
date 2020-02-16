@@ -46,6 +46,21 @@ const routes = [
     component: () => import('../views/SubmitEapp'),
   },
   {
+    name: 'watch-pitch-video',
+    path: '/watch-pitch-video',
+    component: () => import('../views/WatchPitchVideo'),
+  },
+  {
+    name: 'take-pitch-quiz',
+    path: '/take-pitch-quiz',
+    component: () => import('../views/TakePitchQuiz'),
+  },
+  {
+    name: 'submit-pitch-deck',
+    path: '/submit-pitch-deck',
+    component: () => import('../views/SubmitPitchDeck'),
+  },
+  {
     name: 'book-pitch-date',
     path: '/book-pitch-date',
     component: () => import('../views/BookPitchDate'),
