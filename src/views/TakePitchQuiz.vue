@@ -1,19 +1,19 @@
 <script>
+/**
+ * TakePitchQuiz
+ */
 export default {
-  name: 'BookPitchDate',
+  name: 'TakePitchQuiz',
   components: {
     BaseHubSpotFormView: () => import('@/components/BaseHubSpotFormView'),
   },
   data: () => ({
-    instructions: 'Please fill out the Entrepreneur Form below.',
-    formBaseUrl: process.env.VUE_APP_HUBSPOT_EAPP_FORM_URL,
-    prefillKeyMap: {
-      email: 'email',
-      user_id: 'id',
-    },
-    routerLinkTo: 'watch-pitch-video',
-    successMessage: 'Thank you for submitting the form! Click "Next" to continue.',
-    title: 'Submit Eapp',
+    instructions: 'Please complete the pitch quiz below.',
+    formBaseUrl: process.env.VUE_APP_HUBSPOT_PITCH_QUIZ_FORM_URL,
+    prefillKeyMap: {},
+    routerLinkTo: 'submit-pitch-deck',
+    successMessage: 'Thank you for taking the quiz! Click "Next" to continue.',
+    title: 'Take Pitch Quiz',
   }),
 };
 </script>

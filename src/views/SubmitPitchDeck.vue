@@ -1,19 +1,19 @@
 <script>
+/**
+ * SubmitPitchDeck
+ */
 export default {
-  name: 'BookPitchDate',
+  name: 'SubmitPitchDeck',
   components: {
     BaseHubSpotFormView: () => import('@/components/BaseHubSpotFormView'),
   },
   data: () => ({
-    instructions: 'Please fill out the Entrepreneur Form below.',
-    formBaseUrl: process.env.VUE_APP_HUBSPOT_EAPP_FORM_URL,
-    prefillKeyMap: {
-      email: 'email',
-      user_id: 'id',
-    },
-    routerLinkTo: 'watch-pitch-video',
-    successMessage: 'Thank you for submitting the form! Click "Next" to continue.',
-    title: 'Submit Eapp',
+    instructions: 'Please submit your pitch deck using the form below.',
+    formBaseUrl: process.env.VUE_APP_HUBSPOT_PITCH_DECK_SUBMISSION_FORM_URL,
+    prefillKeyMap: {},
+    routerLinkTo: 'home',
+    successMessage: 'Thank you for submitting your pitch deck! Click "Next" to continue.',
+    title: 'Submit Pitch Deck',
   }),
 };
 </script>
