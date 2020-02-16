@@ -24,7 +24,10 @@ export default {
 </script>
 
 <template>
-  <div class="settings-page">
+  <div
+    id="view"
+    class="settings-page"
+  >
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">

@@ -22,6 +22,7 @@ export default {
 
 <template>
   <BaseHubSpotFormView
+    id="view"
     :form-base-url="formBaseUrl"
     :instructions="instructions"
     :prefill-key-map="prefillKeyMap"

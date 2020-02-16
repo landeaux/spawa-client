@@ -79,32 +79,27 @@ export default {
 </script>
 
 <template>
-  <div>
-    <button
-      v-if="videoWatched"
-      class="btn btn-primary"
-      @click="onNextButtonClicked"
-    >
-      Next
-    </button>
+  <div id="view">
     <PulseLoader
       v-if="showLoader"
       class="loader"
       color="blue"
       size="25px"
     />
-    <YouTubePlayer
-      v-if="showPlayer"
-      :video-id="videoId"
-      :player-vars="{ autoplay }"
-      @buffering="onBuffering"
-      @ready="onReady"
-      @playing="onPlaying"
-      @paused="onPaused"
-      @ended="onEnded"
-      @qued="onQued"
-      @error="onError"
-    />
+    <transition name="fade">
+      <YouTubePlayer
+        v-if="showPlayer"
+        :video-id="videoId"
+        :player-vars="{ autoplay }"
+        @buffering="onBuffering"
+        @ready="onReady"
+        @playing="onPlaying"
+        @paused="onPaused"
+        @ended="onEnded"
+        @qued="onQued"
+        @error="onError"
+      />
+    </transition>
     <button
       v-if="showReplayButton"
       class="btn btn-primary"
@@ -112,9 +107,22 @@ export default {
     >
       Replay Video
     </button>
+    <transition name="fade">
+      <button
+        v-if="videoWatched"
+        class="btn btn-primary"
+        @click="onNextButtonClicked"
+      >
+        Next
+      </button>
+    </transition>
   </div>
 </template>
 
 <style scoped lang="sass">
+  .fade-enter-active, .fade-leave-active
+    transition: opacity 1s
 
+  .fade-enter, .fade-leave-to
+    opacity: 0
 </style>

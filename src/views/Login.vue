@@ -28,7 +28,10 @@ export default {
 </script>
 
 <template>
-  <div class="auth-page">
+  <div
+    id="view"
+    class="auth-page"
+  >
     <div class="container page">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-xs-12">
