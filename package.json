@@ -1,24 +1,20 @@
 {
   "name": "spawa-client",
-  "description": "StartUpNV Pitch Application Web App (Client-Side)",
   "version": "0.1.0",
-  "author": "Adam Landis",
-  "license": "MIT",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/landeaux/spawa-client.git"
-  },
+  "description": "StartUpNV Pitch Application Web App (Client-Side)",
+  "author": "Adam Landis",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:staging": "vue-cli-service build --mode staging",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:staging": "vue-cli-service build --mode staging"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bootstrap-vue": "^2.1.0",
     "core-js": "^3.6.4",
     "date-fns": "^2.9.0",
     "vue": "^2.6.11",
@@ -29,6 +25,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.7.0",
     "@vue/cli-plugin-babel": "^4.2.2",
     "@vue/cli-plugin-e2e-nightwatch": "^4.2.2",
     "@vue/cli-plugin-eslint": "^4.2.2",
@@ -39,6 +36,7 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "^10.0.3",
+    "bootstrap": "^4.3.1",
     "canvas": "^2.6.1",
     "chromedriver": "78",
     "eslint": "^5.16.0",
@@ -46,20 +44,29 @@
     "fibers": "^4.0.2",
     "geckodriver": "^1.19.0",
     "lint-staged": "^9.5.0",
+    "mutationobserver-shim": "^0.3.3",
     "node-sass": "^4.13.1",
+    "popper.js": "^1.16.0",
+    "portal-vue": "^2.1.6",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",
     "selenium-server": "^3.141.59",
+    "vue-cli-plugin-bootstrap-vue": "^0.6.0",
     "vue-friendly-iframe": "^0.17.0",
     "vue-template-compiler": "^2.6.11"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
+  "license": "MIT",
   "lint-staged": {
     "*.{js,vue}": [
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/landeaux/spawa-client.git"
   }
 }
