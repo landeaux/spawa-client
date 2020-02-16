@@ -120,7 +120,8 @@ export default {
 <style scoped lang="sass">
   .fade-enter-active, .fade-leave-active
     transition: opacity 3s
-
   .fade-enter, .fade-leave-to
     opacity: 0
+  .btn
+    margin: 10px
 </style>
