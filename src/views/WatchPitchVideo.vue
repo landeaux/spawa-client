@@ -86,20 +86,18 @@ export default {
       color="blue"
       size="25px"
     />
-    <transition name="fade">
-      <YouTubePlayer
-        v-if="showPlayer"
-        :video-id="videoId"
-        :player-vars="{ autoplay }"
-        @buffering="onBuffering"
-        @ready="onReady"
-        @playing="onPlaying"
-        @paused="onPaused"
-        @ended="onEnded"
-        @qued="onQued"
-        @error="onError"
-      />
-    </transition>
+    <YouTubePlayer
+      v-if="showPlayer"
+      :video-id="videoId"
+      :player-vars="{ autoplay }"
+      @buffering="onBuffering"
+      @ready="onReady"
+      @playing="onPlaying"
+      @paused="onPaused"
+      @ended="onEnded"
+      @qued="onQued"
+      @error="onError"
+    />
     <button
       v-if="showReplayButton"
       class="btn btn-primary"
@@ -121,7 +119,7 @@ export default {
 
 <style scoped lang="sass">
   .fade-enter-active, .fade-leave-active
-    transition: opacity 1s
+    transition: opacity 3s
 
   .fade-enter, .fade-leave-to
     opacity: 0
