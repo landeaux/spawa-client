@@ -76,31 +76,6 @@ export default {
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link
-            class="nav-link"
-            active-class="active"
-            exact
-            :to="{ name: 'settings' }"
-          >
-            Settings
-          </router-link>
-        </li>
-        <li
-          v-if="currentUser.username"
-          class="nav-item"
-        >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{
-              name: 'profile',
-              params: { username: currentUser.username }
-            }"
-          >
-            {{ currentUser.username }}
-          </router-link>
-        </li>
-        <li class="nav-item">
           <div class="dropdown">
             <button class="dropbtn">
               {{ currentUser.username }}
