@@ -159,6 +159,12 @@ export default {
     display: block;
   }
 
+  .dropdown-content button {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+  }
+
   .dropdown-content a:hover {background-color: #ddd;}
 
   .dropdown:hover .dropdown-content {display: block;}
