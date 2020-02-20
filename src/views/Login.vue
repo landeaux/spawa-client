@@ -6,7 +6,7 @@ export default {
   name: 'RwvLogin',
   data () {
     return {
-      email: null,
+      username: null,
       password: null,
     };
   },
@@ -16,9 +16,9 @@ export default {
     }),
   },
   methods: {
-    async onSubmit (email, password) {
+    async onSubmit (username, password) {
       await this.$store.dispatch(LOGIN, {
-        email,
+        username,
         password,
       });
       this.$router.push({ name: 'home' });
@@ -54,12 +54,12 @@ export default {
               {{ k }} {{ v | error }}
             </li>
           </ul>
-          <form @submit.prevent="onSubmit(email, password)">
+          <form @submit.prevent="onSubmit(username, password)">
             <fieldset class="form-group">
               <input
-                v-model="email"
+                v-model="username"
                 class="form-control form-control-lg"
-                placeholder="Email"
+                placeholder="Username"
                 type="text"
               >
             </fieldset>
