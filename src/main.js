@@ -1,4 +1,7 @@
+import '@babel/polyfill';
+import 'mutationobserver-shim';
 import Vue from 'vue';
+import './plugins/bootstrap-vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -6,6 +9,11 @@ import { CHECK_AUTH } from './store/actions.type';
 import ApiService from './common/api.service';
 import DateFilter from './common/date.filter';
 import ErrorFilter from './common/error.filter';
+import VueFriendlyIframe from 'vue-friendly-iframe';
+import VueYouTubeEmbed from 'vue-youtube-embed';
+
+Vue.use(VueFriendlyIframe);
+Vue.use(VueYouTubeEmbed, { global: true, componentId: 'YouTubePlayer' });
 
 Vue.config.productionTip = false;
 Vue.filter('date', DateFilter);
