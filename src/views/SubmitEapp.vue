@@ -5,7 +5,7 @@ export default {
     BaseHubSpotFormView: () => import('@/components/BaseHubSpotFormView'),
   },
   data: () => ({
-    instructions: 'Please fill out the Entrepreneur Form below.',
+    instructions: 'Please fill out and submit the form below.',
     formBaseUrl: process.env.VUE_APP_HUBSPOT_EAPP_FORM_URL,
     prefillKeyMap: {
       email: 'email',
@@ -13,7 +13,7 @@ export default {
     },
     routerLinkTo: 'watch-pitch-video',
     successMessage: 'Thank you for submitting the form! Click "Next" to continue.',
-    title: 'Submit Eapp',
+    title: 'Entrepreneur Information Form',
   }),
 };
 </script>
