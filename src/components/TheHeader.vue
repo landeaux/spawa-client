@@ -3,7 +3,6 @@ import { mapGetters } from 'vuex';
 import {
   LOGOUT,
   FETCH_PROFILE,
-  FETCH_PROFILE_BY_USERNAME,
 } from '@/store/actions.type';
 
 export default {
@@ -15,16 +14,8 @@ export default {
       'isAuthenticated',
     ]),
   },
-  watch: {
-    $route (to) {
-      this.fetchProfile(to.params);
-    },
-    currentUser () {
-      this.fetchProfile(this.$route.params);
-    },
-  },
-  mounted () {
-    this.fetchProfile(this.$route.params);
+  async created () {
+    await this.fetchProfile();
   },
   methods: {
     logout () {
@@ -32,21 +23,8 @@ export default {
         this.$router.push({ name: 'home' });
       });
     },
-    async fetchProfile (params) {
-      const { username } = params;
-      if (this.currentUser.username) {
-        if (this.currentUser.username === username) {
-          await this.$store.dispatch(FETCH_PROFILE);
-        } else {
-          await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
-        }
-      }
-    },
-    isCurrentUser () {
-      if (this.currentUser.username && this.profile.username) {
-        return this.currentUser.username === this.profile.username;
-      }
-      return false;
+    async fetchProfile () {
+      await this.$store.dispatch(FETCH_PROFILE);
     },
   },
 };
@@ -112,13 +90,13 @@ export default {
         </li>
         <li class="nav-item">
           <div class="dropdown">
-            <button class="dropbtn">
-              {{ currentUser.username }}
-            </button>
-            <div class="dropdown-content">
+            <button class="dropbtn user-dropdown">
               <img
                 :src="profile.image"
+                class="profile-icon"
               >
+            </button>
+            <div class="dropdown-content">
               <router-link
                 class="nav-link"
                 active-class="active"
@@ -208,10 +186,16 @@ export default {
   }
 
   .dropdown:hover .dropdown-content {
-    display: block;}
+    display: block;
+  }
 
-  img {
+  .user-dropdown {
+    background-color: transparent;
+  }
+
+  img.profile-icon {
     border-radius: 50%;
-    width: 100%;
+    width: 24px;
+    height: auto;
   }
 </style>
