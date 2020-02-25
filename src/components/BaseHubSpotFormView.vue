@@ -110,6 +110,19 @@ export default {
   <div id="view">
     <h1>{{ title }}</h1>
     <p>{{ instructions }}</p>
+    <HubSpotFormWidget
+      v-if="showHubSpotFormWidget"
+      class="widget"
+      :form-base-url="formBaseUrl"
+      :prefill="prefill"
+      @form-submitted="onFormSubmitted"
+    />
+    <p
+      v-if="formSubmitted"
+      class="message"
+    >
+      {{ successMessage }}
+    </p>
     <router-link
       v-if="formSubmitted"
       :to="{ name: routerLinkTo }"
@@ -129,21 +142,8 @@ export default {
       disabled
       title="Please fill out the form to continue."
     >
-      Next
+      Please Fill Out The Form To Continue
     </button>
-    <HubSpotFormWidget
-      v-if="showHubSpotFormWidget"
-      class="widget"
-      :form-base-url="formBaseUrl"
-      :prefill="prefill"
-      @form-submitted="onFormSubmitted"
-    />
-    <p
-      v-if="formSubmitted"
-      class="message"
-    >
-      {{ successMessage }}
-    </p>
   </div>
 </template>
 
@@ -161,4 +161,11 @@ export default {
     align-items: center
   .widget
     flex-basis: 100%
+  h1
+    color: #039
+  p
+    color: #007bff
+  button
+   min-width: 30vw
+
 </style>

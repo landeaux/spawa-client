@@ -1,17 +1,30 @@
 <script>
 import { mapGetters } from 'vuex';
-import { LOGOUT } from '@/store/actions.type';
+import {
+  LOGOUT,
+  FETCH_PROFILE,
+} from '@/store/actions.type';
 
 export default {
   name: 'RwvHeader',
   computed: {
-    ...mapGetters(['currentUser', 'isAuthenticated']),
+    ...mapGetters([
+      'currentUser',
+      'profile',
+      'isAuthenticated',
+    ]),
+  },
+  async created () {
+    await this.fetchProfile();
   },
   methods: {
     logout () {
       this.$store.dispatch(LOGOUT).then(() => {
         this.$router.push({ name: 'home' });
       });
+    },
+    async fetchProfile () {
+      await this.$store.dispatch(FETCH_PROFILE);
     },
   },
 };
@@ -77,8 +90,12 @@ export default {
         </li>
         <li class="nav-item">
           <div class="dropdown">
-            <button class="dropbtn">
-              {{ currentUser.username }}
+            <button class="dropbtn user-dropdown">
+              <img
+                :src="profile.image"
+                class="profile-icon"
+              >
+              <b-icon-chevron-down class="dropdown-arrow" />
             </button>
             <div class="dropdown-content">
               <router-link
@@ -165,7 +182,25 @@ export default {
     border-radius: 0;
   }
 
-  .dropdown-content a:hover {background-color: #ddd;}
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
 
-  .dropdown:hover .dropdown-content {display: block;}
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .user-dropdown {
+    background-color: transparent;
+  }
+
+  img.profile-icon {
+    border-radius: 50%;
+    width: 24px;
+    height: auto;
+  }
+
+  .dropdown-arrow {
+    margin-left: 5px;
+  }
 </style>

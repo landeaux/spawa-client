@@ -11,6 +11,9 @@ import DateFilter from './common/date.filter';
 import ErrorFilter from './common/error.filter';
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueYouTubeEmbed from 'vue-youtube-embed';
+import { IconsPlugin } from 'bootstrap-vue';
+
+Vue.use(IconsPlugin);
 
 Vue.use(VueFriendlyIframe);
 Vue.use(VueYouTubeEmbed, { global: true, componentId: 'YouTubePlayer' });
