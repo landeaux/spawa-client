@@ -95,6 +95,7 @@ export default {
                 :src="profile.image"
                 class="profile-icon"
               >
+              <b-icon-chevron-down class="dropdown-arrow" />
             </button>
             <div class="dropdown-content">
               <router-link
@@ -197,5 +198,9 @@ export default {
     border-radius: 50%;
     width: 24px;
     height: auto;
+  }
+
+  .dropdown-arrow {
+    margin-left: 5px;
   }
 </style>
