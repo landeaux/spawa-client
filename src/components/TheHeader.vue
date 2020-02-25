@@ -1,17 +1,52 @@
 <script>
 import { mapGetters } from 'vuex';
-import { LOGOUT } from '@/store/actions.type';
+import {
+  LOGOUT,
+  FETCH_PROFILE,
+  FETCH_PROFILE_BY_USERNAME,
+} from '@/store/actions.type';
 
 export default {
   name: 'RwvHeader',
   computed: {
-    ...mapGetters(['currentUser', 'isAuthenticated']),
+    ...mapGetters([
+      'currentUser',
+      'profile',
+      'isAuthenticated',
+    ]),
+  },
+  watch: {
+    $route (to) {
+      this.fetchProfile(to.params);
+    },
+    currentUser () {
+      this.fetchProfile(this.$route.params);
+    },
+  },
+  mounted () {
+    this.fetchProfile(this.$route.params);
   },
   methods: {
     logout () {
       this.$store.dispatch(LOGOUT).then(() => {
         this.$router.push({ name: 'home' });
       });
+    },
+    async fetchProfile (params) {
+      const { username } = params;
+      if (this.currentUser.username) {
+        if (this.currentUser.username === username) {
+          await this.$store.dispatch(FETCH_PROFILE);
+        } else {
+          await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
+        }
+      }
+    },
+    isCurrentUser () {
+      if (this.currentUser.username && this.profile.username) {
+        return this.currentUser.username === this.profile.username;
+      }
+      return false;
     },
   },
 };
@@ -81,6 +116,9 @@ export default {
               {{ currentUser.username }}
             </button>
             <div class="dropdown-content">
+              <img
+                :src="profile.image"
+              >
               <router-link
                 class="nav-link"
                 active-class="active"
@@ -165,7 +203,15 @@ export default {
     border-radius: 0;
   }
 
-  .dropdown-content a:hover {background-color: #ddd;}
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
 
-  .dropdown:hover .dropdown-content {display: block;}
+  .dropdown:hover .dropdown-content {
+    display: block;}
+
+  img {
+    border-radius: 50%;
+    width: 100%;
+  }
 </style>
