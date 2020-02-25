@@ -2,7 +2,6 @@
 import { mapGetters } from 'vuex';
 import {
   LOGOUT,
-  FETCH_PROFILE,
 } from '@/store/actions.type';
 
 export default {
@@ -10,21 +9,14 @@ export default {
   computed: {
     ...mapGetters([
       'currentUser',
-      'profile',
       'isAuthenticated',
     ]),
-  },
-  async created () {
-    await this.fetchProfile();
   },
   methods: {
     logout () {
       this.$store.dispatch(LOGOUT).then(() => {
         this.$router.push({ name: 'home' });
       });
-    },
-    async fetchProfile () {
-      await this.$store.dispatch(FETCH_PROFILE);
     },
   },
 };
@@ -91,11 +83,7 @@ export default {
         <li class="nav-item">
           <div class="dropdown">
             <button class="dropbtn user-dropdown">
-              <img
-                :src="profile.image"
-                class="profile-icon"
-              >
-              <b-icon-chevron-down class="dropdown-arrow" />
+              {{ currentUser.username }}
             </button>
             <div class="dropdown-content">
               <router-link
@@ -159,6 +147,7 @@ export default {
     border: none;
     border-radius: .25rem;
     color: #fff;
+    font-weight: bold;
 
   }
   .dropdown-content {
@@ -188,19 +177,5 @@ export default {
 
   .dropdown:hover .dropdown-content {
     display: block;
-  }
-
-  .user-dropdown {
-    background-color: transparent;
-  }
-
-  img.profile-icon {
-    border-radius: 50%;
-    width: 24px;
-    height: auto;
-  }
-
-  .dropdown-arrow {
-    margin-left: 5px;
   }
 </style>
