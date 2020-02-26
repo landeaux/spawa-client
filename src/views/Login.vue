@@ -3,7 +3,7 @@ import { mapState } from 'vuex';
 import { LOGIN } from '@/store/actions.type';
 
 export default {
-  name: 'RwvLogin',
+  name: 'Login',
   data () {
     return {
       username: null,

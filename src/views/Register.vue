@@ -3,7 +3,7 @@ import { mapState } from 'vuex';
 import { REGISTER } from '@/store/actions.type';
 
 export default {
-  name: 'RwvRegister',
+  name: 'TheRegister',
   data () {
     return {
       username: '',

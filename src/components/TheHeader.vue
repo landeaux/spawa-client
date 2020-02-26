@@ -5,7 +5,7 @@ import {
 } from '@/store/actions.type';
 
 export default {
-  name: 'RwvHeader',
+  name: 'TheHeader',
   computed: {
     ...mapGetters([
       'currentUser',
