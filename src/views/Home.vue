@@ -1,13 +1,14 @@
 <script>
 import { mapGetters } from 'vuex';
-import AdminDashboard from '@/components/AdminDashboard';
-import EvaluatorDashboard from '@/components/EvaluatorDashboard';
-import FounderDashboard from '@/components/FounderDashboard';
-import ReviewerDashboard from '@/components/ReviewerDashboard';
 
 export default {
   name: 'Home',
-  components: { EvaluatorDashboard, FounderDashboard, ReviewerDashboard, AdminDashboard },
+  components: {
+    AdminDashboard: () => import('@/components/AdminDashboard'),
+    EvaluatorDashboard: () => import('@/components/EvaluatorDashboard'),
+    FounderDashboard: () => import('@/components/FounderDashboard'),
+    ReviewerDashboard: () => import('@/components/ReviewerDashboard'),
+  },
   computed: {
     ...mapGetters(['currentUser']),
   },
