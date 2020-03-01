@@ -20,11 +20,21 @@ export default {
   },
   computed: {
     ...mapGetters(['currentUser']),
-    enableNextButton () {
-      return this.state === 'event_scheduled';
-    },
     showLoader () {
       return this.state === 'init';
+    },
+    nextButtonDisabled () {
+      return this.state !== 'event_scheduled';
+    },
+    nextButtonTitle () {
+      return this.nextButtonDisabled
+        ? 'Please select a date and time slot below'
+        : 'Click next to continue';
+    },
+    nextButtonStyle () {
+      return this.nextButtonDisabled
+        ? 'cursor: not-allowed'
+        : '';
     },
   },
   created () {
@@ -45,6 +55,11 @@ export default {
         this.state = 'widget_loaded';
       });
     },
+    onNextButtonClick () {
+      if (this.state === 'event_scheduled') {
+        this.$router.push({ name: 'home' });
+      }
+    },
   },
 };
 </script>
@@ -53,24 +68,13 @@ export default {
   <div id="view">
     <h1>Book A Pitch Date</h1>
     <p>Select from the available date and time slots below.</p>
-    <router-link
-      v-if="enableNextButton"
-      :to="{ name: 'home' }"
-    >
-      <button
-        type="button"
-        class="btn btn-primary next-button"
-      >
-        Next
-      </button>
-    </router-link>
     <button
-      v-else
       type="button"
       class="btn btn-primary next-button"
-      style="cursor: not-allowed"
-      disabled
-      title="Please select a date and time slot below"
+      :disabled="nextButtonDisabled"
+      :title="nextButtonTitle"
+      :style="nextButtonStyle"
+      @click="onNextButtonClick"
     >
       Next
     </button>
