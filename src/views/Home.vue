@@ -1,48 +1,67 @@
 <script>
 import { mapGetters } from 'vuex';
-import AdminDashboard from '@/components/AdminDashboard';
-import EvaluatorDashboard from '@/components/EvaluatorDashboard';
-import FounderDashboard from '@/components/FounderDashboard';
-import ReviewerDashboard from '@/components/ReviewerDashboard';
 
 export default {
   name: 'Home',
-  components: { EvaluatorDashboard, FounderDashboard, ReviewerDashboard, AdminDashboard },
+  components: {
+    AdminDashboard: () => import('@/components/AdminDashboard'),
+    EvaluatorDashboard: () => import('@/components/EvaluatorDashboard'),
+    FounderDashboard: () => import('@/components/FounderDashboard'),
+    ReviewerDashboard: () => import('@/components/ReviewerDashboard'),
+    Loader: () => import('vue-spinner/src/PulseLoader.vue'),
+  },
   computed: {
     ...mapGetters(['currentUser']),
+    dashboardComponent () {
+      const componentKey = this.currentUser && this.currentUser.role
+        ? this.currentUser.role
+        : 'loader';
+      // const componentKey = 'loader';
+      return {
+        admin: 'AdminDashboard',
+        evaluator: 'EvaluatorDashboard',
+        founder: 'FounderDashboard',
+        reviewer: 'ReviewerDashboard',
+        loader: 'Loader',
+      }[componentKey];
+    },
+    dashboardComponentProps () {
+      return this.currentUser && this.currentUser.role
+        ? {}
+        : {
+          color: 'blue',
+          size: '25px',
+        };
+    },
+    dashboardComponentClasses () {
+      return this.dashboardComponent === 'Loader'
+        ? 'loader'
+        : 'component';
+    },
   },
 };
 </script>
 
 <template>
   <div id="view">
-    <AdminDashboard v-if="currentUser.role === 'admin'" />
-    <EvaluatorDashboard v-else-if="currentUser.role === 'evaluator'" />
-    <ReviewerDashboard v-else-if="currentUser.role === 'reviewer'" />
-    <FounderDashboard v-else-if="currentUser.role === 'founder'" />
-    <div v-else>
-      <router-link
-        class="nav-link"
-        :to="{ name: 'login' }"
-      >
-        <button
-          type="button"
-          class="btn btn-primary"
-        >
-          Login
-        </button>
-      </router-link>
-      <router-link
-        class="nav-link"
-        :to="{ name: 'register' }"
-      >
-        <button
-          type="button"
-          class="btn btn-primary"
-        >
-          Register
-        </button>
-      </router-link>
-    </div>
+    <component
+      :is="dashboardComponent"
+      v-bind="dashboardComponentProps"
+      :class="dashboardComponentClasses"
+    />
   </div>
 </template>
+
+<style scoped lang="sass">
+@import '../assets/sass/vars'
+#view
+  .loader
+    position: relative
+    height: 100%
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+  .component
+    flex-basis: 100%
+</style>

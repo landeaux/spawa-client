@@ -11,44 +11,54 @@ export default {
   },
   data () {
     return {
-      dateAndTimeSelected: false,
-      eventScheduled: false,
-      eventTypeViewed: false,
+      state: 'init',
       prefill: {
-        name: '',
         email: '',
       },
       url: 'https://calendly.com/spawa-dev/pitch-presentation?hide_event_type_details=0',
-      userPopulated: false,
-      widgetLoaded: false,
     };
   },
   computed: {
     ...mapGetters(['currentUser']),
-  },
-  watch: {
-    currentUser () {
-      this.userPopulated = Object.entries(this.currentUser).length > 0;
-      if (this.userPopulated) {
-        this.prefill.name = this.currentUser.username;
-        this.prefill.email = this.currentUser.email;
-      }
+    showLoader () {
+      return this.state === 'init';
     },
+    nextButtonDisabled () {
+      return this.state !== 'event_scheduled';
+    },
+    nextButtonTitle () {
+      return this.nextButtonDisabled
+        ? 'Please select a date and time slot below'
+        : 'Click next to continue';
+    },
+    nextButtonStyle () {
+      return this.nextButtonDisabled
+        ? 'cursor: not-allowed'
+        : '';
+    },
+  },
+  created () {
+    this.prefill.email = this.currentUser.email;
   },
   methods: {
     dateAndTimeSelectedHandler () {
-      this.dateAndTimeSelected = true;
+      this.state = 'date_and_time_selected';
     },
     eventScheduledHandler () {
-      this.eventScheduled = true;
+      this.state = 'event_scheduled';
     },
     eventTypeViewedHandler () {
-      this.eventTypeViewed = true;
+      this.state = 'event_type_viewed';
     },
     loadHandler () {
       this.$nextTick().then(() => {
-        this.widgetLoaded = true;
+        this.state = 'widget_loaded';
       });
+    },
+    onNextButtonClick () {
+      if (this.state === 'event_scheduled') {
+        this.$router.push({ name: 'home' });
+      }
     },
   },
 };
@@ -58,36 +68,23 @@ export default {
   <div id="view">
     <h1>Book A Pitch Date</h1>
     <p>Select from the available date and time slots below.</p>
-    <router-link
-      v-if="eventScheduled"
-      :to="{ name: 'home' }"
-    >
-      <button
-        type="button"
-        class="btn btn-primary next-button"
-      >
-        Next
-      </button>
-    </router-link>
     <button
-      v-else
       type="button"
       class="btn btn-primary next-button"
-      style="cursor: not-allowed"
-      disabled
-      title="Please select a date and time slot below"
+      :disabled="nextButtonDisabled"
+      :title="nextButtonTitle"
+      :style="nextButtonStyle"
+      @click="onNextButtonClick"
     >
       Next
     </button>
     <PulseLoader
-      v-if="!userPopulated && !widgetLoaded"
+      v-if="showLoader"
       class="loader"
       color="blue"
       size="25px"
     />
     <CalendlyWidget
-      v-if="userPopulated"
-      :key="JSON.stringify(prefill)"
       class="calendly"
       :height="650"
       :prefill="prefill"
