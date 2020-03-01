@@ -20,6 +20,12 @@ export default {
   },
   computed: {
     ...mapGetters(['currentUser']),
+    enableNextButton () {
+      return this.state === 'event_scheduled';
+    },
+    showLoader () {
+      return this.state === 'init';
+    },
   },
   created () {
     this.prefill.email = this.currentUser.email;
@@ -48,7 +54,7 @@ export default {
     <h1>Book A Pitch Date</h1>
     <p>Select from the available date and time slots below.</p>
     <router-link
-      v-if="this.state === 'event_scheduled'"
+      v-if="enableNextButton"
       :to="{ name: 'home' }"
     >
       <button
@@ -69,7 +75,7 @@ export default {
       Next
     </button>
     <PulseLoader
-      v-if="this.state === 'init'"
+      v-if="showLoader"
       class="loader"
       color="blue"
       size="25px"
