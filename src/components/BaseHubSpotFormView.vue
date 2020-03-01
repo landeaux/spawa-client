@@ -69,7 +69,6 @@ export default {
     return {
       formSubmitted: false,
       prefill: {},
-      state: 'init',
       widgetLoaded: false,
     };
   },
@@ -82,25 +81,13 @@ export default {
       return this.currentUser && Object.entries(this.currentUser).length > 0;
     },
   },
-  watch: {
-    /**
-     * This watcher waits for the currentUser data to populate and once
-     * populated, sets the prefill object to the key/value pairs to pass to the
-     * widget for pre-filling form fields.
-     */
-    currentUser: {
-      deep: true,
-      handler: function () {
-        if (this.userPopulated) {
-          Object.keys(this.prefillKeyMap).forEach(key => {
-            const userProp = this.prefillKeyMap[key];
-            if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
-              this.prefill[key] = this.currentUser[userProp];
-            }
-          });
-        }
-      },
-    },
+  created () {
+    Object.keys(this.prefillKeyMap).forEach(key => {
+      const userProp = this.prefillKeyMap[key];
+      if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
+        this.prefill[key] = this.currentUser[userProp];
+      }
+    });
   },
   methods: {
     onFormSubmitted () {
@@ -171,5 +158,4 @@ export default {
     color: #007bff
   button
    min-width: 30vw
-
 </style>
