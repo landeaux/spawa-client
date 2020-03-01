@@ -11,15 +11,11 @@ export default {
   },
   data () {
     return {
-      dateAndTimeSelected: false,
-      eventScheduled: false,
-      eventTypeViewed: false,
+      state: 'init',
       prefill: {
         email: '',
       },
       url: 'https://calendly.com/spawa-dev/pitch-presentation?hide_event_type_details=0',
-      userPopulated: false,
-      widgetLoaded: false,
     };
   },
   computed: {
@@ -30,17 +26,17 @@ export default {
   },
   methods: {
     dateAndTimeSelectedHandler () {
-      this.dateAndTimeSelected = true;
+      this.state = 'date_and_time_selected';
     },
     eventScheduledHandler () {
-      this.eventScheduled = true;
+      this.state = 'event_scheduled';
     },
     eventTypeViewedHandler () {
-      this.eventTypeViewed = true;
+      this.state = 'event_type_viewed';
     },
     loadHandler () {
       this.$nextTick().then(() => {
-        this.widgetLoaded = true;
+        this.state = 'widget_loaded';
       });
     },
   },
@@ -52,7 +48,7 @@ export default {
     <h1>Book A Pitch Date</h1>
     <p>Select from the available date and time slots below.</p>
     <router-link
-      v-if="eventScheduled"
+      v-if="this.state === 'event_scheduled'"
       :to="{ name: 'home' }"
     >
       <button
@@ -73,7 +69,7 @@ export default {
       Next
     </button>
     <PulseLoader
-      v-if="!widgetLoaded"
+      v-if="this.state === 'init'"
       class="loader"
       color="blue"
       size="25px"
