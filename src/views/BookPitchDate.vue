@@ -15,7 +15,6 @@ export default {
       eventScheduled: false,
       eventTypeViewed: false,
       prefill: {
-        name: '',
         email: '',
       },
       url: 'https://calendly.com/spawa-dev/pitch-presentation?hide_event_type_details=0',
@@ -26,14 +25,8 @@ export default {
   computed: {
     ...mapGetters(['currentUser']),
   },
-  watch: {
-    currentUser () {
-      this.userPopulated = Object.entries(this.currentUser).length > 0;
-      if (this.userPopulated) {
-        this.prefill.name = this.currentUser.username;
-        this.prefill.email = this.currentUser.email;
-      }
-    },
+  created () {
+    this.prefill.email = this.currentUser.email;
   },
   methods: {
     dateAndTimeSelectedHandler () {
@@ -80,14 +73,12 @@ export default {
       Next
     </button>
     <PulseLoader
-      v-if="!userPopulated && !widgetLoaded"
+      v-if="!widgetLoaded"
       class="loader"
       color="blue"
       size="25px"
     />
     <CalendlyWidget
-      v-if="userPopulated"
-      :key="JSON.stringify(prefill)"
       class="calendly"
       :height="650"
       :prefill="prefill"
