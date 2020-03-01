@@ -70,7 +70,6 @@ export default {
       formSubmitted: false,
       prefill: {},
       state: 'init',
-      userPopulated: false,
       widgetLoaded: false,
     };
   },
@@ -79,6 +78,9 @@ export default {
     showHubSpotFormWidget () {
       return this.userPopulated && !this.formSubmitted;
     },
+    userPopulated () {
+      return this.currentUser && Object.entries(this.currentUser).length > 0;
+    },
   },
   watch: {
     /**
@@ -86,16 +88,18 @@ export default {
      * populated, sets the prefill object to the key/value pairs to pass to the
      * widget for pre-filling form fields.
      */
-    currentUser () {
-      this.userPopulated = Object.entries(this.currentUser).length > 0;
-      if (this.userPopulated) {
-        Object.keys(this.prefillKeyMap).forEach(key => {
-          const userProp = this.prefillKeyMap[key];
-          if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
-            this.prefill[key] = this.currentUser[userProp];
-          }
-        });
-      }
+    currentUser: {
+      deep: true,
+      handler: function () {
+        if (this.userPopulated) {
+          Object.keys(this.prefillKeyMap).forEach(key => {
+            const userProp = this.prefillKeyMap[key];
+            if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
+              this.prefill[key] = this.currentUser[userProp];
+            }
+          });
+        }
+      },
     },
   },
   methods: {
