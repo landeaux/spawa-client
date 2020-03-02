@@ -20,10 +20,17 @@ export default {
 
 <template>
   <div>
-    {{ businessName }}
+    <div class="icon"></div>
+    <div class="business-name">
+      {{ businessName }}
+    </div>
+    <div class="date-submitted"></div>
+    <div class="action-btns"></div>
   </div>
 </template>
 
 <style scoped lang="sass">
-
+div
+  display: flex
+  flex-direction: row
 </style>
