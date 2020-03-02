@@ -3,8 +3,7 @@
  * @displayName PitchDeckListItem.vue
  */
 export default {
-  name: 'PitchDeckListItemVue',
-  components: {},
+  name: 'PitchDeckListItem',
   props: {
     businessName: {
       type: String,
@@ -16,16 +15,29 @@ export default {
       required: true,
       default: () => new Date(),
     },
+    userHasReviewed: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data: () => ({}),
-  computed: {},
+  computed: {
+    icon () {
+      return this.userHasReviewed
+        ? 'check-circle'
+        : 'alert-circle';
+    },
+  },
   methods: {},
 };
 </script>
 
 <template>
   <div>
-    <div class="icon"></div>
+    <div class="icon">
+      <b-icon :icon="icon" />
+    </div>
     <div class="business-name">
       {{ businessName }}
     </div>
