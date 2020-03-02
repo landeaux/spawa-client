@@ -1,8 +1,12 @@
-// import { shallowMount } from '@vue/test-utils';
-// import PitchDeckListItem from '@/components/PitchDeckListItem';
+import { shallowMount } from '@vue/test-utils';
+import PitchDeckListItem from '@/components/PitchDeckListItem';
 
 describe('PitchDeckListItem.vue', function () {
-  it('sanity check', function () {
-    expect(true).toBe(false);
+  it('should display the business name', function () {
+    const businessName = 'Krispy Kreme';
+    const wrapper = shallowMount(PitchDeckListItem, {
+      propsData: { businessName },
+    });
+    expect(wrapper.text()).toContain(businessName);
   });
 });

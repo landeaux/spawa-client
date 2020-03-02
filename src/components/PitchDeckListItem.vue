@@ -5,7 +5,13 @@
 export default {
   name: 'PitchDeckListItemVue',
   components: {},
-  props: {},
+  props: {
+    businessName: {
+      type: String,
+      required: true,
+      default: '',
+    },
+  },
   data: () => ({}),
   computed: {},
   methods: {},
@@ -14,6 +20,7 @@ export default {
 
 <template>
   <div>
+    {{ businessName }}
   </div>
 </template>
 
