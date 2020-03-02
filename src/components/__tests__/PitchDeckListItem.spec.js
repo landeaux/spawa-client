@@ -68,4 +68,26 @@ describe('PitchDeckListItem.vue', function () {
     const icon = wrapper.find(BIcon);
     expect(icon.attributes().icon).toBe('alert-circle');
   });
+
+  it('should have a "Review" button for users to click to review the item', () => {
+    const item = {
+      businessName: '',
+      dateSubmitted: new Date(),
+      userHasReviewed: false,
+    };
+
+    const wrapper = shallowMount(PitchDeckListItem, {
+      propsData: { ...item },
+      localVue,
+    });
+
+    const filteredButtonArray = wrapper
+      .findAll('button')
+      .filter((w) => w.text().toLowerCase() === 'review');
+
+    expect(filteredButtonArray.length).toBe(1);
+
+    const button = filteredButtonArray[0];
+    button.trigger('click');
+  });
 });
