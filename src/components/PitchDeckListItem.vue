@@ -11,6 +11,11 @@ export default {
       required: true,
       default: '',
     },
+    dateSubmitted: {
+      type: Date,
+      required: true,
+      default: () => new Date(),
+    },
   },
   data: () => ({}),
   computed: {},
@@ -24,7 +29,9 @@ export default {
     <div class="business-name">
       {{ businessName }}
     </div>
-    <div class="date-submitted"></div>
+    <div class="date-submitted">
+      {{ dateSubmitted.toDateString() }}
+    </div>
     <div class="action-btns"></div>
   </div>
 </template>

@@ -2,11 +2,20 @@ import { shallowMount } from '@vue/test-utils';
 import PitchDeckListItem from '@/components/PitchDeckListItem';
 
 describe('PitchDeckListItem.vue', function () {
-  it('should display the business name', function () {
-    const businessName = 'Krispy Kreme';
-    const wrapper = shallowMount(PitchDeckListItem, {
-      propsData: { businessName },
-    });
-    expect(wrapper.text()).toContain(businessName);
+  const item = {
+    businessName: 'Krispy Kreme',
+    dateSubmitted: new Date(),
+  };
+
+  const wrapper = shallowMount(PitchDeckListItem, {
+    propsData: { ...item },
+  });
+
+  it('should display the business name', () => {
+    expect(wrapper.text()).toContain(item.businessName);
+  });
+
+  it('should display the date submitted', () => {
+    expect(wrapper.text()).toContain(item.dateSubmitted.toDateString());
   });
 });
