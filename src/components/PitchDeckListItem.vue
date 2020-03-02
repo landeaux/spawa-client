@@ -44,7 +44,11 @@ export default {
     <div class="date-submitted">
       {{ dateSubmitted.toDateString() }}
     </div>
-    <div class="action-btns"></div>
+    <div class="action-btns">
+      <button class="btn btn-primary">
+        Review
+      </button>
+    </div>
   </div>
 </template>
 
