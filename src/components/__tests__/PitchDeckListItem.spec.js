@@ -69,7 +69,7 @@ describe('PitchDeckListItem.vue', function () {
     expect(icon.attributes().icon).toBe('alert-circle');
   });
 
-  it('should have a "Review" button for users to click to review the item', () => {
+  it('should have a "Review" button that emits review-button-clicked when clicked', () => {
     const item = {
       businessName: '',
       dateSubmitted: new Date(),
@@ -85,9 +85,10 @@ describe('PitchDeckListItem.vue', function () {
       .findAll('button')
       .filter((w) => w.text().toLowerCase() === 'review');
 
-    expect(filteredButtonArray.length).toBe(1);
+    expect(filteredButtonArray).toHaveLength(1);
 
-    const button = filteredButtonArray[0];
+    const button = filteredButtonArray.at(0);
     button.trigger('click');
+    expect(wrapper.emitted('review-button-clicked')).toHaveLength(1);
   });
 });
