@@ -88,8 +88,6 @@ export default {
   align-items: center
   width: 100%
   padding: 5px
-  //*
-    border: 1px dashed blue
   .icon
     flex-basis: 34px
     flex-shrink: 0
@@ -97,13 +95,22 @@ export default {
     display: flex
     flex-direction: row
     flex-grow: 1
-    flex-basis: 100%
-    > *
-      flex-grow: 1
-      text-align: left
+    align-items: center
+    justify-content: stretch
+    .business-name
       padding-left: 10px
-    > .date-submitted, .review-count
+      flex-basis: 50%
+      text-align: left
+      min-width: 0
+      text-overflow: ellipsis
+      white-space: nowrap
+      overflow: hidden
+    .date-submitted, .review-count
       font-size: 0.8rem
+    .date-submitted
+      flex-basis: 35%
+    .review-count
+      flex-basis: 15%
   .action-btns
     flex-basis: 50px
     flex-shrink: 0

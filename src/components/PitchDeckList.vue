@@ -20,7 +20,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="list-group">
     <PitchDeckListItem
       v-for="(item, index) in items"
       :key="index"
@@ -28,10 +28,14 @@ export default {
       :date-submitted="item.dateSubmitted"
       :review-count="item.reviewCount"
       :user-has-reviewed="item.userHasReviewed"
+      class="list-group-item"
     />
   </div>
 </template>
 
 <style scoped lang="sass">
-
+.list-group
+  .list-group-item
+    &:hover
+      background-color: #e4f7ff
 </style>
