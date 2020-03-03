@@ -12,6 +12,7 @@ describe('PitchDeckListItem.vue', function () {
       businessName: 'Krispy Kreme',
       dateSubmitted: new Date(),
       userHasReviewed: true,
+      reviewCount: 0,
     };
 
     const wrapper = shallowMount(PitchDeckListItem, {
@@ -27,6 +28,7 @@ describe('PitchDeckListItem.vue', function () {
       businessName: '',
       dateSubmitted: new Date(),
       userHasReviewed: true,
+      reviewCount: 0,
     };
 
     const wrapper = shallowMount(PitchDeckListItem, {
@@ -42,6 +44,7 @@ describe('PitchDeckListItem.vue', function () {
       businessName: '',
       dateSubmitted: new Date(),
       userHasReviewed: true,
+      reviewCount: 0,
     };
 
     const wrapper = shallowMount(PitchDeckListItem, {
@@ -58,6 +61,7 @@ describe('PitchDeckListItem.vue', function () {
       businessName: '',
       dateSubmitted: new Date(),
       userHasReviewed: false,
+      reviewCount: 0,
     };
 
     const wrapper = shallowMount(PitchDeckListItem, {
@@ -74,6 +78,7 @@ describe('PitchDeckListItem.vue', function () {
       businessName: '',
       dateSubmitted: new Date(),
       userHasReviewed: false,
+      reviewCount: 0,
     };
 
     const wrapper = shallowMount(PitchDeckListItem, {
@@ -90,5 +95,21 @@ describe('PitchDeckListItem.vue', function () {
     const button = filteredButtonArray.at(0);
     button.trigger('click');
     expect(wrapper.emitted('review-button-clicked')).toHaveLength(1);
+  });
+
+  it('should display the number of reviews', function () {
+    const item = {
+      businessName: '',
+      dateSubmitted: new Date(),
+      userHasReviewed: false,
+      reviewCount: 4,
+    };
+
+    const wrapper = shallowMount(PitchDeckListItem, {
+      propsData: { ...item },
+      localVue,
+    });
+
+    expect(wrapper.find('.review-count').text()).toContain(item.reviewCount);
   });
 });
