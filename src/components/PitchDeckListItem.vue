@@ -17,8 +17,16 @@ export default {
     },
     userHasReviewed: {
       type: Boolean,
-      required: false,
+      required: true,
       default: false,
+    },
+    reviewCount: {
+      type: Number,
+      required: true,
+      default: 0,
+      validator: function (value) {
+        return Number.isInteger(value) && value >= 0;
+      },
     },
   },
   data: () => ({}),
@@ -58,6 +66,9 @@ export default {
       <div class="date-submitted">
         {{ dateSubmitted.toDateString() }}
       </div>
+      <div class="review-count">
+        {{ reviewCount }} reviews
+      </div>
     </div>
     <div class="action-btns">
       <button
@@ -91,7 +102,7 @@ export default {
       flex-grow: 1
       text-align: left
       padding-left: 10px
-    > .date-submitted
+    > .date-submitted, .review-count
       font-size: 0.8rem
   .action-btns
     flex-basis: 50px
