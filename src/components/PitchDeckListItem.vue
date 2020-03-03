@@ -29,7 +29,11 @@ export default {
         : 'alert-circle';
     },
   },
-  methods: {},
+  methods: {
+    onReviewButtonClick () {
+      this.$emit('review-button-clicked');
+    },
+  },
 };
 </script>
 
@@ -45,7 +49,10 @@ export default {
       {{ dateSubmitted.toDateString() }}
     </div>
     <div class="action-btns">
-      <button class="btn btn-primary">
+      <button
+        class="btn btn-primary"
+        @click="onReviewButtonClick"
+      >
         Review
       </button>
     </div>
