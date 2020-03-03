@@ -1,6 +1,6 @@
 <script>
 /**
- * @displayName PitchDeckListItem.vue
+ * @displayName PitchDeckListItem
  */
 export default {
   name: 'PitchDeckListItem',
