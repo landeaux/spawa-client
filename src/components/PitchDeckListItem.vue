@@ -28,6 +28,11 @@ export default {
         ? 'check-circle'
         : 'alert-circle';
     },
+    iconVariant () {
+      return this.userHasReviewed
+        ? 'success'
+        : 'warning';
+    },
   },
   methods: {
     onReviewButtonClick () {
@@ -38,15 +43,21 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="item-wrapper">
     <div class="icon">
-      <b-icon :icon="icon" />
+      <b-icon
+        :icon="icon"
+        :font-scale="2"
+        :variant="iconVariant"
+      />
     </div>
-    <div class="business-name">
-      {{ businessName }}
-    </div>
-    <div class="date-submitted">
-      {{ dateSubmitted.toDateString() }}
+    <div class="info">
+      <div class="business-name">
+        {{ businessName }}
+      </div>
+      <div class="date-submitted">
+        {{ dateSubmitted.toDateString() }}
+      </div>
     </div>
     <div class="action-btns">
       <button
@@ -60,7 +71,29 @@ export default {
 </template>
 
 <style scoped lang="sass">
-div
+.item-wrapper
   display: flex
   flex-direction: row
+  align-items: center
+  width: 100%
+  padding: 5px
+  //*
+    border: 1px dashed blue
+  .icon
+    flex-basis: 34px
+    flex-shrink: 0
+  .info
+    display: flex
+    flex-direction: row
+    flex-grow: 1
+    flex-basis: 100%
+    > *
+      flex-grow: 1
+      text-align: left
+      padding-left: 10px
+    > .date-submitted
+      font-size: 0.8rem
+  .action-btns
+    flex-basis: 50px
+    flex-shrink: 0
 </style>
