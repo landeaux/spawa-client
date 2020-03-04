@@ -12,10 +12,10 @@ export default {
       required: false,
       type: String,
     },
-    num: {
-      default: 0,
+    info: {
+      default: '',
       required: false,
-      type: Number,
+      type: String,
     },
   },
 };
@@ -26,7 +26,7 @@ export default {
     type="button"
     class="big-button btn btn-primary"
   >
-    <b>{{ title }}</b><br>{{ subtitle }} {{ num }}
+    <b>{{ title }}</b><br>{{ subtitle }} {{ info }}
   </button>
 </template>
 

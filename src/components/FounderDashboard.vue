@@ -5,6 +5,9 @@ import BigButtonComponent from '@/components/BigButtonComponent';
 export default {
   name: 'FounderDashboard',
   components: { BigButtonComponent },
+  data: () => ({
+    videoId: 'jwLZVMI3q70',
+  }),
   computed: {
     ...mapGetters(['currentUser']),
   },
@@ -20,10 +23,13 @@ export default {
     <div class="main-flex">
       <div class="column">
         <div class="stat-display">
-          Status Of My Pitch Deck:<br>
-          <div class="status">
+          Status Of My Pitch Deck:
+          <b-badge
+            variant="light"
+            class="status"
+          >
             APPROVED
-          </div>
+          </b-badge>
         </div>
         <h2>What Should I Do Now?</h2>
         <div class="instruct-text">
@@ -40,7 +46,7 @@ export default {
         <BigButtonComponent
           title="See My Feedback"
           subtitle="Total Reviews: "
-          :num="10"
+          info="10"
           class="right-flex"
         />
         <button
@@ -58,14 +64,15 @@ export default {
         </button>
         <b-modal
           id="vid-model"
+          size="lg"
+          centered
           title="Pitch Process Video"
         >
-          <iframe
-            width="100%"
-            height="350"
-            src="https://www.youtube.com/embed/jwLZVMI3q70"
-          >
-          </iframe>
+          <YouTubePlayer
+            :video-id="videoId"
+            player-width="100%"
+            class="text-center"
+          />
         </b-modal>
       </div>
     </div>
@@ -122,7 +129,7 @@ export default {
     margin-top: 10px;
   }
   .small-btn {
-    height: 3rem;
+    height: 4rem;
     border-radius: 8px;
   }
   .btn {
@@ -133,12 +140,16 @@ export default {
     margin-bottom: 5%;
     width: 100%;
     border-radius: 8px;
-    background: #007bff;
-    cursor: none;
+    background: rgba(40, 216, 255, 0.39);
+    cursor: default;
     padding: 5px;
-    color: white;
+    color: #039;
+    text-align: left;
+    font-size: 20px;
   }
   .status{
     font-weight: bold;
+    width: 100%;
+    color: #039;
   }
 </style>
