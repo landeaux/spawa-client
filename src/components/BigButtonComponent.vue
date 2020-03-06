@@ -37,4 +37,5 @@ export default {
     height: 15rem;
     border-radius: 16px;
   }
+
 </style>
