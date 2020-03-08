@@ -8,8 +8,8 @@ export default {
         username: '',
         password: '',
         active: [],
-        role: null,
-        state: null,
+        role: '',
+        state: '',
       },
       roles: [{ text: 'Select One', value: null }, 'Founder', 'Admin', 'Reviewer'],
       states: [{ text: 'Select One', value: null },
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onSubmit (evt) {
-      if (this.form.role !== 'Founder') { this.form.state = null; }
+      if (this.form.role !== 'Founder') { this.form.state = ''; }
       evt.preventDefault();
       alert(JSON.stringify(this.form));
     },
@@ -37,8 +37,8 @@ export default {
       this.form.username = '';
       this.form.password = '';
       this.form.active = [];
-      this.form.role = null;
-      this.form.state = null;
+      this.form.role = '';
+      this.form.state = '';
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {

@@ -18,13 +18,24 @@ export default {
       type: String,
     },
   },
+  computed: {
+    getModifyModalId () {
+      return 'modify' + this.username;
+    },
+    getSuspendModalId () {
+      return 'suspend' + this.username;
+    },
+    getDeleteModalId () {
+      return 'delete' + this.username;
+    },
+  },
 };
 </script>
 
 <template>
   <div class="main-box">
     <b-icon
-      v-if="active === 'true'"
+      v-if="active"
       icon="check-circle"
       variant="success"
       class="row-flex list-icon"
@@ -45,17 +56,30 @@ export default {
       text="Actions"
       class="row-flex"
     >
-      <b-dropdown-item class="inside-drop">
+      <b-dropdown-item
+        v-b-modal="getModifyModalId"
+        class="inside-drop"
+      >
         Modify
       </b-dropdown-item>
+      <b-modal
+        :id="getModifyModalId"
+        size="lg"
+        centered
+        title="Modify User"
+      >
+        <p class="mod-text">
+          Are you sure you want to modify {{ username }}?
+        </p>
+      </b-modal>
       <b-dropdown-item
-        v-b-modal.sus-model
+        v-b-modal="getSuspendModalId"
         class="inside-drop"
       >
         Suspend
       </b-dropdown-item>
       <b-modal
-        id="sus-model"
+        :id="getSuspendModalId"
         size="lg"
         centered
         title="Suspend User"
@@ -65,13 +89,13 @@ export default {
         </p>
       </b-modal>
       <b-dropdown-item
-        v-b-modal.del-model
+        v-b-modal="getDeleteModalId"
         class="inside-drop"
       >
         Delete
       </b-dropdown-item>
       <b-modal
-        id="del-model"
+        :id="getDeleteModalId"
         size="lg"
         centered
         title="Delete User"

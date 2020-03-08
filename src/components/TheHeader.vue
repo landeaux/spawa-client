@@ -18,6 +18,9 @@ export default {
         this.$router.push({ name: 'login' });
       });
     },
+    onPitchDeckListButtonClick () {
+      this.$emit('pitch-list-btn-clicked');
+    },
   },
 };
 </script>

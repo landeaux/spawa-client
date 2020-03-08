@@ -6,14 +6,14 @@ export default {
     BigButtonComponent,
   },
   methods: {
-    emitPList () {
-      this.$emit('pitch-list');
+    onPitchDeckListButtonClick () {
+      this.$emit('pitch-list-btn-clicked');
     },
-    emitUList () {
-      this.$emit('user-list');
+    onUserListButtonClick () {
+      this.$emit('user-list-btn-clicked');
     },
-    emitUCreate () {
-      this.$emit('create-user');
+    onCreateUserButtonClick () {
+      this.$emit('create-user-btn-clicked');
     },
   },
 };
@@ -24,17 +24,17 @@ export default {
     <BigButtonComponent
       title="Pitch Deck List"
       class="btn-flex"
-      @click.native="emitPList"
+      @click.native="onPitchDeckListButtonClick"
     />
     <BigButtonComponent
       title="User List"
       class="btn-flex"
-      @click.native="emitUList"
+      @click.native="onUserListButtonClick"
     />
     <BigButtonComponent
       title="Create User"
       class="btn-flex"
-      @click.native="emitUCreate"
+      @click.native="onCreateUserButtonClick"
     />
   </div>
 </template>

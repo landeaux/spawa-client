@@ -98,9 +98,9 @@ export default {
     </b-breadcrumb>
     <component
       :is="viewComponent"
-      @pitch-list="onPListBtnClick"
-      @user-list="onUListBtnClick"
-      @create-user="onUCreateBtnClick"
+      @pitch-list-btn-clicked="onPListBtnClick"
+      @user-list-btn-clicked="onUListBtnClick"
+      @create-user-btn-clicked="onUCreateBtnClick"
     />
   </div>
 </template>
