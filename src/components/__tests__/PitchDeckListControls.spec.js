@@ -19,4 +19,27 @@ describe('PitchDeckList.vue', () => {
       })).toHaveLength(1);
     });
   });
+
+  // it('should render an option for each option in sortOptions', () => {
+  //   expect(true).toBe(false);
+  // });
+
+  // it('should render an option for each option in filterOptions', () => {
+  //   expect(true).toBe(false);
+  // });
+
+  it('should render the total number of pitch decks', () => {
+    const pitchDeckCount = 100;
+    const wrapper = shallowMount(PitchDeckListControls, {
+      propsData: {
+        pitchDeckCount,
+      },
+      localVue,
+    });
+    expect(wrapper.find('.pitch-deck-count').text()).toContain(pitchDeckCount);
+  });
+
+  // it('should render the total number of unreviewed pitch decks', () => {
+  //   expect(true).toBe(false);
+  // });
 });
