@@ -39,7 +39,14 @@ describe('PitchDeckList.vue', () => {
     expect(wrapper.find('.pitch-deck-count').text()).toContain(pitchDeckCount);
   });
 
-  // it('should render the total number of unreviewed pitch decks', () => {
-  //   expect(true).toBe(false);
-  // });
+  it('should render the total number of unreviewed pitch decks', () => {
+    const unreviewedCount = 7;
+    const wrapper = shallowMount(PitchDeckListControls, {
+      propsData: {
+        unreviewedCount,
+      },
+      localVue,
+    });
+    expect(wrapper.find('.unreviewed-count').text()).toContain(unreviewedCount);
+  });
 });
