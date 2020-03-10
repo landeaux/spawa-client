@@ -64,7 +64,7 @@ export default {
         {{ businessName }}
       </div>
       <div class="date-submitted">
-        {{ dateSubmitted.toDateString() }}
+        <strong>Submitted</strong> {{ dateSubmitted.toDateString() }}
       </div>
       <div class="review-count">
         {{ reviewCount }} reviews
