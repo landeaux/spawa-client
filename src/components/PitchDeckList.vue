@@ -24,7 +24,9 @@ export default {
 <template>
   <div class="list-container">
     <div>
-      <PitchDeckListControls />
+      <PitchDeckListControls
+        :pitch-deck-count="items.length"
+      />
     </div>
     <div class="list-group">
       <PitchDeckListItem
