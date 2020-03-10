@@ -17,27 +17,33 @@ export default {
 
 <template>
   <div class="controls-container border">
-    <div class="pitch-deck-count">
-      {{ pitchDeckCount }} Total Pitch Decks
+    <div class="info-wrapper">
+      <div class="pitch-deck-count">
+        {{ pitchDeckCount }} Total Pitch Decks
+      </div>
+      <div class="unreviewed-count">
+        {{ pitchDeckCount }} Unreviewed
+      </div>
     </div>
-    <div class="filter-wrapper">
-      <b-dropdown
-        id="dropdown-filter"
-        text="Filter By"
-        class="m-md-2"
-      >
-        <b-dropdown-item>First Filter</b-dropdown-item>
-      </b-dropdown>
-    </div>
-
-    <div class="sort-wrapper">
-      <b-dropdown
-        id="dropdown-sort"
-        text="Sort By"
-        class="m-md-2"
-      >
-        <b-dropdown-item>First Sort</b-dropdown-item>
-      </b-dropdown>
+    <div class="dropdown-group">
+      <div class="filter-wrapper">
+        <b-dropdown
+          id="dropdown-filter"
+          text="Filter By"
+          class="m-md-2"
+        >
+          <b-dropdown-item>First Filter</b-dropdown-item>
+        </b-dropdown>
+      </div>
+      <div class="sort-wrapper">
+        <b-dropdown
+          id="dropdown-sort"
+          text="Sort By"
+          class="m-md-2"
+        >
+          <b-dropdown-item>First Sort</b-dropdown-item>
+        </b-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -49,4 +55,14 @@ export default {
   flex-direction: row
   justify-content: space-between
   background-color: #e4f7ff
+  .info-wrapper
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
+    padding-left: 7px
+  .dropdown-group
+    display: flex
+    align-items: center
+    justify-content: center
 </style>
