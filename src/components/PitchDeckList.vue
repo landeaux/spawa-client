@@ -26,6 +26,7 @@ export default {
     <div>
       <PitchDeckListControls
         :pitch-deck-count="items.length"
+        :unreviewed-count="1"
       />
     </div>
     <div class="list-group">
