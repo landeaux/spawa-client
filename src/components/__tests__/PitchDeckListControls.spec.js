@@ -13,5 +13,10 @@ describe('PitchDeckList.vue', () => {
     });
     const dropdowns = wrapper.findAll(BDropdown);
     expect(dropdowns).toHaveLength(2);
+    ['filter', 'sort'].forEach((label) => {
+      expect(dropdowns.filter((d) => {
+        return d.props().text.toLowerCase().includes(label);
+      })).toHaveLength(1);
+    });
   });
 });
