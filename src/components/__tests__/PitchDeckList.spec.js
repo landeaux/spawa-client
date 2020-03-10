@@ -9,7 +9,6 @@ localVue.component('b-icon', BIcon);
 
 describe('PitchDeckList.vue', () => {
   it('should render an item with data for each item in items', () => {
-    debugger;
     const items = [
       {
         businessName: 'Burger King',
