@@ -69,8 +69,6 @@ export default {
     return {
       formSubmitted: false,
       prefill: {},
-      state: 'init',
-      userPopulated: false,
       widgetLoaded: false,
     };
   },
@@ -79,24 +77,17 @@ export default {
     showHubSpotFormWidget () {
       return this.userPopulated && !this.formSubmitted;
     },
-  },
-  watch: {
-    /**
-     * This watcher waits for the currentUser data to populate and once
-     * populated, sets the prefill object to the key/value pairs to pass to the
-     * widget for pre-filling form fields.
-     */
-    currentUser () {
-      this.userPopulated = Object.entries(this.currentUser).length > 0;
-      if (this.userPopulated) {
-        Object.keys(this.prefillKeyMap).forEach(key => {
-          const userProp = this.prefillKeyMap[key];
-          if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
-            this.prefill[key] = this.currentUser[userProp];
-          }
-        });
-      }
+    userPopulated () {
+      return this.currentUser && Object.entries(this.currentUser).length > 0;
     },
+  },
+  created () {
+    Object.keys(this.prefillKeyMap).forEach(key => {
+      const userProp = this.prefillKeyMap[key];
+      if (Object.prototype.hasOwnProperty.call(this.currentUser, userProp)) {
+        this.prefill[key] = this.currentUser[userProp];
+      }
+    });
   },
   methods: {
     onFormSubmitted () {
@@ -110,6 +101,19 @@ export default {
   <div id="view">
     <h1>{{ title }}</h1>
     <p>{{ instructions }}</p>
+    <HubSpotFormWidget
+      v-if="showHubSpotFormWidget"
+      class="widget"
+      :form-base-url="formBaseUrl"
+      :prefill="prefill"
+      @form-submitted="onFormSubmitted"
+    />
+    <p
+      v-if="formSubmitted"
+      class="message"
+    >
+      {{ successMessage }}
+    </p>
     <router-link
       v-if="formSubmitted"
       :to="{ name: routerLinkTo }"
@@ -129,21 +133,8 @@ export default {
       disabled
       title="Please fill out the form to continue."
     >
-      Next
+      Please Fill Out The Form To Continue
     </button>
-    <HubSpotFormWidget
-      v-if="showHubSpotFormWidget"
-      class="widget"
-      :form-base-url="formBaseUrl"
-      :prefill="prefill"
-      @form-submitted="onFormSubmitted"
-    />
-    <p
-      v-if="formSubmitted"
-      class="message"
-    >
-      {{ successMessage }}
-    </p>
   </div>
 </template>
 
@@ -161,4 +152,10 @@ export default {
     align-items: center
   .widget
     flex-basis: 100%
+  h1
+    color: #039
+  p
+    color: #007bff
+  button
+   min-width: 30vw
 </style>

@@ -11,6 +11,9 @@ import DateFilter from './common/date.filter';
 import ErrorFilter from './common/error.filter';
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueYouTubeEmbed from 'vue-youtube-embed';
+import { IconsPlugin } from 'bootstrap-vue';
+
+Vue.use(IconsPlugin);
 
 Vue.use(VueFriendlyIframe);
 Vue.use(VueYouTubeEmbed, { global: true, componentId: 'YouTubePlayer' });
@@ -22,9 +25,14 @@ Vue.filter('error', ErrorFilter);
 ApiService.init();
 
 // Ensure we checked auth before each page load.
-router.beforeEach((to, from, next) =>
-  Promise.all([store.dispatch(CHECK_AUTH)]).then(next)
-);
+router.beforeEach(async (to, from, next) => {
+  await Promise.all([store.dispatch(CHECK_AUTH)]);
+  if (store.getters.isAuthenticated || to.name === 'login' || to.name === 'register') {
+    next();
+  } else {
+    next({ name: 'login' });
+  }
+});
 
 new Vue({
   router,

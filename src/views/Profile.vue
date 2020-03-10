@@ -6,7 +6,7 @@ import {
 } from '@/store/actions.type';
 
 export default {
-  name: 'RwvProfile',
+  name: 'TheProfile',
   computed: {
     ...mapGetters([
       'currentUser',

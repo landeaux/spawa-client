@@ -1,17 +1,25 @@
 <script>
 import { mapGetters } from 'vuex';
-import { LOGOUT } from '@/store/actions.type';
+import {
+  LOGOUT,
+} from '@/store/actions.type';
 
 export default {
-  name: 'RwvHeader',
+  name: 'TheHeader',
   computed: {
-    ...mapGetters(['currentUser', 'isAuthenticated']),
+    ...mapGetters([
+      'currentUser',
+      'isAuthenticated',
+    ]),
   },
   methods: {
     logout () {
       this.$store.dispatch(LOGOUT).then(() => {
-        this.$router.push({ name: 'home' });
+        this.$router.push({ name: 'login' });
       });
+    },
+    onPitchDeckListButtonClick () {
+      this.$emit('pitch-list-btn-clicked');
     },
   },
 };
@@ -77,7 +85,7 @@ export default {
         </li>
         <li class="nav-item">
           <div class="dropdown">
-            <button class="dropbtn">
+            <button class="dropbtn user-dropdown">
               {{ currentUser.username }}
             </button>
             <div class="dropdown-content">
@@ -142,6 +150,7 @@ export default {
     border: none;
     border-radius: .25rem;
     color: #fff;
+    font-weight: bold;
 
   }
   .dropdown-content {
@@ -165,7 +174,11 @@ export default {
     border-radius: 0;
   }
 
-  .dropdown-content a:hover {background-color: #ddd;}
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
 
-  .dropdown:hover .dropdown-content {display: block;}
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 </style>

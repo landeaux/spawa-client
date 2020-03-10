@@ -80,6 +80,8 @@ export default {
 
 <template>
   <div id="view">
+    <h1>StartUpNV Pitch Video</h1>
+    <p>Please watch the video below.</p>
     <PulseLoader
       v-if="showLoader"
       class="loader"
@@ -124,4 +126,9 @@ export default {
     opacity: 0
   .btn
     margin: 10px
+    min-width: 30vw
+  h1
+    color: #039
+  p
+    color: #007bff
 </style>
