@@ -36,5 +36,8 @@ export default {
     width: 15rem;
     height: 15rem;
     border-radius: 16px;
+    -webkit-box-shadow: 7px 7px 16px -8px rgba(0,0,0,0.93);
+    -moz-box-shadow: 7px 7px 16px -8px rgba(0,0,0,0.93);
+    box-shadow: 7px 7px 16px -8px rgba(0,0,0,0.93);
   }
 </style>

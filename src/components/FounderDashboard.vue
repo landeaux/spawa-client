@@ -141,7 +141,6 @@ export default {
     width: 100%;
     border-radius: 8px;
     background: rgba(40, 216, 255, 0.39);
-    cursor: default;
     padding: 5px;
     color: #039;
     text-align: left;
