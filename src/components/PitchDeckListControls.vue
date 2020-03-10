@@ -11,6 +11,12 @@ export default {
       type: Number,
       validator: Number.isInteger,
     },
+    unreviewedCount: {
+      default: 0,
+      required: false,
+      type: Number,
+      validator: Number.isInteger,
+    },
   },
 };
 </script>
@@ -22,7 +28,7 @@ export default {
         {{ pitchDeckCount }} Total Pitch Decks
       </div>
       <div class="unreviewed-count">
-        {{ pitchDeckCount }} Unreviewed
+        {{ unreviewedCount }} Unreviewed
       </div>
     </div>
     <div class="dropdown-group">
