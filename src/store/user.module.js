@@ -27,7 +27,14 @@ const actions = {
     }
   },
   async [FETCH_USERS] (context) {
-    console.log('FETCH_USERS dispatched!');
+    try {
+      const { data } = await ApiService.get('users');
+      return data;
+    } catch ({ response }) {
+      const { errors } = response.data;
+      context.commit(SET_ERROR, errors);
+      return response.data;
+    }
   },
 };
 
