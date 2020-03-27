@@ -7,11 +7,11 @@ import {
 } from '@/store/mutations.type';
 
 const state = {
-
+  errors: null,
 };
 
 const getters = {
-
+  errors: (state) => state.errors,
 };
 
 const actions = {
@@ -20,13 +20,17 @@ const actions = {
       const { data } = await ApiService.post('user', { user });
       return data;
     } catch ({ response }) {
-      context.commit(SET_ERROR, response.data.errors);
+      const { errors } = response.data;
+      context.commit(SET_ERROR, errors);
+      return response.data;
     }
   },
 };
 
 const mutations = {
-
+  [SET_ERROR] (state, error) {
+    state.errors = error;
+  },
 };
 
 export default {
