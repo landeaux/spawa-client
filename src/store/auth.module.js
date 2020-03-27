@@ -7,7 +7,11 @@ import {
   CHECK_AUTH,
   UPDATE_USER,
 } from './actions.type';
-import { SET_AUTH, PURGE_AUTH, SET_ERROR } from './mutations.type';
+import {
+  SET_AUTH,
+  PURGE_AUTH,
+  SET_ERROR,
+} from './mutations.type';
 
 const state = {
   errors: null,
