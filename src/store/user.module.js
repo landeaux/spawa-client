@@ -1,6 +1,7 @@
 import ApiService from '@/common/api.service';
 import {
   CREATE_USER,
+  FETCH_USERS,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -24,6 +25,9 @@ const actions = {
       context.commit(SET_ERROR, errors);
       return response.data;
     }
+  },
+  async [FETCH_USERS] (context) {
+    console.log('FETCH_USERS dispatched!');
   },
 };
 
