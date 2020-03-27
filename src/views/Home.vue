@@ -16,7 +16,6 @@ export default {
       const componentKey = this.currentUser && this.currentUser.role
         ? this.currentUser.role
         : 'loader';
-      // const componentKey = 'loader';
       return {
         admin: 'AdminDashboard',
         evaluator: 'EvaluatorDashboard',
