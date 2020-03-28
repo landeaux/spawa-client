@@ -3,6 +3,7 @@ import {
   CREATE_USER,
   FETCH_USERS,
   SUSPEND_USER,
+  ACTIVATE_USER,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -40,6 +41,16 @@ const actions = {
   async [SUSPEND_USER] (context, id) {
     try {
       const { data } = await ApiService.update('user/suspend', id);
+      return data;
+    } catch ({ response }) {
+      const { errors } = response.data;
+      context.commit(SET_ERROR, errors);
+      return response.data;
+    }
+  },
+  async [ACTIVATE_USER] (context, id) {
+    try {
+      const { data } = await ApiService.update('user/activate', id);
       return data;
     } catch ({ response }) {
       const { errors } = response.data;
