@@ -9,3 +9,4 @@ export const CREATE_USER = 'createUser';
 export const FETCH_USERS = 'fetchUsers';
 export const SUSPEND_USER = 'suspendUser';
 export const ACTIVATE_USER = 'activateUser';
+export const DELETE_USER = 'deleteUser';
