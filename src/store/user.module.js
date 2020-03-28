@@ -4,6 +4,7 @@ import {
   FETCH_USERS,
   SUSPEND_USER,
   ACTIVATE_USER,
+  DELETE_USER,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -56,6 +57,14 @@ const actions = {
       const { errors } = response.data;
       context.commit(SET_ERROR, errors);
       return response.data;
+    }
+  },
+  async [DELETE_USER] (context, id) {
+    try {
+      return await ApiService.delete('user', id);
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      return error;
     }
   },
 };
