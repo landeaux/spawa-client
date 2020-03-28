@@ -8,3 +8,4 @@ export const FETCH_PROFILE_BY_USERNAME = 'fetchProfileByUsername';
 export const CREATE_USER = 'createUser';
 export const FETCH_USERS = 'fetchUsers';
 export const SUSPEND_USER = 'suspendUser';
+export const ACTIVATE_USER = 'activateUser';
