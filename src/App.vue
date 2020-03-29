@@ -45,6 +45,13 @@ body
     height: $view-height
     overflow-y: auto
     top: $header-height
+    > .loader
+      position: relative
+      height: 100%
+      display: flex
+      flex-direction: row
+      justify-content: center
+      align-items: center
   a
     color: #039
     text-decoration: none
