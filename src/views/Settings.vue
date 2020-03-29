@@ -1,23 +1,26 @@
 <script>
 import { mapGetters } from 'vuex';
-import { LOGOUT, UPDATE_USER } from '@/store/actions.type';
+import {
+  LOGOUT,
+  UPDATE_USER,
+} from '@/store/actions.type';
 
 export default {
   name: 'TheSettings',
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
   methods: {
-    updateSettings () {
-      this.$store.dispatch(UPDATE_USER, this.currentUser).then(() => {
-        // #todo, nice toast and no redirect
-        this.$router.push({ name: 'home' });
-      });
+    async updateSettings () {
+      await this.$store.dispatch(UPDATE_USER, this.currentUser);
+      // #todo, nice toast and no redirect
+      await this.$router.push({ name: 'home' });
     },
-    logout () {
-      this.$store.dispatch(LOGOUT).then(() => {
-        this.$router.push({ name: 'home' });
-      });
+    async logout () {
+      await this.$store.dispatch(LOGOUT);
+      await this.$router.push({ name: 'home' });
     },
   },
 };
@@ -37,43 +40,32 @@ export default {
           <form @submit.prevent="updateSettings()">
             <fieldset>
               <fieldset class="form-group">
+                <label for="username">Username</label>
                 <input
-                  v-model="currentUser.image"
-                  class="form-control"
-                  type="text"
-                  placeholder="URL of profile picture"
-                >
-              </fieldset>
-              <fieldset class="form-group">
-                <input
+                  id="username"
                   v-model="currentUser.username"
                   class="form-control form-control-lg"
                   type="text"
-                  placeholder="Your username"
+                  required
                 >
               </fieldset>
               <fieldset class="form-group">
-                <textarea
-                  v-model="currentUser.bio"
-                  class="form-control form-control-lg"
-                  rows="8"
-                  placeholder="Short bio about you"
-                ></textarea>
-              </fieldset>
-              <fieldset class="form-group">
+                <label for="email">Email</label>
                 <input
+                  id="email"
                   v-model="currentUser.email"
                   class="form-control form-control-lg"
-                  type="text"
-                  placeholder="Email"
+                  type="email"
+                  required
                 >
               </fieldset>
               <fieldset class="form-group">
+                <label for="new-password">New Password</label>
                 <input
+                  id="new-password"
                   v-model="currentUser.password"
                   class="form-control form-control-lg"
                   type="password"
-                  placeholder="Password"
                 >
               </fieldset>
               <button class="btn btn-lg btn-primary pull-xs-right">
@@ -81,16 +73,16 @@ export default {
               </button>
             </fieldset>
           </form>
-          <!-- Line break for logout button -->
-          <hr>
-          <button
-            class="btn btn-outline-danger"
-            @click="logout"
-          >
-            Or click here to logout.
-          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style lang="sass">
+  fieldset
+    &.form-group
+      text-align: left
+      label
+        font-weight: bold
+</style>
