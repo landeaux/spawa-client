@@ -124,7 +124,7 @@ export default {
               v-for="(value, key) in profile.eapp"
               :key="key"
             >
-              <strong>{{ key }}:</strong> {{ value }}
+              <strong>{{ key | startCase }}:</strong> {{ value }}
             </li>
           </ul>
         </div>
@@ -135,7 +135,7 @@ export default {
               v-for="(value, key) in profile.pitchQuiz"
               :key="key"
             >
-              <strong>{{ key }}:</strong> {{ value }}
+              <strong>{{ key | startCase }}:</strong> {{ value }}
             </li>
           </ul>
         </div>
@@ -146,7 +146,7 @@ export default {
               v-for="(value, key) in profile.pitchDeck"
               :key="key"
             >
-              <strong>{{ key }}:</strong> {{ value }}
+              <strong>{{ key | startCase }}:</strong> {{ value }}
             </li>
           </ul>
         </div>
