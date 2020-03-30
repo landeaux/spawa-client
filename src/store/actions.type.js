@@ -11,3 +11,4 @@ export const SUSPEND_USER = 'suspendUser';
 export const ACTIVATE_USER = 'activateUser';
 export const DELETE_USER = 'deleteUser';
 export const FETCH_PITCH_DECKS = 'fetchPitchDecks';
+export const FETCH_PITCH_DECK_BY_ID = 'fetchPitchDeckById';

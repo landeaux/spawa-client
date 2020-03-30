@@ -1,6 +1,7 @@
 import ApiService from '@/common/api.service';
 import {
   FETCH_PITCH_DECKS,
+  FETCH_PITCH_DECK_BY_ID,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -22,6 +23,17 @@ const actions = {
     } catch (error) {
       context.commit(SET_ERROR, error);
       return error;
+    }
+  },
+  async [FETCH_PITCH_DECK_BY_ID] (context, id) {
+    try {
+      const { data } = await ApiService.get('pitchdecks', id);
+      return data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      if (process.NODE_ENV !== 'production') {
+        console.error(error);
+      }
     }
   },
 };
