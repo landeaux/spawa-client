@@ -1,5 +1,6 @@
 import ApiService from '@/common/api.service';
 import {
+  CREATE_PITCH_DECK,
   FETCH_PITCH_DECKS,
   FETCH_PITCH_DECK_BY_ID,
 } from '@/store/actions.type';
@@ -16,6 +17,18 @@ const getters = {
 };
 
 const actions = {
+  async [CREATE_PITCH_DECK] (context, payload) {
+    try {
+      const { data } = await ApiService.post('pitchdecks', {
+        pitchDeck: payload,
+      });
+      return data;
+    } catch ({ response }) {
+      const { errors } = response.data;
+      context.commit(SET_ERROR, errors);
+      return response.data;
+    }
+  },
   async [FETCH_PITCH_DECKS] (context) {
     try {
       const { data } = await ApiService.get('pitchdecks');
