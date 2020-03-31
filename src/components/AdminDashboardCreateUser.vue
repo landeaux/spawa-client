@@ -10,7 +10,7 @@ export default {
         email: '',
         username: '',
         password: '',
-        active: false,
+        active: true,
         role: '',
         state: '',
       },
