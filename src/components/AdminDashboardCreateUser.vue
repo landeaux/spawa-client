@@ -1,4 +1,7 @@
 <script>
+import { mapState } from 'vuex';
+import { CREATE_USER } from '@/store/actions.type';
+
 export default {
   name: 'AdminDashboardCreateUser',
   data () {
@@ -7,28 +10,54 @@ export default {
         email: '',
         username: '',
         password: '',
-        active: [],
+        active: true,
         role: '',
         state: '',
       },
-      roles: [{ text: 'Select One', value: null }, 'Founder', 'Admin', 'Reviewer'],
-      states: [{ text: 'Select One', value: null },
-        'submit_eapp',
-        'watch_pitch_video',
-        'take_pitch_quiz',
-        'submit_pitch_deck',
-        'pitch_deck_review',
-        'book_pitch_date',
-        'pitch_accepted',
-        'pitch_cancelled'],
+      roles: [
+        { text: 'Select One', value: null },
+        { text: 'Founder', value: 'founder' },
+        { text: 'Admin', value: 'admin' },
+        { text: 'Reviewer', value: 'reviewer' },
+      ],
+      states: [
+        { text: 'Select One', value: null },
+        { text: 'Submit Eapp', value: 'submit_eapp' },
+        { text: 'Watch Pitch Video', value: 'watch_pitch_video' },
+        { text: 'Take Pitch Quiz', value: 'take_pitch_quiz' },
+        { text: 'Submit Pitch Deck', value: 'submit_pitch_deck' },
+        { text: 'Pitch Deck Review', value: 'pitch_deck_review' },
+        { text: 'Book Pitch Date', value: 'book_pitch_date' },
+        { text: 'Pitch Accepted', value: 'pitch_accepted' },
+        { text: 'Pitch Cancelled', value: 'pitch_cancelled' },
+      ],
       show: true,
+      createdUsername: '',
+      showErrorAlert: false,
+      showSuccessAlert: false,
     };
   },
+  computed: {
+    ...mapState({
+      errors: state => state.auth.errors,
+    }),
+  },
   methods: {
-    onSubmit (evt) {
-      if (this.form.role !== 'Founder') { this.form.state = ''; }
+    async onSubmit (evt) {
+      Object.keys(this.errors).forEach(k => delete this.errors[k]);
+      if (this.form.role !== 'founder') { this.form.state = ''; }
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      await this.$store.dispatch(CREATE_USER, {
+        username: this.form.username,
+        email: this.form.email,
+        password: this.form.password,
+        active: this.form.active,
+        role: this.form.role,
+        state: this.form.state,
+      });
+      this.createdUsername = this.form.username;
+      this.determineAlert();
+      this.onReset(evt);
     },
     onReset (evt) {
       evt.preventDefault();
@@ -36,7 +65,7 @@ export default {
       this.form.email = '';
       this.form.username = '';
       this.form.password = '';
-      this.form.active = [];
+      this.form.active = true;
       this.form.role = '';
       this.form.state = '';
       // Trick to reset/clear native browser form validation state
@@ -45,12 +74,57 @@ export default {
         this.show = true;
       });
     },
+    determineAlert () {
+      this.showErrorAlert = false;
+      this.showSuccessAlert = false;
+      if (Object.keys(this.errors).length !== 0) {
+        this.showErrorAlert = true;
+      } else if (Object.keys(this.errors).length === 0 && this.createdUsername !== '') {
+        this.showSuccessAlert = true;
+      }
+    },
   },
 };
 </script>
 
 <template>
   <div id="view">
+    <b-alert
+      v-model="showErrorAlert"
+      variant="danger"
+      dismissible
+      class="alerts"
+    >
+      An error has occurred!
+      <ul
+        class="error-messages"
+      >
+        <li
+          v-for="(v, k) in errors"
+          :key="k"
+        >
+          {{ k }} {{ v }}
+        </li>
+      </ul>
+    </b-alert>
+    <b-alert
+      v-model="showSuccessAlert"
+      variant="success"
+      dismissible
+      class="alerts"
+    >
+      User Created:
+      <router-link
+        class="nav-link"
+        active-class="active"
+        :to="{
+          name: 'profile',
+          params: { username: createdUsername }
+        }"
+      >
+        {{ createdUsername }}
+      </router-link>
+    </b-alert>
     <b-form
       v-if="show"
       @submit="onSubmit"
@@ -98,15 +172,13 @@ export default {
           />
         </b-form-group>
 
-        <b-form-group id="input-group-active">
-          <b-form-checkbox-group
+        <b-form-group>
+          <b-form-checkbox
             id="input-active"
             v-model="form.active"
           >
-            <b-form-checkbox value="active">
-              Active Account?
-            </b-form-checkbox>
-          </b-form-checkbox-group>
+            Active Account?
+          </b-form-checkbox>
         </b-form-group>
 
         <b-form-group
@@ -123,7 +195,7 @@ export default {
         </b-form-group>
 
         <b-form-group
-          v-if="form.role === 'Founder'"
+          v-if="form.role === 'founder'"
           id="input-group-state"
           label="State:"
           label-for="input-state"
@@ -168,4 +240,6 @@ export default {
     font-size: 16px
     margin: 10px
     font-weight: bold
+  .alerts
+    width: 45vw
 </style>
