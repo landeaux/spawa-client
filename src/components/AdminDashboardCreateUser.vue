@@ -10,20 +10,27 @@ export default {
         email: '',
         username: '',
         password: '',
-        active: false,
+        active: true,
         role: '',
         state: '',
       },
-      roles: [{ text: 'Select One', value: null }, 'founder', 'admin', 'reviewer'],
-      states: [{ text: 'Select One', value: null },
-        'submit_eapp',
-        'watch_pitch_video',
-        'take_pitch_quiz',
-        'submit_pitch_deck',
-        'pitch_deck_review',
-        'book_pitch_date',
-        'pitch_accepted',
-        'pitch_cancelled'],
+      roles: [
+        { text: 'Select One', value: null },
+        { text: 'Founder', value: 'founder' },
+        { text: 'Admin', value: 'admin' },
+        { text: 'Reviewer', value: 'reviewer' },
+      ],
+      states: [
+        { text: 'Select One', value: null },
+        { text: 'Submit Eapp', value: 'submit_eapp' },
+        { text: 'Watch Pitch Video', value: 'watch_pitch_video' },
+        { text: 'Take Pitch Quiz', value: 'take_pitch_quiz' },
+        { text: 'Submit Pitch Deck', value: 'submit_pitch_deck' },
+        { text: 'Pitch Deck Review', value: 'pitch_deck_review' },
+        { text: 'Book Pitch Date', value: 'book_pitch_date' },
+        { text: 'Pitch Accepted', value: 'pitch_accepted' },
+        { text: 'Pitch Cancelled', value: 'pitch_cancelled' },
+      ],
       show: true,
       createdUsername: '',
       showErrorAlert: false,
@@ -58,7 +65,7 @@ export default {
       this.form.email = '';
       this.form.username = '';
       this.form.password = '';
-      this.form.active = false;
+      this.form.active = true;
       this.form.role = '';
       this.form.state = '';
       // Trick to reset/clear native browser form validation state
@@ -235,5 +242,4 @@ export default {
     font-weight: bold
   .alerts
     width: 45vw
-
 </style>
