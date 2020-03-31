@@ -58,7 +58,7 @@ export default {
       this.form.email = '';
       this.form.username = '';
       this.form.password = '';
-      this.form.active = false;
+      this.form.active = true;
       this.form.role = '';
       this.form.state = '';
       // Trick to reset/clear native browser form validation state
