@@ -3,17 +3,19 @@ import {
   FETCH_PROFILE,
   FETCH_PROFILE_BY_USERNAME,
 } from './actions.type';
-import { SET_PROFILE } from './mutations.type';
+import {
+  SET_PROFILE,
+  SET_ERROR,
+} from './mutations.type';
 
 const state = {
-  errors: {},
+  profileErrors: [],
   profile: {},
 };
 
 const getters = {
-  profile (state) {
-    return state.profile;
-  },
+  profile: (state) => state.profile,
+  profileErrors: (state) => [...state.profileErrors],
 };
 
 const actions = {
@@ -22,35 +24,35 @@ const actions = {
       const { data } = await ApiService.get('profile');
       context.commit(SET_PROFILE, data.profile);
       return data;
-    } catch (err) {
-      // #todo SET_ERROR cannot work in multiple states
-      // context.commit(SET_ERROR, response.data.errors)
+    } catch (error) {
+      context.commit(SET_ERROR, error);
       if (process.NODE_ENV !== 'production') {
-        console.error(err);
+        console.error(error);
       }
     }
   },
-  [FETCH_PROFILE_BY_USERNAME] (context, payload) {
-    const { username } = payload;
-    return ApiService.get('profile', username)
-      .then(({ data }) => {
-        context.commit(SET_PROFILE, data.profile);
-        return data;
-      })
-      .catch(() => {
-        // #todo SET_ERROR cannot work in multiple states
-        // context.commit(SET_ERROR, response.data.errors)
-      });
+  async [FETCH_PROFILE_BY_USERNAME] (context, payload) {
+    try {
+      const { username } = payload;
+      const { data } = await ApiService.get('profile', username);
+      context.commit(SET_PROFILE, data.profile);
+      return data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      if (process.NODE_ENV !== 'production') {
+        console.error(error);
+      }
+    }
   },
 };
 
 const mutations = {
-  // [SET_ERROR] (state, error) {
-  //   state.errors = error
-  // },
+  [SET_ERROR] (state, error) {
+    state.profileErrors.push(error);
+  },
   [SET_PROFILE] (state, profile) {
     state.profile = profile;
-    state.errors = {};
+    state.errors = [];
   },
 };
 

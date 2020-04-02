@@ -9,6 +9,7 @@ import { CHECK_AUTH } from './store/actions.type';
 import ApiService from './common/api.service';
 import DateFilter from './common/date.filter';
 import ErrorFilter from './common/error.filter';
+import StartCaseFilter from './common/startCase.filter';
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 import { IconsPlugin } from 'bootstrap-vue';
@@ -21,6 +22,7 @@ Vue.use(VueYouTubeEmbed, { global: true, componentId: 'YouTubePlayer' });
 Vue.config.productionTip = false;
 Vue.filter('date', DateFilter);
 Vue.filter('error', ErrorFilter);
+Vue.filter('startCase', StartCaseFilter);
 
 ApiService.init();
 
