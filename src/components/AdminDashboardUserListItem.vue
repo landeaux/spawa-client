@@ -48,8 +48,8 @@ export default {
     <p class="row-flex">
       {{ username }}
     </p>
-    <p class="row-flex">
-      {{ created }}
+    <p class="row-flex date-type">
+      {{ created | date }}
     </p>
     <b-dropdown
       variant="primary"
@@ -131,4 +131,6 @@ export default {
   .mod-text
     font-size: 16px
     font-weight: bold
+  .date-type
+    font-size: 10px
 </style>
