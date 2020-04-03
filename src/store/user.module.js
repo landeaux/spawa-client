@@ -11,11 +11,11 @@ import {
 } from '@/store/mutations.type';
 
 const state = {
-  errors: null,
+  userErrors: [],
 };
 
 const getters = {
-  errors: (state) => state.errors,
+  userErrors: (state) => [...state.userErrors],
 };
 
 const actions = {
@@ -31,12 +31,11 @@ const actions = {
   },
   async [FETCH_USERS] (context) {
     try {
-      const { data } = await ApiService.get('users');
-      return data;
-    } catch ({ response }) {
-      const { errors } = response.data;
-      context.commit(SET_ERROR, errors);
+      const response = await ApiService.get('users');
       return response.data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      return error;
     }
   },
   async [SUSPEND_USER] (context, id) {
@@ -71,7 +70,7 @@ const actions = {
 
 const mutations = {
   [SET_ERROR] (state, error) {
-    state.errors = error;
+    state.userErrors.push(error);
   },
 };
 
