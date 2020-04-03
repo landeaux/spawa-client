@@ -49,7 +49,7 @@ export default {
       {{ username }}
     </p>
     <p class="row-flex date-type">
-      {{ created }}
+      {{ created | date }}
     </p>
     <b-dropdown
       variant="primary"
