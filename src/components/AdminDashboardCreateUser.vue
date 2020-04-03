@@ -1,5 +1,5 @@
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { CREATE_USER } from '@/store/actions.type';
 
 export default {
@@ -38,13 +38,16 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      errors: state => state.auth.errors,
-    }),
+    ...mapGetters([
+      'userErrors',
+    ]),
+    errors () {
+      return this.userErrors[0];
+    },
   },
   methods: {
     async onSubmit (evt) {
-      Object.keys(this.errors).forEach(k => delete this.errors[k]);
+      Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
       evt.preventDefault();
       await this.$store.dispatch(CREATE_USER, {
@@ -77,9 +80,9 @@ export default {
     determineAlert () {
       this.showErrorAlert = false;
       this.showSuccessAlert = false;
-      if (Object.keys(this.errors).length !== 0) {
+      if (Object.keys(this.userErrors).length !== 0) {
         this.showErrorAlert = true;
-      } else if (Object.keys(this.errors).length === 0 && this.createdUsername !== '') {
+      } else if (Object.keys(this.userErrors).length === 0 && this.createdUsername !== '') {
         this.showSuccessAlert = true;
       }
     },
