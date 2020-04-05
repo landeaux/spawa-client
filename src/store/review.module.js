@@ -3,6 +3,7 @@ import {
   CREATE_REVIEW,
   GET_REVIEW_BY_ID,
   GET_REVIEWS,
+  DELETE_REVIEW,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -42,6 +43,17 @@ const actions = {
     try {
       const { data } = await ApiService.get('reviews');
       return data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      if (process.NODE_ENV !== 'production') {
+        console.error(error);
+      }
+      return error;
+    }
+  },
+  async [DELETE_REVIEW] (context, id) {
+    try {
+      return await ApiService.delete('reviews', id);
     } catch (error) {
       context.commit(SET_ERROR, error);
       if (process.NODE_ENV !== 'production') {
