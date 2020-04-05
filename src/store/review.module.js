@@ -2,6 +2,7 @@ import ApiService from '@/common/api.service';
 import {
   CREATE_REVIEW,
   GET_REVIEW_BY_ID,
+  GET_REVIEWS,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -35,6 +36,18 @@ const actions = {
       if (process.NODE_ENV !== 'production') {
         console.error(error);
       }
+    }
+  },
+  async [GET_REVIEWS] (context) {
+    try {
+      const { data } = await ApiService.get('reviews');
+      return data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      if (process.NODE_ENV !== 'production') {
+        console.error(error);
+      }
+      return error;
     }
   },
 };
