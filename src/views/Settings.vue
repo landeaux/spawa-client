@@ -60,6 +60,16 @@ export default {
                 >
               </fieldset>
               <fieldset class="form-group">
+                <label for="company">Company</label>
+                <input
+                  id="company"
+                  v-model="currentUser.company"
+                  class="form-control form-control-lg"
+                  type="text"
+                  required
+                >
+              </fieldset>
+              <fieldset class="form-group">
                 <label for="new-password">New Password</label>
                 <input
                   id="new-password"

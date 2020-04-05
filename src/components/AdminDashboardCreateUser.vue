@@ -7,8 +7,9 @@ export default {
   data () {
     return {
       form: {
-        email: '',
         username: '',
+        email: '',
+        company: '',
         password: '',
         active: true,
         role: '',
@@ -53,6 +54,7 @@ export default {
       await this.$store.dispatch(CREATE_USER, {
         username: this.form.username,
         email: this.form.email,
+        company: this.form.company,
         password: this.form.password,
         active: this.form.active,
         role: this.form.role,
@@ -65,8 +67,9 @@ export default {
     onReset (evt) {
       evt.preventDefault();
       // Reset our form values
-      this.form.email = '';
       this.form.username = '';
+      this.form.email = '';
+      this.form.company = '';
       this.form.password = '';
       this.form.active = true;
       this.form.role = '';
@@ -135,6 +138,19 @@ export default {
     >
       <div class="main-form">
         <b-form-group
+          id="input-group-username"
+          label="Username:"
+          label-for="input-username"
+        >
+          <b-form-input
+            id="input-username"
+            v-model="form.username"
+            required
+            placeholder="Enter Username"
+          />
+        </b-form-group>
+
+        <b-form-group
           id="input-group-email"
           label="Email:"
           label-for="input-email"
@@ -149,15 +165,15 @@ export default {
         </b-form-group>
 
         <b-form-group
-          id="input-group-username"
-          label="Username:"
-          label-for="input-username"
+          id="input-group-company"
+          label="Company:"
+          label-for="input-company"
         >
           <b-form-input
-            id="input-username"
-            v-model="form.username"
+            id="input-company"
+            v-model="form.company"
             required
-            placeholder="Enter Username"
+            placeholder="Enter Company"
           />
         </b-form-group>
 
