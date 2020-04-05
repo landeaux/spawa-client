@@ -13,3 +13,7 @@ export const DELETE_USER = 'deleteUser';
 export const FETCH_PITCH_DECKS = 'fetchPitchDecks';
 export const FETCH_PITCH_DECK_BY_ID = 'fetchPitchDeckById';
 export const CREATE_PITCH_DECK = 'createPitchDeck';
+export const CREATE_REVIEW = 'createReview';
+export const GET_REVIEW_BY_ID = 'getReviewById';
+export const GET_REVIEWS = 'getReviews';
+export const DELETE_REVIEW = 'deleteReview';
