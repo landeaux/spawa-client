@@ -3,6 +3,7 @@ import {
   CREATE_PITCH_DECK,
   FETCH_PITCH_DECKS,
   FETCH_PITCH_DECK_BY_ID,
+  DOWNLOAD_PITCH_DECK,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -48,6 +49,23 @@ const actions = {
         console.error(error);
       }
     }
+  },
+  [DOWNLOAD_PITCH_DECK] (context, payload) {
+    console.log(`${DOWNLOAD_PITCH_DECK} dispatched!`);
+    const {
+      id,
+    } = payload;
+
+    ApiService.get('pitchDecks', `${id}/download`, { responseType: 'blob' })
+      .then(response => {
+        console.log(response);
+        const blob = new Blob([response.data], { type: `application/pptx` });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'PitchDeck';
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }).catch(console.error);
   },
 };
 
