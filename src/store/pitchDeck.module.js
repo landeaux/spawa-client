@@ -20,9 +20,7 @@ const getters = {
 const actions = {
   async [CREATE_PITCH_DECK] (context, payload) {
     try {
-      const { data } = await ApiService.post('pitchdecks', {
-        pitchDeck: payload,
-      });
+      const { data } = await ApiService.post('pitchdecks', payload);
       return data;
     } catch ({ response }) {
       const { errors } = response.data;
