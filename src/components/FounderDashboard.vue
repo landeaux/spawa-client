@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import BigButtonComponent from '@/components/BigButtonComponent';
+import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 
 export default {
   name: 'FounderDashboard',
@@ -10,6 +11,14 @@ export default {
   }),
   computed: {
     ...mapGetters(['currentUser']),
+  },
+  methods: {
+    onDownloadButtonClick () {
+      const payload = {
+        id: this.currentUser.pitchDeck,
+      };
+      this.$store.dispatch(DOWNLOAD_PITCH_DECK, payload);
+    },
   },
 };
 </script>
@@ -49,6 +58,13 @@ export default {
           info="10"
           class="right-flex"
         />
+        <button
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onDownloadButtonClick"
+        >
+          Download Pitch Deck
+        </button>
         <button
           type="button"
           class="right-flex btn btn-primary small-btn"
