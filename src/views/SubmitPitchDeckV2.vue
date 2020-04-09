@@ -1,5 +1,5 @@
 <script>
-import { upload } from '@/common/file-upload.service';
+import { CREATE_PITCH_DECK } from '@/store/actions.type';
 
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
@@ -13,11 +13,11 @@ export default {
   name: 'SubmitPitchDeckV2',
   data () {
     return {
-      uploadError: null,
       currentStatus: null,
+      uploadError: null,
       uploadFieldName: 'pitchdeck',
-      fileName: '',
       fileBlob: null,
+      fileName: '',
     };
   },
   computed: {
@@ -44,25 +44,23 @@ export default {
     reset () {
       this.currentStatus = STATUS_INITIAL;
       this.uploadError = null;
-      this.fileName = '';
       this.fileBlob = null;
+      this.fileName = '';
     },
     /**
      * Upload file to server
      * @param formData The form data to send to server
      */
-    save (formData) {
+    async uploadFile (formData) {
       this.currentStatus = STATUS_SAVING;
-
-      upload(formData)
-        .then((res) => {
-          console.log(res);
-          this.currentStatus = STATUS_SUCCESS;
-        })
-        .catch((err) => {
-          this.uploadError = err.response;
-          this.currentStatus = STATUS_FAILED;
-        });
+      try {
+        const data = await this.$store.dispatch(CREATE_PITCH_DECK, formData);
+        this.currentStatus = STATUS_SUCCESS;
+        console.log(data);
+      } catch (err) {
+        this.uploadError = err.response;
+        this.currentStatus = STATUS_FAILED;
+      }
     },
     /**
      * Stage data according to selected file
@@ -86,7 +84,7 @@ export default {
       const formData = new FormData();
       if (!this.fileBlob || this.fileName === '') return;
       formData.append(this.uploadFieldName, this.fileBlob, this.fileName);
-      this.save(formData);
+      this.uploadFile(formData);
     },
   },
 };
