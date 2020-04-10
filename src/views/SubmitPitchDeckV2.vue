@@ -101,11 +101,12 @@ export default {
 
     <div
       v-if="isInitial"
-      class="form"
+      class="form-container"
     >
-      <form
+      <b-form
+        id="upload-form"
+        validated
         enctype="multipart/form-data"
-        novalidate
         @submit.prevent="onFormSubmit"
       >
         <fieldset>
@@ -119,14 +120,14 @@ export default {
             <p class="text-muted">
               {{ inputHelp }}
             </p>
-            <input
-              type="file"
+            <b-form-file
+              style="text-align: left"
               :name="uploadFieldName"
               accept="application/pdf, application/vnd.openxmlformats-officedocument.presentationml.presentation"
               required
-              class="form-control form-control-lg"
+              size="lg"
               @change="onFileInputChange"
-            >
+            />
           </fieldset>
           <input
             type="submit"
@@ -134,7 +135,7 @@ export default {
             class="btn btn-lg btn-primary"
           >
         </fieldset>
-      </form>
+      </b-form>
     </div>
 
     <div
@@ -203,14 +204,14 @@ export default {
   #view
     display: flex
     flex-direction: column
-    .message, .form
+    .message, .form-container
       position: relative
       height: 100%
       display: flex
       flex-direction: column
       justify-content: center
       align-items: center
-    .form
+    form
       fieldset
         &.form-group
           label

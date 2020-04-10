@@ -58,7 +58,7 @@ const routes = [
   {
     name: 'submit-pitch-deck',
     path: '/submit-pitch-deck',
-    component: () => import('../views/SubmitPitchDeck'),
+    component: () => import('../views/SubmitPitchDeckV2'),
   },
   {
     name: 'book-pitch-date',
