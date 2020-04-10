@@ -52,14 +52,10 @@ const actions = {
     }
   },
   [DOWNLOAD_PITCH_DECK] (context, payload) {
-    console.log(`${DOWNLOAD_PITCH_DECK} dispatched!`);
-    const {
-      id,
-    } = payload;
+    const { id } = payload;
 
     ApiService.get('pitchDecks', `${id}/download`, { responseType: 'blob' })
       .then(response => {
-        console.log(response);
         const blob = new Blob([response.data], { type: `application/pptx` });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
