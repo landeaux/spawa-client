@@ -7,20 +7,23 @@ import {
 } from '@/store/actions.type';
 import {
   SET_ERROR,
+  SET_PITCH_DECK,
 } from '@/store/mutations.type';
 
 const state = {
   pitchDeckErrors: [],
+  pitchDeck: null,
 };
 
 const getters = {
-
+  pitchDeck: (state) => ({ ...state.pitchDeck }),
 };
 
 const actions = {
   async [CREATE_PITCH_DECK] (context, payload) {
     try {
       const { data } = await ApiService.post('pitchdecks', payload);
+      context.commit(SET_PITCH_DECK, data);
       return data;
     } catch ({ response }) {
       const { errors } = response.data;
@@ -70,6 +73,9 @@ const actions = {
 const mutations = {
   [SET_ERROR] (state, error) {
     state.pitchDeckErrors.push(error);
+  },
+  [SET_PITCH_DECK] (state, payload) {
+    state.pitchDeck = payload;
   },
 };
 

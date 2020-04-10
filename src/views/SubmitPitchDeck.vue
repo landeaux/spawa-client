@@ -1,4 +1,5 @@
 <script>
+import { mapGetters } from 'vuex';
 import { CREATE_PITCH_DECK } from '@/store/actions.type';
 
 const STATUS_INITIAL = 0;
@@ -29,6 +30,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['pitchDeck']),
     inputValid () {
       return this.file !== null;
     },
@@ -64,9 +66,8 @@ export default {
     async uploadFile (formData) {
       this.currentStatus = STATUS_SAVING;
       try {
-        const data = await this.$store.dispatch(CREATE_PITCH_DECK, formData);
+        await this.$store.dispatch(CREATE_PITCH_DECK, formData);
         this.currentStatus = STATUS_SUCCESS;
-        console.log(data);
       } catch (err) {
         this.uploadError = err.response;
         this.currentStatus = STATUS_FAILED;
@@ -153,6 +154,7 @@ export default {
       class="message"
     >
       <p>{{ successMessage }}</p>
+      <pre>{{ pitchDeck }}</pre>
     </div>
 
     <div
