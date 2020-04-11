@@ -56,10 +56,15 @@ const actions = {
 
     ApiService.get('pitchDecks', `${id}/download`, { responseType: 'blob' })
       .then(response => {
-        const blob = new Blob([response.data], { type: `application/pptx` });
+        const { data } = response;
+        const ext = {
+          'application/pdf': 'pdf',
+          'vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
+        }[data.type];
+        const blob = new Blob([data], { type: data.type });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'PitchDeck';
+        link.download = `PitchDeck.${ext}`;
         link.click();
         URL.revokeObjectURL(link.href);
       }).catch(console.error);
