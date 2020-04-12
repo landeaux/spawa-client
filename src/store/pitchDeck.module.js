@@ -3,25 +3,27 @@ import {
   CREATE_PITCH_DECK,
   FETCH_PITCH_DECKS,
   FETCH_PITCH_DECK_BY_ID,
+  DOWNLOAD_PITCH_DECK,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
+  SET_PITCH_DECK,
 } from '@/store/mutations.type';
 
 const state = {
   pitchDeckErrors: [],
+  pitchDeck: null,
 };
 
 const getters = {
-
+  pitchDeck: (state) => ({ ...state.pitchDeck }),
 };
 
 const actions = {
   async [CREATE_PITCH_DECK] (context, payload) {
     try {
-      const { data } = await ApiService.post('pitchdecks', {
-        pitchDeck: payload,
-      });
+      const { data } = await ApiService.post('pitchdecks', payload);
+      context.commit(SET_PITCH_DECK, data);
       return data;
     } catch ({ response }) {
       const { errors } = response.data;
@@ -49,11 +51,32 @@ const actions = {
       }
     }
   },
+  [DOWNLOAD_PITCH_DECK] (context, payload) {
+    const { id } = payload;
+
+    ApiService.get('pitchDecks', `${id}/download`, { responseType: 'blob' })
+      .then(response => {
+        const { data } = response;
+        const ext = {
+          'application/pdf': 'pdf',
+          'vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
+        }[data.type];
+        const blob = new Blob([data], { type: data.type });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `PitchDeck.${ext}`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }).catch(console.error);
+  },
 };
 
 const mutations = {
   [SET_ERROR] (state, error) {
     state.pitchDeckErrors.push(error);
+  },
+  [SET_PITCH_DECK] (state, payload) {
+    state.pitchDeck = payload;
   },
 };
 

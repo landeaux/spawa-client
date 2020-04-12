@@ -19,8 +19,8 @@ const ApiService = {
     });
   },
 
-  get (resource, slug = '') {
-    return Vue.axios.get(`${resource}/${slug}`).catch(error => {
+  get (resource, slug = '', config = {}) {
+    return Vue.axios.get(`${resource}/${slug}`, config).catch(error => {
       throw new Error(`ApiService ${error}`);
     });
   },

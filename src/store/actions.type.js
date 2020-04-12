@@ -17,3 +17,4 @@ export const CREATE_REVIEW = 'createReview';
 export const GET_REVIEW_BY_ID = 'getReviewById';
 export const GET_REVIEWS = 'getReviews';
 export const DELETE_REVIEW = 'deleteReview';
+export const DOWNLOAD_PITCH_DECK = 'downloadPitchDeckById';
