@@ -1,6 +1,9 @@
 <script>
 import { mapGetters } from 'vuex';
-import { CREATE_PITCH_DECK } from '@/store/actions.type';
+import {
+  CREATE_PITCH_DECK,
+  UPDATE_USER_STATE,
+} from '@/store/actions.type';
 
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
@@ -83,6 +86,11 @@ export default {
       formData.append(this.uploadFieldName, this.file, this.file.name);
       this.uploadFile(formData);
     },
+    onNextButtonClick () {
+      this.$store.dispatch(UPDATE_USER_STATE, {
+        state: 'pitch_deck_review',
+      });
+    },
   },
 };
 </script>
@@ -154,7 +162,6 @@ export default {
       class="message"
     >
       <p>{{ successMessage }}</p>
-      <pre>{{ pitchDeck }}</pre>
     </div>
 
     <div
@@ -173,17 +180,15 @@ export default {
       <pre>{{ uploadError }}</pre>
     </div>
 
-    <router-link
+    <button
       v-if="isSuccess"
-      :to="{ name: routerLinkTo }"
+      type="button"
+      class="btn btn-primary next-button"
+      @click="onNextButtonClick"
     >
-      <button
-        type="button"
-        class="btn btn-primary next-button"
-      >
-        Next
-      </button>
-    </router-link>
+      Next
+    </button>
+
     <button
       v-else
       type="button"
@@ -221,6 +226,6 @@ export default {
       color: #039
     p
       color: #007bff
-    button
-     min-width: 30vw
+    .next-button
+      min-width: 30vw
 </style>

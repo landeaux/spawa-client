@@ -1,4 +1,5 @@
 <script>
+import { UPDATE_USER_STATE } from '@/store/actions.type';
 /*
  * WATCH_THRESHOLD controls how much of the video must be watched before
  * allowing the user to continue.
@@ -68,7 +69,9 @@ export default {
       }
     },
     onNextButtonClicked () {
-      this.$router.push('take-pitch-quiz');
+      this.$store.dispatch(UPDATE_USER_STATE, {
+        state: 'take_pitch_quiz',
+      });
     },
     onReplayButtonClicked () {
       this.autoplay = 1;
@@ -102,7 +105,7 @@ export default {
     />
     <button
       v-if="showReplayButton"
-      class="btn btn-primary"
+      class="btn btn-primary next-button"
       @click="onReplayButtonClicked"
     >
       Replay Video
@@ -110,7 +113,7 @@ export default {
     <transition name="fade">
       <button
         v-if="videoWatched"
-        class="btn btn-primary"
+        class="btn btn-primary next-button"
         @click="onNextButtonClicked"
       >
         Next
@@ -120,15 +123,16 @@ export default {
 </template>
 
 <style scoped lang="sass">
-  .fade-enter-active, .fade-leave-active
-    transition: opacity 3s
-  .fade-enter, .fade-leave-to
-    opacity: 0
-  .btn
-    margin: 10px
-    min-width: 30vw
-  h1
-    color: #039
-  p
-    color: #007bff
+  #view
+    .fade-enter-active, .fade-leave-active
+      transition: opacity 3s
+    .fade-enter, .fade-leave-to
+      opacity: 0
+    .next-button
+      margin: 10px
+      min-width: 30vw
+    h1
+      color: #039
+    p
+      color: #007bff
 </style>

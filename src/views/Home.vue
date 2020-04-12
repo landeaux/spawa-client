@@ -6,7 +6,7 @@ export default {
   components: {
     AdminDashboard: () => import('@/components/AdminDashboard'),
     EvaluatorDashboard: () => import('@/components/EvaluatorDashboard'),
-    FounderDashboard: () => import('@/components/FounderDashboard'),
+    FounderWalkthrough: () => import('@/views/FounderWalkthrough'),
     ReviewerDashboard: () => import('@/components/ReviewerDashboard'),
     Loader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
@@ -19,7 +19,7 @@ export default {
       return {
         admin: 'AdminDashboard',
         evaluator: 'EvaluatorDashboard',
-        founder: 'FounderDashboard',
+        founder: 'FounderWalkthrough',
         reviewer: 'ReviewerDashboard',
         loader: 'Loader',
       }[componentKey];

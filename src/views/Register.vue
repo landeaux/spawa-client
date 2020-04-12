@@ -26,7 +26,7 @@ export default {
         company: this.company,
         password: this.password,
       });
-      if (!this.errors) await this.$router.push({ name: 'home' });
+      await this.$router.push({ name: 'home' });
     },
   },
 };

@@ -93,6 +93,9 @@ export default {
     onFormSubmitted () {
       this.formSubmitted = true;
     },
+    onNextButtonClick () {
+      this.$emit('next-button-click');
+    },
   },
 };
 </script>
@@ -114,17 +117,16 @@ export default {
     >
       {{ successMessage }}
     </p>
-    <router-link
+
+    <button
       v-if="formSubmitted"
-      :to="{ name: routerLinkTo }"
+      type="button"
+      class="btn btn-primary next-button"
+      @click="onNextButtonClick"
     >
-      <button
-        type="button"
-        class="btn btn-primary next-button"
-      >
-        Next
-      </button>
-    </router-link>
+      Next
+    </button>
+
     <button
       v-else
       type="button"
@@ -156,6 +158,6 @@ export default {
     color: #039
   p
     color: #007bff
-  button
-   min-width: 30vw
+  .next-button
+    min-width: 30vw
 </style>

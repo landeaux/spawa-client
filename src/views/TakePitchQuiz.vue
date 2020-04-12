@@ -1,4 +1,6 @@
 <script>
+import { UPDATE_USER_STATE } from '@/store/actions.type';
+
 /**
  * TakePitchQuiz
  */
@@ -17,6 +19,13 @@ export default {
     successMessage: 'Thank you for taking the quiz! Click "Next" to continue.',
     title: 'Take Pitch Quiz',
   }),
+  methods: {
+    onNextButtonClick () {
+      this.$store.dispatch(UPDATE_USER_STATE, {
+        state: 'submit_pitch_deck',
+      });
+    },
+  },
 };
 </script>
 
@@ -29,5 +38,6 @@ export default {
     :router-link-to="routerLinkTo"
     :success-message="successMessage"
     :title="title"
+    @next-button-click="onNextButtonClick"
   />
 </template>
