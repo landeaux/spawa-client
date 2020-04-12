@@ -33,6 +33,12 @@ export default {
     showReplayButton () {
       return this.state === 'ended';
     },
+    playerWidth () {
+      return Math.round(window.innerWidth * 0.70);
+    },
+    playerHeight () {
+      return Math.round(this.playerWidth * (9.0 / 16.0));
+    },
   },
   methods: {
     onReady (e) {
@@ -95,6 +101,8 @@ export default {
       v-if="showPlayer"
       :video-id="videoId"
       :player-vars="{ autoplay }"
+      :player-width="playerWidth"
+      :player-height="playerHeight"
       @buffering="onBuffering"
       @ready="onReady"
       @playing="onPlaying"
