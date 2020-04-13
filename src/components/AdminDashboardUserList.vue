@@ -57,8 +57,7 @@ export default {
       <AdminDashboardUserListItem
         v-for="userItem in userList"
         :key="userItem.username"
-        :active="userItem.active"
-        :username="userItem.username"
+        :user="userItem"
         :created="userItem.createdAt"
         class="bot-margin"
       />
