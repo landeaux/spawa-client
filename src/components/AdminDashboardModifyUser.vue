@@ -1,6 +1,6 @@
 <script>
 import { mapGetters } from 'vuex';
-import { UPDATE_USER } from '@/store/actions.type';
+import { UPDATE_USER_BY_ID } from '@/store/actions.type';
 
 export default {
   name: 'AdminDashboardModifyUser',
@@ -46,22 +46,30 @@ export default {
     },
   },
   created () {
-    this.form = this.user;
+    this.form = { ...this.user };
   },
   methods: {
-    async onSubmit (evt) {
+    async onSubmit () {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
-      evt.preventDefault();
-      await this.$store.dispatch(UPDATE_USER, this.form);
+      const payload = { ...this.form };
+
+      // Remove props which didn't change or are empty
+      Object.keys(this.form).forEach((key) => {
+        if (this.form[key] === this.user[key] || this.form[key] === '') {
+          delete payload[key];
+        }
+      });
+
+      payload.id = this.user.id;
+      await this.$store.dispatch(UPDATE_USER_BY_ID, payload);
       this.createdUsername = this.form.username;
       this.determineAlert();
       if (this.showSuccessAlert === true) { this.show = false; }
     },
-    onReset (evt) {
-      evt.preventDefault();
+    onReset () {
       // Reset our form values
-      this.form = this.user;
+      this.form = { ...this.user };
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -121,8 +129,8 @@ export default {
     </b-alert>
     <b-form
       v-if="show"
-      @submit="onSubmit"
-      @reset="onReset"
+      @submit.prevent="onSubmit"
+      @reset.prevent="onReset"
     >
       <div class="main-form">
         <b-form-group
@@ -174,7 +182,6 @@ export default {
             id="input-password"
             v-model="form.password"
             type="password"
-            required
             placeholder="Enter Password"
           />
         </b-form-group>
