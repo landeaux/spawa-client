@@ -94,7 +94,7 @@ export default {
 </script>
 
 <template>
-  <div id="view">
+  <div class="container">
     <b-alert
       v-model="showErrorAlert"
       variant="danger"
@@ -247,7 +247,6 @@ export default {
 
 <style scoped lang = sass>
   .main-form
-    width: 45vw
     text-align: left
     color: #039
   .form-btn
