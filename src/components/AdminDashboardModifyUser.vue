@@ -263,7 +263,6 @@ export default {
 
 <style scoped lang = sass>
   .main-form
-    width: 35vw
     text-align: left
     color: #039
     .alerts
