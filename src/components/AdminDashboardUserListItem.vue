@@ -47,6 +47,9 @@ export default {
     <p class="row-flex">
       {{ user.username }}
     </p>
+    <p class="row-flex">
+      {{ user.role.charAt(0).toUpperCase() + row.item.role.slice(1) }}
+    </p>
     <p class="row-flex date-type">
       {{ created | date }}
     </p>
