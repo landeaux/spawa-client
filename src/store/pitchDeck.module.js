@@ -1,4 +1,5 @@
 import ApiService from '@/common/api.service';
+import { wait } from '@/assets/utils';
 import {
   CREATE_PITCH_DECK,
   FETCH_PITCH_DECKS,
@@ -36,8 +37,52 @@ const actions = {
     }
   },
   async [FETCH_PITCH_DECKS] ({ commit }) {
+    // #todo update FETCH_PITCH_DECKS to make a real API call
     try {
-      const { data } = await ApiService.get('pitchdecks');
+      // const { data } = await ApiService.get('pitchdecks');
+
+      // Fake data
+      const data = {
+        pitchDecks: [
+          {
+            id: '5e900a650560eb52cc0e5de5',
+            s3Key: 'Your big idea_9f05d82d-b3d4-414b-bd97-d9ae32925d21.pdf',
+            filename: 'Your big idea.pdf',
+            rejectionCount: 0,
+            accepted: false,
+            owner: '5e90027a220bf0513ae546c9',
+            reviews: ['1', '2', '3'],
+            createdAt: '2020-04-10T05:55:49.384Z',
+            updatedAt: '2020-04-10T05:55:49.384Z',
+            company: 'Burger King',
+          },
+          {
+            id: '5e900a650560eb52cc0e5de6',
+            s3Key: 'Your big idea_9f05d82d-b3d4-414b-bd97-d9ae32925d21.pdf',
+            filename: 'Your big idea.pdf',
+            rejectionCount: 0,
+            accepted: false,
+            owner: '5e90027a220bf0513ae546c9',
+            reviews: ['5e9556a4f3e82d13e3f5f2c4'],
+            createdAt: '2020-03-28T05:55:49.384Z',
+            updatedAt: '2020-03-28T05:55:49.384Z',
+            company: 'McDonald\'s',
+          },
+          {
+            id: '5e900a650560eb52cc0e5de7',
+            s3Key: 'Your big idea_9f05d82d-b3d4-414b-bd97-d9ae32925d21.pdf',
+            filename: 'Your big idea.pdf',
+            rejectionCount: 0,
+            accepted: false,
+            owner: '5e90027a220bf0513ae546c9',
+            reviews: [0],
+            createdAt: '2020-04-09T05:55:49.384Z',
+            updatedAt: '2020-04-09T05:55:49.384Z',
+            company: 'Wendy\'s',
+          },
+        ],
+      };
+      await Promise.resolve().then(wait(1000)); // fake a network delay
       commit(SET_PITCH_DECK_LIST, data.pitchDecks);
       return data.pitchDecks;
     } catch (error) {
