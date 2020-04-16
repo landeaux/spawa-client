@@ -58,4 +58,6 @@ body
     &:hover
       color: #069
       text-decoration: none
+  .table-cell
+    vertical-align: middle
 </style>
