@@ -8,15 +8,19 @@ import {
 import {
   SET_ERROR,
   SET_PITCH_DECK,
+  SET_PITCH_DECK_LIST,
 } from '@/store/mutations.type';
 
 const state = {
   pitchDeckErrors: [],
   pitchDeck: null,
+  pitchDeckList: [],
 };
 
 const getters = {
   pitchDeck: (state) => ({ ...state.pitchDeck }),
+  pitchDeckErrors: (state) => [ ...state.pitchDeckErrors ],
+  pitchDeckList: (state) => [ ...state.pitchDeckList ],
 };
 
 const actions = {
@@ -31,12 +35,13 @@ const actions = {
       return response.data;
     }
   },
-  async [FETCH_PITCH_DECKS] (context) {
+  async [FETCH_PITCH_DECKS] ({ commit }) {
     try {
       const { data } = await ApiService.get('pitchdecks');
-      return data;
+      commit(SET_PITCH_DECK_LIST, data.pitchDecks);
+      return data.pitchDecks;
     } catch (error) {
-      context.commit(SET_ERROR, error);
+      commit(SET_ERROR, error);
       return error;
     }
   },
@@ -77,6 +82,9 @@ const mutations = {
   },
   [SET_PITCH_DECK] (state, payload) {
     state.pitchDeck = payload;
+  },
+  [SET_PITCH_DECK_LIST] (state, payload) {
+    state.pitchDeckList = payload;
   },
 };
 
