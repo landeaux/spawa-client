@@ -118,6 +118,7 @@ export default {
             :id="`mod-${row.item.id}`"
             size="lg"
             centered
+            :hide-footer="true"
             title="Modify User"
           >
             <AdminDashboardModifyUser

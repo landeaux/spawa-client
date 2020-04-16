@@ -44,6 +44,15 @@ export default {
     errors () {
       return this.userErrors[0];
     },
+    determineCanSubmit () {
+      return this.form.username !== this.user.username ||
+        this.form.email !== this.user.email ||
+        this.form.company !== this.user.company ||
+        this.form.password !== this.user.password ||
+        this.form.active !== this.user.active ||
+        this.form.role !== this.user.role ||
+        this.form.state !== this.user.state;
+    },
   },
   created () {
     this.form = { ...this.user };
@@ -112,7 +121,6 @@ export default {
     <b-alert
       v-model="showSuccessAlert"
       variant="success"
-      dismissible
       class="alerts"
     >
       User Updated:
@@ -223,7 +231,19 @@ export default {
         </b-form-group>
       </div>
       <b-button
+        v-if="determineCanSubmit"
         type="submit"
+        block
+        variant="primary"
+        class="form-btn"
+      >
+        Submit
+      </b-button>
+      <b-button
+        v-else
+        type="fake-submit"
+        block
+        disabled
         variant="primary"
         class="form-btn"
       >
@@ -231,6 +251,7 @@ export default {
       </b-button>
       <b-button
         type="reset"
+        block
         variant="danger"
         class="form-btn"
       >
@@ -245,15 +266,16 @@ export default {
     width: 35vw
     text-align: left
     color: #039
+    .alerts
+      width: 35vw
+
     .form-btn
       display: inline-flex
       flex-direction: row
-      justify-content: space-evenly
+      justify-content: space-around
       width: 10vw
       height: 2.5rem
       font-size: 16px
       margin: 10px
       font-weight: bold
-    .alerts
-      width: 35vw
 </style>
