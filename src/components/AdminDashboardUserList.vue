@@ -22,6 +22,11 @@ export default {
         tdClass: 'table-cell',
       },
       {
+        key: 'role',
+        label: 'Role',
+        tdClass: 'table-cell',
+      },
+      {
         key: 'company',
         label: 'Company',
         tdClass: 'table-cell',
@@ -96,6 +101,10 @@ export default {
             class="list-icon"
           />
         </div>
+      </template>
+
+      <template v-slot:cell(role)="row">
+        {{ row.item.role.charAt(0).toUpperCase()  + row.item.role.slice(1) }}
       </template>
 
       <template v-slot:cell(createdAt)="row">
