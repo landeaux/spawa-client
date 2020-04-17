@@ -2,6 +2,8 @@
 import {
   FETCH_USERS,
   DELETE_USER,
+  SUSPEND_USER,
+  ACTIVATE_USER,
 } from '@/store/actions.type';
 import { mapGetters } from 'vuex';
 
@@ -74,6 +76,21 @@ export default {
     async onDeleteButtonOk (userId) {
       await this.$store.dispatch(DELETE_USER, userId);
     },
+    async onSuspendButtonOk (userId, active) {
+      const action = active
+        ? SUSPEND_USER
+        : ACTIVATE_USER;
+      await this.$store.dispatch(action, userId);
+    },
+    modifyModalId (id) {
+      return `mod-${id}`;
+    },
+    suspendModalId (id) {
+      return `sus-${id}`;
+    },
+    deleteModalId (id) {
+      return `del-${id}`;
+    },
   },
 };
 </script>
@@ -137,13 +154,13 @@ export default {
           class="table-actions"
         >
           <b-dropdown-item
-            v-b-modal="`mod-${row.item.id}`"
+            v-b-modal="modifyModalId(row.item.id)"
             class="inside-drop"
           >
             Modify
           </b-dropdown-item>
           <b-modal
-            :id="`mod-${row.item.id}`"
+            :id="modifyModalId(row.item.id)"
             size="lg"
             centered
             :hide-footer="true"
@@ -154,29 +171,30 @@ export default {
             />
           </b-modal>
           <b-dropdown-item
-            v-b-modal="`sus-${row.item.id}`"
+            v-b-modal="suspendModalId(row.item.id)"
             class="inside-drop"
           >
-            Suspend
+            {{ row.item.active ? 'Suspend' : 'Activate' }}
           </b-dropdown-item>
           <b-modal
-            :id="`sus-${row.item.id}`"
+            :id="suspendModalId(row.item.id)"
             size="lg"
             centered
             title="Suspend User"
+            @ok="onSuspendButtonOk(row.item.id, row.item.active)"
           >
             <p class="mod-text">
-              Are you sure you want to suspend {{ row.item.username }}?
+              Are you sure you want to {{ row.item.active ? 'suspend' : 'activate' }} {{ row.item.username }}?
             </p>
           </b-modal>
           <b-dropdown-item
-            v-b-modal="`del-${row.item.id}`"
+            v-b-modal="deleteModalId(row.item.id)"
             class="inside-drop"
           >
             Delete
           </b-dropdown-item>
           <b-modal
-            :id="`del-${row.item.id}`"
+            :id="deleteModalId(row.item.id)"
             size="lg"
             centered
             title="Delete User"
