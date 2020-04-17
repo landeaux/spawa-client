@@ -118,6 +118,7 @@ export default {
       :sort-desc="sortDesc"
       head-variant="light"
       sticky-header="100%"
+      thead-tr-class="table-header-row"
       tbody-tr-class="table-row"
       striped
       outlined
