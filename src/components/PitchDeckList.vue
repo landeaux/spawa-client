@@ -102,7 +102,6 @@ export default {
     </b-alert>
 
     <div v-else>
-      <h2>Pitch Deck List</h2>
       <b-table
         :items="pitchDeckListForDisplay"
         :fields="tableFields"
