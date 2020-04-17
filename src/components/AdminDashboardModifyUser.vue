@@ -4,6 +4,9 @@ import { UPDATE_USER_BY_ID } from '@/store/actions.type';
 
 export default {
   name: 'AdminDashboardModifyUser',
+  components: {
+    PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
+  },
   props: {
     user: {
       default: null,
@@ -35,6 +38,7 @@ export default {
       createdUsername: '',
       showErrorAlert: false,
       showSuccessAlert: false,
+      showLoader: true,
     };
   },
   computed: {
@@ -45,17 +49,18 @@ export default {
       return this.userErrors[0];
     },
     determineCanSubmit () {
-      return this.form.username !== this.user.username ||
+      return (this.form.username !== this.user.username ||
         this.form.email !== this.user.email ||
         this.form.company !== this.user.company ||
-        this.form.password !== this.user.password ||
         this.form.active !== this.user.active ||
         this.form.role !== this.user.role ||
-        this.form.state !== this.user.state;
+        this.form.state !== this.user.state) &&
+        (this.form.password !== '' && this.form.password !== this.user.password);
     },
   },
   created () {
     this.form = { ...this.user };
+    this.showLoader = false;
   },
   methods: {
     async onSubmit () {
@@ -71,10 +76,13 @@ export default {
       });
 
       payload.id = this.user.id;
+      this.showLoader = true;
+      this.show = false;
       await this.$store.dispatch(UPDATE_USER_BY_ID, payload);
       this.createdUsername = this.form.username;
       this.determineAlert();
-      if (this.showSuccessAlert === true) { this.show = false; }
+      this.showLoader = false;
+      if (this.showErrorAlert === true) { this.show = true; }
     },
     onReset () {
       // Reset our form values
@@ -100,6 +108,12 @@ export default {
 
 <template>
   <div id="view">
+    <PulseLoader
+      v-if="showLoader"
+      class="loader"
+      color="blue"
+      size="25px"
+    />
     <b-alert
       v-model="showErrorAlert"
       variant="danger"
