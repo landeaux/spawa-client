@@ -104,7 +104,7 @@ export default {
       </template>
 
       <template v-slot:cell(role)="row">
-        {{ row.item.role.charAt(0).toUpperCase()  + row.item.role.slice(1) }}
+        {{ row.item.role.charAt(0).toUpperCase() + row.item.role.slice(1) }}
       </template>
 
       <template v-slot:cell(createdAt)="row">
