@@ -1,20 +1,19 @@
 <script>
 import { mapGetters } from 'vuex';
-import { CREATE_USER } from '@/store/actions.type';
+import { UPDATE_USER_BY_ID } from '@/store/actions.type';
 
 export default {
-  name: 'AdminDashboardCreateUser',
+  name: 'AdminDashboardModifyUser',
+  props: {
+    user: {
+      default: null,
+      required: true,
+      type: Object,
+    },
+  },
   data () {
     return {
-      form: {
-        username: '',
-        email: '',
-        company: '',
-        password: '',
-        active: true,
-        role: '',
-        state: '',
-      },
+      form: null,
       roles: [
         { text: 'Select One', value: null },
         { text: 'Founder', value: 'founder' },
@@ -45,35 +44,41 @@ export default {
     errors () {
       return this.userErrors[0];
     },
+    determineCanSubmit () {
+      return this.form.username !== this.user.username ||
+        this.form.email !== this.user.email ||
+        this.form.company !== this.user.company ||
+        this.form.password !== this.user.password ||
+        this.form.active !== this.user.active ||
+        this.form.role !== this.user.role ||
+        this.form.state !== this.user.state;
+    },
+  },
+  created () {
+    this.form = { ...this.user };
   },
   methods: {
-    async onSubmit (evt) {
+    async onSubmit () {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
-      evt.preventDefault();
-      await this.$store.dispatch(CREATE_USER, {
-        username: this.form.username,
-        email: this.form.email,
-        company: this.form.company,
-        password: this.form.password,
-        active: this.form.active,
-        role: this.form.role,
-        state: this.form.state,
+      const payload = { ...this.form };
+
+      // Remove props which didn't change or are empty
+      Object.keys(this.form).forEach((key) => {
+        if (this.form[key] === this.user[key] || this.form[key] === '') {
+          delete payload[key];
+        }
       });
+
+      payload.id = this.user.id;
+      await this.$store.dispatch(UPDATE_USER_BY_ID, payload);
       this.createdUsername = this.form.username;
       this.determineAlert();
-      this.onReset(evt);
+      if (this.showSuccessAlert === true) { this.show = false; }
     },
-    onReset (evt) {
-      evt.preventDefault();
+    onReset () {
       // Reset our form values
-      this.form.username = '';
-      this.form.email = '';
-      this.form.company = '';
-      this.form.password = '';
-      this.form.active = true;
-      this.form.role = '';
-      this.form.state = '';
+      this.form = { ...this.user };
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -94,7 +99,7 @@ export default {
 </script>
 
 <template>
-  <div class="container">
+  <div id="view">
     <b-alert
       v-model="showErrorAlert"
       variant="danger"
@@ -116,10 +121,9 @@ export default {
     <b-alert
       v-model="showSuccessAlert"
       variant="success"
-      dismissible
       class="alerts"
     >
-      User Created:
+      User Updated:
       <router-link
         class="nav-link"
         active-class="active"
@@ -133,8 +137,8 @@ export default {
     </b-alert>
     <b-form
       v-if="show"
-      @submit="onSubmit"
-      @reset="onReset"
+      @submit.prevent="onSubmit"
+      @reset.prevent="onReset"
     >
       <div class="main-form">
         <b-form-group
@@ -186,7 +190,6 @@ export default {
             id="input-password"
             v-model="form.password"
             type="password"
-            required
             placeholder="Enter Password"
           />
         </b-form-group>
@@ -228,7 +231,19 @@ export default {
         </b-form-group>
       </div>
       <b-button
+        v-if="determineCanSubmit"
         type="submit"
+        block
+        variant="primary"
+        class="form-btn"
+      >
+        Submit
+      </b-button>
+      <b-button
+        v-else
+        type="fake-submit"
+        block
+        disabled
         variant="primary"
         class="form-btn"
       >
@@ -236,6 +251,7 @@ export default {
       </b-button>
       <b-button
         type="reset"
+        block
         variant="danger"
         class="form-btn"
       >
@@ -249,15 +265,16 @@ export default {
   .main-form
     text-align: left
     color: #039
-  .form-btn
-    display: inline-flex
-    flex-direction: row
-    justify-content: space-evenly
-    width: 10vw
-    height: 2.5rem
-    font-size: 16px
-    margin: 10px
-    font-weight: bold
-  .alerts
-    width: 45vw
+    .alerts
+      width: 35vw
+
+    .form-btn
+      display: inline-flex
+      flex-direction: row
+      justify-content: space-around
+      width: 10vw
+      height: 2.5rem
+      font-size: 16px
+      margin: 10px
+      font-weight: bold
 </style>

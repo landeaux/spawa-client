@@ -6,6 +6,7 @@ import {
   REGISTER,
   CHECK_AUTH,
   UPDATE_USER,
+  UPDATE_USER_STATE,
 } from './actions.type';
 import {
   SET_AUTH,
@@ -66,6 +67,12 @@ const actions = {
   },
   [UPDATE_USER] (context, payload) {
     return ApiService.put('user', { user: payload }).then(({ data }) => {
+      context.commit(SET_AUTH, data.user);
+      return data;
+    });
+  },
+  [UPDATE_USER_STATE] (context, payload) {
+    return ApiService.put('user/state', { user: payload }).then(({ data }) => {
       context.commit(SET_AUTH, data.user);
       return data;
     });

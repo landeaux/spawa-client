@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import BigButtonComponent from '@/components/BigButtonComponent';
+import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 
 export default {
   name: 'FounderDashboard',
@@ -10,6 +11,14 @@ export default {
   }),
   computed: {
     ...mapGetters(['currentUser']),
+  },
+  methods: {
+    onDownloadButtonClick () {
+      const payload = {
+        id: this.currentUser.pitchDeck,
+      };
+      this.$store.dispatch(DOWNLOAD_PITCH_DECK, payload);
+    },
   },
 };
 </script>
@@ -49,12 +58,7 @@ export default {
           info="10"
           class="right-flex"
         />
-        <button
-          type="button"
-          class="right-flex btn btn-primary small-btn"
-        >
-          Re-submit Pitch Deck
-        </button>
+
         <button
           v-b-modal.vid-model
           type="button"
@@ -74,31 +78,23 @@ export default {
             class="text-center"
           />
         </b-modal>
+
+        <button
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onDownloadButtonClick"
+        >
+          Download Pitch Deck
+        </button>
+
+        <button
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+        >
+          Re-submit Pitch Deck
+        </button>
       </div>
     </div>
-
-    <router-link
-      class="nav-link"
-      :to="{ name: 'submit-eapp' }"
-    >
-      <button
-        type="button"
-        class="btn btn-primary"
-      >
-        Submit Eapp
-      </button>
-    </router-link>
-    <router-link
-      class="nav-link"
-      :to="{ name: 'book-pitch-date' }"
-    >
-      <button
-        type="button"
-        class="btn btn-primary"
-      >
-        Book a Pitch Date
-      </button>
-    </router-link>
   </div>
 </template>
 

@@ -8,6 +8,7 @@ export default {
     return {
       username: '',
       email: '',
+      company: '',
       password: '',
     };
   },
@@ -18,12 +19,14 @@ export default {
   },
   methods: {
     async onSubmit () {
+      // #todo Need to clear the errors before dispatching
       await this.$store.dispatch(REGISTER, {
-        email: this.email,
-        password: this.password,
         username: this.username,
+        email: this.email,
+        company: this.company,
+        password: this.password,
       });
-      this.$router.push({ name: 'home' });
+      await this.$router.push({ name: 'home' });
     },
   },
 };
@@ -53,7 +56,7 @@ export default {
               v-for="(v, k) in errors"
               :key="k"
             >
-              {{ k }} {{ v | error }}
+              {{ k }} {{ v }}
             </li>
           </ul>
           <form @submit.prevent="onSubmit">
@@ -71,6 +74,14 @@ export default {
                 class="form-control form-control-lg"
                 type="text"
                 placeholder="Email"
+              >
+            </fieldset>
+            <fieldset class="form-group">
+              <input
+                v-model="company"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Company"
               >
             </fieldset>
             <fieldset class="form-group">

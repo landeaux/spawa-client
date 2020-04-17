@@ -1,4 +1,6 @@
 <script>
+import { UPDATE_USER_STATE } from '@/store/actions.type';
+
 export default {
   name: 'BookPitchDate',
   components: {
@@ -15,6 +17,13 @@ export default {
     successMessage: 'Thank you for submitting the form! Click "Next" to continue.',
     title: 'Entrepreneur Information Form',
   }),
+  methods: {
+    onNextButtonClick () {
+      this.$store.dispatch(UPDATE_USER_STATE, {
+        state: 'watch_pitch_video',
+      });
+    },
+  },
 };
 </script>
 
@@ -27,5 +36,6 @@ export default {
     :router-link-to="routerLinkTo"
     :success-message="successMessage"
     :title="title"
+    @next-button-click="onNextButtonClick"
   />
 </template>

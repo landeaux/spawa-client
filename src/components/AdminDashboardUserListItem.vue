@@ -1,32 +1,31 @@
 <script>
+import AdminDashboardModifyUser from '@/components/AdminDashboardModifyUser';
 export default {
   name: 'AdminDashboardUserListItem',
+  components: {
+    AdminDashboardModifyUser,
+  },
   props: {
-    active: {
-      default: false,
-      required: true,
-      type: Boolean,
-    },
-    username: {
-      default: '',
-      required: true,
-      type: String,
-    },
     created: {
       default: '',
       required: true,
       type: String,
     },
+    user: {
+      default: null,
+      required: true,
+      type: Object,
+    },
   },
   computed: {
     getModifyModalId () {
-      return 'modify' + this.username;
+      return 'modify' + this.user.username;
     },
     getSuspendModalId () {
-      return 'suspend' + this.username;
+      return 'suspend' + this.user.username;
     },
     getDeleteModalId () {
-      return 'delete' + this.username;
+      return 'delete' + this.user.username;
     },
   },
 };
@@ -35,7 +34,7 @@ export default {
 <template>
   <div class="main-box">
     <b-icon
-      v-if="active"
+      v-if="user.active"
       icon="check-circle"
       variant="success"
       class="row-flex list-icon"
@@ -46,7 +45,10 @@ export default {
       class="row-flex list-icon"
     />
     <p class="row-flex">
-      {{ username }}
+      {{ user.username }}
+    </p>
+    <p class="row-flex">
+      {{ user.role.charAt(0).toUpperCase() + row.item.role.slice(1) }}
     </p>
     <p class="row-flex date-type">
       {{ created | date }}
@@ -69,7 +71,9 @@ export default {
         title="Modify User"
       >
         <p class="mod-text">
-          Are you sure you want to modify {{ username }}?
+          <AdminDashboardModifyUser
+            :user="user"
+          />
         </p>
       </b-modal>
       <b-dropdown-item
@@ -85,7 +89,7 @@ export default {
         title="Suspend User"
       >
         <p class="mod-text">
-          Are you sure you want to suspend {{ username }}?
+          Are you sure you want to suspend {{ user.username }}?
         </p>
       </b-modal>
       <b-dropdown-item
@@ -101,7 +105,7 @@ export default {
         title="Delete User"
       >
         <p class="mod-text">
-          Are you sure you want to delete {{ username }}?
+          Are you sure you want to delete {{ user.username }}?
         </p>
       </b-modal>
     </b-dropdown>

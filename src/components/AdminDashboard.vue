@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AdminDashboardMain from '@/components/AdminDashboardMain';
+import PitchDeckList from '@/components/PitchDeckList';
 import AdminDashboardUserList from '@/components/AdminDashboardUserList';
 import AdminDashboardCreateUser from '@/components/AdminDashboardCreateUser';
 export default {
@@ -14,11 +15,13 @@ export default {
     view: 'default',
   }),
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
     viewComponent () {
       return {
         default: AdminDashboardMain,
-        plist: AdminDashboardMain,
+        plist: PitchDeckList,
         ulist: AdminDashboardUserList,
         ucreate: AdminDashboardCreateUser,
       }[this.view];
@@ -43,65 +46,69 @@ export default {
 
 <template>
   <div id="view">
-    <div class="greeting">
-      <h1>Admin Dashboard</h1>
-      <p>Welcome back, {{ currentUser.username }}!</p>
+    <div class="container">
+      <div class="greeting">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back, {{ currentUser.username }}!</p>
+      </div>
+      <b-breadcrumb class="mainbread">
+        <b-breadcrumb-item
+          v-if="view === 'default'"
+          active
+          class="active-crumb"
+        >
+          <b-icon
+            icon="house-fill"
+            scale="1.25"
+            shift-v="1.25"
+            aria-hidden="true"
+          />
+          Admin
+        </b-breadcrumb-item>
+        <b-breadcrumb-item
+          v-else
+          @click="onDefaultBtnClick"
+        >
+          <b-icon
+            icon="house-fill"
+            scale="1.25"
+            shift-v="1.25"
+            aria-hidden="true"
+            class="inactive-crumb"
+          />
+          Admin
+        </b-breadcrumb-item>
+        <b-breadcrumb-item
+          v-if="view === 'plist'"
+          active
+          class="active-crumb"
+        >
+          Pitch Deck List
+        </b-breadcrumb-item>
+        <b-breadcrumb-item
+          v-if="view === 'ulist'"
+          active
+          class="active-crumb"
+        >
+          User List
+        </b-breadcrumb-item>
+        <b-breadcrumb-item
+          v-if="view === 'ucreate'"
+          active
+          class="active-crumb"
+        >
+          Create User
+        </b-breadcrumb-item>
+      </b-breadcrumb>
+      <div class="dashboard-actions">
+        <component
+          :is="viewComponent"
+          @pitch-list-btn-clicked="onPListBtnClick"
+          @user-list-btn-clicked="onUListBtnClick"
+          @create-user-btn-clicked="onUCreateBtnClick"
+        />
+      </div>
     </div>
-    <b-breadcrumb class="mainbread">
-      <b-breadcrumb-item
-        v-if="view === 'default'"
-        active
-        class="active-crumb"
-      >
-        <b-icon
-          icon="house-fill"
-          scale="1.25"
-          shift-v="1.25"
-          aria-hidden="true"
-        />
-        Admin
-      </b-breadcrumb-item>
-      <b-breadcrumb-item
-        v-else
-        @click="onDefaultBtnClick"
-      >
-        <b-icon
-          icon="house-fill"
-          scale="1.25"
-          shift-v="1.25"
-          aria-hidden="true"
-          class="inactive-crumb"
-        />
-        Admin
-      </b-breadcrumb-item>
-      <b-breadcrumb-item
-        v-if="view === 'plist'"
-        active
-        class="active-crumb"
-      >
-        Pitch Deck List
-      </b-breadcrumb-item>
-      <b-breadcrumb-item
-        v-if="view === 'ulist'"
-        active
-        class="active-crumb"
-      >
-        User List
-      </b-breadcrumb-item>
-      <b-breadcrumb-item
-        v-if="view === 'ucreate'"
-        active
-        class="active-crumb"
-      >
-        Create User
-      </b-breadcrumb-item>
-    </b-breadcrumb>
-    <component
-      :is="viewComponent"
-      @pitch-list-btn-clicked="onPListBtnClick"
-      @user-list-btn-clicked="onUListBtnClick"
-      @create-user-btn-clicked="onUCreateBtnClick"
-    />
   </div>
 </template>
 
@@ -110,10 +117,11 @@ export default {
     color: #039
   p
     color: #007bff
-  .mainbread
-    width: 70vw
   .active-crumb
     color: #039
   .inactive-crumb
     color: #007bff
+  .dashboard-actions
+    display: flex
+    flex-direction: row
 </style>
