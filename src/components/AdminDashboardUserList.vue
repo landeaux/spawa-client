@@ -9,36 +9,44 @@ export default {
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   data: () => ({
+    sortBy: 'role',
+    sortDesc: false,
     state: 'INIT',
     tableFields: [
       {
         key: 'active',
         label: 'Active',
+        sortable: true,
         tdClass: 'table-cell',
       },
       {
         key: 'username',
         label: 'Username',
+        sortable: true,
         tdClass: 'table-cell',
       },
       {
         key: 'role',
         label: 'Role',
+        sortable: true,
         tdClass: 'table-cell',
       },
       {
         key: 'company',
         label: 'Company',
+        sortable: true,
         tdClass: 'table-cell',
       },
       {
         key: 'createdAt',
-        label: 'Date Created',
+        label: 'User Since',
+        sortable: true,
         tdClass: 'table-cell',
       },
       {
         key: 'actions',
         label: 'Actions',
+        sortable: false,
         tdClass: 'table-cell',
       },
     ],
@@ -79,13 +87,15 @@ export default {
     </b-alert>
     <b-table
       v-else
-      striped
-      hover
       :items="userList"
       :fields="tableFields"
+      :sort-by.sync="sortBy"
+      :sort-desc="sortDesc"
       head-variant="light"
       sticky-header="100%"
       tbody-tr-class="table-row"
+      striped
+      hover
     >
       <template v-slot:cell(active)="row">
         <div style="vertical-align: center">
