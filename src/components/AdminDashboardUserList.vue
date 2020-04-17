@@ -1,5 +1,8 @@
 <script>
-import { FETCH_USERS } from '@/store/actions.type';
+import {
+  FETCH_USERS,
+  DELETE_USER,
+} from '@/store/actions.type';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -67,6 +70,11 @@ export default {
     await this.$store.dispatch(FETCH_USERS);
     this.state = 'FETCH_COMPLETE';
   },
+  methods: {
+    async onDeleteButtonOk (userId) {
+      await this.$store.dispatch(DELETE_USER, userId);
+    },
+  },
 };
 </script>
 
@@ -95,6 +103,7 @@ export default {
       sticky-header="100%"
       tbody-tr-class="table-row"
       striped
+      outlined
       hover
     >
       <template v-slot:cell(active)="row">
@@ -171,6 +180,7 @@ export default {
             size="lg"
             centered
             title="Delete User"
+            @ok="onDeleteButtonOk(row.item.id)"
           >
             <p class="mod-text">
               Are you sure you want to delete {{ row.item.username }}?
