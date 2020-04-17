@@ -111,6 +111,7 @@ export default {
         sticky-header="100%"
         tbody-tr-class="table-row"
         striped
+        outlined
         hover
       >
         <template v-slot:cell(userHasReviewed)="row">
