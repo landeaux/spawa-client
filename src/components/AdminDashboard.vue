@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AdminDashboardMain from '@/components/AdminDashboardMain';
+import PitchDeckList from '@/components/PitchDeckListV2';
 import AdminDashboardUserList from '@/components/AdminDashboardUserList';
 import AdminDashboardCreateUser from '@/components/AdminDashboardCreateUser';
 export default {
@@ -20,7 +21,7 @@ export default {
     viewComponent () {
       return {
         default: AdminDashboardMain,
-        plist: AdminDashboardMain,
+        plist: PitchDeckList,
         ulist: AdminDashboardUserList,
         ucreate: AdminDashboardCreateUser,
       }[this.view];
