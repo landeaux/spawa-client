@@ -61,11 +61,11 @@ export default {
       return this.pitchDeckList
         .filter((p) => !p.accepted)
         .map((p) => {
-          const augmentedPitchDeck = { ...p };
-          augmentedPitchDeck.numReviews = p.reviews.length;
-          // #todo Need to check intersection of user's reviews and pitch deck's reviews
-          augmentedPitchDeck.userHasReviewed = false;
-          return augmentedPitchDeck;
+          return {
+            ...p,
+            numReviews: p.reviews.length,
+            userHasReviewed: this.userHasReviewed(p),
+          };
         });
     },
     showError () {
@@ -78,6 +78,14 @@ export default {
   async created () {
     await this.$store.dispatch(FETCH_PITCH_DECKS);
     this.state = 'FETCH_COMPLETE';
+    console.log(this.currentUser);
+  },
+  methods: {
+    userHasReviewed (pitchDeck) {
+      const pitchDeckReviews = pitchDeck.reviews;
+      const currentUserReviews = this.currentUser.reviews;
+      return pitchDeckReviews.some((r) => currentUserReviews.includes(r));
+    },
   },
 };
 </script>
@@ -109,6 +117,7 @@ export default {
         :sort-desc="sortDesc"
         head-variant="light"
         sticky-header="100%"
+        thead-tr-class="table-header-row"
         tbody-tr-class="table-row"
         striped
         outlined
