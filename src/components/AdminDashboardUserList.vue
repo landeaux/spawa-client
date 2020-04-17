@@ -139,6 +139,19 @@ export default {
         </div>
       </template>
 
+      <template v-slot:cell(username)="row">
+        <router-link
+          class="nav-link"
+          active-class="active"
+          :to="{
+            name: 'profile',
+            params: { username: row.item.username }
+          }"
+        >
+          {{ row.item.username }}
+        </router-link>
+      </template>
+
       <template v-slot:cell(role)="row">
         {{ row.item.role.charAt(0).toUpperCase() + row.item.role.slice(1) }}
       </template>
