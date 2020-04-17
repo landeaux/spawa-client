@@ -1,7 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AdminDashboardMain from '@/components/AdminDashboardMain';
-import PitchDeckList from '@/components/PitchDeckListV2';
+import PitchDeckList from '@/components/PitchDeckList';
 import AdminDashboardUserList from '@/components/AdminDashboardUserList';
 import AdminDashboardCreateUser from '@/components/AdminDashboardCreateUser';
 export default {

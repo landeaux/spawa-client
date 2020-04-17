@@ -4,7 +4,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'ReviewerDashboard',
   components: {
-    PitchDeckList: () => import('@/components/PitchDeckListV2'),
+    PitchDeckList: () => import('@/components/PitchDeckList'),
   },
   computed: {
     ...mapGetters(['currentUser']),
