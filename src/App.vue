@@ -60,4 +60,8 @@ body
       text-decoration: none
   .table-cell
     vertical-align: middle
+  .table-header-row
+    th
+      &:focus
+        outline: none
 </style>
