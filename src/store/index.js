@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import auth from './auth.module';
-import profile from './profile.module';
-import user from './user.module';
-import pitchDeck from './pitchDeck.module';
-import review from './review.module';
+import auth from './modules/auth.module';
+import profile from './modules/profile.module';
+import user from './modules/user.module';
+import pitchDeck from './modules/pitchDeck.module';
+import review from './modules/review.module';
 
 Vue.use(Vuex);
 
