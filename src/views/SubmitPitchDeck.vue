@@ -1,10 +1,22 @@
 <script>
-import { mapGetters } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+} from 'vuex';
 import {
   CREATE_PITCH_DECK,
   UPDATE_USER_STATE,
 } from '@/store/actions.type';
 
+/**
+ * vuex module names
+ */
+const PITCH_DECK = 'pitchDeck';
+const AUTH = 'auth';
+
+/**
+ * component states
+ */
 const STATUS_INITIAL = 0;
 const STATUS_SAVING = 1;
 const STATUS_SUCCESS = 2;
@@ -33,7 +45,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['pitchDeck']),
+    ...mapGetters({
+      pitchDeck: 'pitchDeck/pitchDeck',
+    }),
     inputValid () {
       return this.file !== null;
     },
@@ -54,6 +68,10 @@ export default {
     this.reset();
   },
   methods: {
+    ...mapActions({
+      createPitchDeck: `${PITCH_DECK}/${CREATE_PITCH_DECK}`,
+      updateUserState: `${AUTH}/${UPDATE_USER_STATE}`,
+    }),
     /**
      * Reset form to initial state
      */
@@ -69,7 +87,7 @@ export default {
     async uploadFile (formData) {
       this.currentStatus = STATUS_SAVING;
       try {
-        await this.$store.dispatch(CREATE_PITCH_DECK, formData);
+        await this.createPitchDeck(formData);
         this.currentStatus = STATUS_SUCCESS;
       } catch (err) {
         this.uploadError = err.response;
@@ -87,7 +105,7 @@ export default {
       this.uploadFile(formData);
     },
     onNextButtonClick () {
-      this.$store.dispatch(UPDATE_USER_STATE, {
+      this.updateUserState({
         state: 'pitch_deck_review',
       });
     },
