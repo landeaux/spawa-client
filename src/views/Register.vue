@@ -1,7 +1,17 @@
 <script>
-import { mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import { REGISTER } from '@/store/actions.type';
 
+const {
+  mapActions,
+  mapState,
+} = createNamespacedHelpers('auth');
+
+/**
+ * TheRegister
+ *
+ * The Register view
+ */
 export default {
   name: 'TheRegister',
   data () {
@@ -13,14 +23,17 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      errors: state => state.auth.errors,
-    }),
+    ...mapState([
+      'errors',
+    ]),
   },
   methods: {
+    ...mapActions({
+      registerUser: REGISTER,
+    }),
     async onSubmit () {
       // #todo Need to clear the errors before dispatching
-      await this.$store.dispatch(REGISTER, {
+      await this.registerUser({
         username: this.username,
         email: this.email,
         company: this.company,
