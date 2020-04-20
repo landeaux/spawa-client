@@ -69,7 +69,7 @@ export default {
           title="See My Feedback"
           subtitle="Total Reviews: "
           info="10"
-          class="right-flex"
+          class="right-flex big-button"
         />
 
         <button
@@ -141,8 +141,8 @@ export default {
     height: 4rem;
     border-radius: 8px;
   }
-  .btn {
-    width: 70%;
+  .btn, .big-button {
+    width: 70% !important;
   }
   .stat-display {
     margin-top: 1%;
