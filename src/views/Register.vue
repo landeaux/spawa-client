@@ -74,35 +74,39 @@ export default {
           </ul>
           <form @submit.prevent="onSubmit">
             <fieldset class="form-group">
+              <label for="username">Username</label>
               <input
+                id="username"
                 v-model="username"
                 class="form-control form-control-lg"
                 type="text"
-                placeholder="Username"
               >
             </fieldset>
             <fieldset class="form-group">
+              <label for="email">Email</label>
               <input
+                id="email"
                 v-model="email"
                 class="form-control form-control-lg"
                 type="text"
-                placeholder="Email"
               >
             </fieldset>
             <fieldset class="form-group">
+              <label for="company">Company</label>
               <input
+                id="company"
                 v-model="company"
                 class="form-control form-control-lg"
                 type="text"
-                placeholder="Company"
               >
             </fieldset>
             <fieldset class="form-group">
+              <label for="password">Password</label>
               <input
+                id="password"
                 v-model="password"
                 class="form-control form-control-lg"
                 type="password"
-                placeholder="Password"
               >
             </fieldset>
             <button class="btn btn-lg btn-primary pull-xs-right">
@@ -114,3 +118,11 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped lang="sass">
+  fieldset
+    &.form-group
+      text-align: left
+      label
+        font-weight: bold
+</style>
