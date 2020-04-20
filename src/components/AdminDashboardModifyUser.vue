@@ -29,7 +29,7 @@ export default {
         email: '',
         company: '',
         password: '',
-        active: false,
+        active: true,
         role: '',
         state: '',
       },
