@@ -1,19 +1,38 @@
 <script>
-import { mapGetters } from 'vuex';
 import { UPDATE_USER_BY_ID } from '@/store/actions.type';
+import { createNamespacedHelpers } from 'vuex';
 
+const {
+  mapActions,
+  mapGetters,
+} = createNamespacedHelpers('user');
+
+/**
+ * AdminDashboardModifyUser
+ *
+ * The Modify User form in the Admin Dashboard.
+ */
 export default {
   name: 'AdminDashboardModifyUser',
   props: {
     user: {
-      default: null,
+      default: () => ({}),
       required: true,
       type: Object,
     },
   },
   data () {
     return {
-      form: null,
+      form: {
+        // Note: these prop names must exactly match user prop names
+        username: '',
+        email: '',
+        company: '',
+        password: '',
+        active: false,
+        role: '',
+        state: '',
+      },
       roles: [
         { text: 'Select One', value: null },
         { text: 'Founder', value: 'founder' },
@@ -21,7 +40,6 @@ export default {
         { text: 'Reviewer', value: 'reviewer' },
       ],
       states: [
-        { text: 'Select One', value: null },
         { text: 'Submit Eapp', value: 'submit_eapp' },
         { text: 'Watch Pitch Video', value: 'watch_pitch_video' },
         { text: 'Take Pitch Quiz', value: 'take_pitch_quiz' },
@@ -31,7 +49,7 @@ export default {
         { text: 'Pitch Accepted', value: 'pitch_accepted' },
         { text: 'Pitch Cancelled', value: 'pitch_cancelled' },
       ],
-      show: true,
+      showForm: true,
       createdUsername: '',
       showErrorAlert: false,
       showSuccessAlert: false,
@@ -48,41 +66,50 @@ export default {
       return this.form.username !== this.user.username ||
         this.form.email !== this.user.email ||
         this.form.company !== this.user.company ||
-        this.form.password !== this.user.password ||
+        this.form.password !== '' ||
         this.form.active !== this.user.active ||
         this.form.role !== this.user.role ||
         this.form.state !== this.user.state;
     },
   },
   created () {
-    this.form = { ...this.user };
+    this.setInitialFormValues();
   },
   methods: {
+    ...mapActions({
+      updateUserById: UPDATE_USER_BY_ID,
+    }),
+    setInitialFormValues () {
+      // Only copy the user props for which we have form fields
+      Object.keys(this.form).forEach((key) => {
+        if (Object.prototype.hasOwnProperty.call(this.user, key)) {
+          this.form[key] = this.user[key] || '';
+        }
+      });
+    },
     async onSubmit () {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
       const payload = { ...this.form };
-
       // Remove props which didn't change or are empty
       Object.keys(this.form).forEach((key) => {
         if (this.form[key] === this.user[key] || this.form[key] === '') {
           delete payload[key];
         }
       });
-
       payload.id = this.user.id;
-      await this.$store.dispatch(UPDATE_USER_BY_ID, payload);
+      await this.updateUserById(payload);
       this.createdUsername = this.form.username;
       this.determineAlert();
-      if (this.showSuccessAlert === true) { this.show = false; }
+      if (this.showSuccessAlert === true) { this.showForm = false; }
     },
     onReset () {
       // Reset our form values
-      this.form = { ...this.user };
+      this.setInitialFormValues();
       // Trick to reset/clear native browser form validation state
-      this.show = false;
+      this.showForm = false;
       this.$nextTick(() => {
-        this.show = true;
+        this.showForm = true;
       });
     },
     determineAlert () {
@@ -114,7 +141,7 @@ export default {
           v-for="(v, k) in errors"
           :key="k"
         >
-          {{ k }} {{ v }}
+          <strong>{{ k }}</strong> {{ v }}
         </li>
       </ul>
     </b-alert>
@@ -136,7 +163,7 @@ export default {
       </router-link>
     </b-alert>
     <b-form
-      v-if="show"
+      v-if="showForm"
       @submit.prevent="onSubmit"
       @reset.prevent="onReset"
     >
@@ -267,7 +294,6 @@ export default {
     color: #039
     .alerts
       width: 35vw
-
     .form-btn
       display: inline-flex
       flex-direction: row
