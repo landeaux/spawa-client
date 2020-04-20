@@ -1,9 +1,17 @@
 <script>
-import { mapGetters } from 'vuex';
 import AdminDashboardMain from '@/components/AdminDashboardMain';
 import PitchDeckList from '@/components/PitchDeckList';
 import AdminDashboardUserList from '@/components/AdminDashboardUserList';
 import AdminDashboardCreateUser from '@/components/AdminDashboardCreateUser';
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * AdminDashboard
+ *
+ * The admin dashboard.
+ */
 export default {
   name: 'AdminDashboard',
   components: {
