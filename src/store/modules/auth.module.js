@@ -12,10 +12,11 @@ import {
   SET_AUTH,
   PURGE_AUTH,
   SET_ERROR,
+  CLEAR_ERRORS,
 } from '@/store/mutations.type';
 
 const state = {
-  errors: null,
+  errors: {},
   user: {},
   isAuthenticated: !!JwtService.getToken(),
 };
@@ -82,6 +83,9 @@ const actions = {
 const mutations = {
   [SET_ERROR] (state, error) {
     state.errors = error;
+  },
+  [CLEAR_ERRORS] (state) {
+    state.errors = {};
   },
   [SET_AUTH] (state, user) {
     state.isAuthenticated = true;
