@@ -9,6 +9,7 @@ import {
 } from '@/store/actions.type';
 import {
   SET_ERROR,
+  CLEAR_ERRORS,
   SET_USER_LIST,
 } from '@/store/mutations.type';
 
@@ -89,6 +90,9 @@ const actions = {
 const mutations = {
   [SET_ERROR] (state, error) {
     state.userErrors.push(error);
+  },
+  [CLEAR_ERRORS] (state) {
+    state.errors = [];
   },
   [SET_USER_LIST] (state, payload) {
     state.userList = payload;

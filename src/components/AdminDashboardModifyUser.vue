@@ -5,7 +5,16 @@ import { createNamespacedHelpers } from 'vuex';
 const {
   mapActions,
   mapGetters,
+  mapMutations,
 } = createNamespacedHelpers('user');
+
+/**
+ * component statuses
+ */
+const INIT = 'INIT';
+const PENDING = 'PENDING';
+const SUCCESS = 'SUCCESS';
+const ERROR = 'ERROR';
 
 /**
  * AdminDashboardModifyUser
@@ -14,6 +23,9 @@ const {
  */
 export default {
   name: 'AdminDashboardModifyUser',
+  components: {
+    PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
+  },
   props: {
     user: {
       default: () => ({}),
@@ -23,6 +35,8 @@ export default {
   },
   data () {
     return {
+      status: INIT,
+      errors: {},
       form: {
         // Note: these prop names must exactly match user prop names
         username: '',
@@ -39,7 +53,7 @@ export default {
         { text: 'Admin', value: 'admin' },
         { text: 'Reviewer', value: 'reviewer' },
       ],
-      states: [
+      founderStates: [
         { text: 'Submit Eapp', value: 'submit_eapp' },
         { text: 'Watch Pitch Video', value: 'watch_pitch_video' },
         { text: 'Take Pitch Quiz', value: 'take_pitch_quiz' },
@@ -49,31 +63,38 @@ export default {
         { text: 'Pitch Accepted', value: 'pitch_accepted' },
         { text: 'Pitch Cancelled', value: 'pitch_cancelled' },
       ],
-      showForm: true,
       createdUsername: '',
-      showErrorAlert: false,
-      showSuccessAlert: false,
     };
   },
   computed: {
     ...mapGetters([
       'userErrors',
     ]),
-    errors () {
-      return this.userErrors[0];
-    },
     determineCanSubmit () {
-      return this.form.username !== this.user.username ||
+      return (this.form.username !== this.user.username ||
         this.form.email !== this.user.email ||
         this.form.company !== this.user.company ||
         this.form.password !== '' ||
         this.form.active !== this.user.active ||
         this.form.role !== this.user.role ||
-        this.form.state !== this.user.state;
+        this.form.state !== this.user.state);
+    },
+    showForm () {
+      return !this.statusIsPending
+    },
+    statusIsPending () {
+      return this.status === PENDING;
+    },
+    statusIsSuccess () {
+      return this.status === SUCCESS;
+    },
+    statusIsError () {
+      return this.status === ERROR;
     },
   },
   created () {
     this.setInitialFormValues();
+    this.showLoader = false;
   },
   methods: {
     ...mapActions({
@@ -82,13 +103,13 @@ export default {
     setInitialFormValues () {
       // Only copy the user props for which we have form fields
       Object.keys(this.form).forEach((key) => {
-        if (Object.prototype.hasOwnProperty.call(this.user, key)) {
-          this.form[key] = this.user[key] || '';
-        }
+          this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
+            ? this.user[key]
+            : '';
       });
     },
     async onSubmit () {
-      Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
+      this.errors = {};
       if (this.form.role !== 'founder') { this.form.state = ''; }
       const payload = { ...this.form };
       // Remove props which didn't change or are empty
@@ -98,40 +119,49 @@ export default {
         }
       });
       payload.id = this.user.id;
-      await this.updateUserById(payload);
-      this.createdUsername = this.form.username;
-      this.determineAlert();
-      if (this.showSuccessAlert === true) { this.showForm = false; }
+      this.status = PENDING
+      try {
+        await this.updateUserById(payload);
+        this.createdUsername = this.form.username;
+        this.status = SUCCESS;
+      } catch ({ response }) {
+        this.errors = response.data.errors;
+        this.status = ERROR;
+      }
     },
     onReset () {
       // Reset our form values
+      this.status = INIT;
+      this.errors = {};
       this.setInitialFormValues();
-      // Trick to reset/clear native browser form validation state
-      this.showForm = false;
-      this.$nextTick(() => {
-        this.showForm = true;
-      });
     },
-    determineAlert () {
-      this.showErrorAlert = false;
-      this.showSuccessAlert = false;
-      if (Object.keys(this.userErrors).length !== 0) {
-        this.showErrorAlert = true;
-      } else if (Object.keys(this.userErrors).length === 0 && this.createdUsername !== '') {
-        this.showSuccessAlert = true;
-      }
+    onErrorAlertDismissed () {
+      this.errors = {}
     },
   },
 };
 </script>
 
 <template>
-  <div id="view">
+  <div class="container">
+    <div
+      v-if="statusIsPending"
+      class="loader-container"
+    >
+      <PulseLoader
+        class="loader"
+        color="blue"
+        size="25px"
+      />
+    </div>
     <b-alert
-      v-model="showErrorAlert"
+      v-else-if="statusIsError"
       variant="danger"
-      dismissible
       class="alerts"
+      show="true"
+      dismissible
+      fade
+      @dismissed="onErrorAlertDismissed"
     >
       An error has occurred!
       <ul
@@ -146,9 +176,12 @@ export default {
       </ul>
     </b-alert>
     <b-alert
-      v-model="showSuccessAlert"
+      v-else-if="statusIsSuccess"
       variant="success"
       class="alerts"
+      show="true"
+      dismissible
+      fade
     >
       User Updated:
       <router-link
@@ -252,7 +285,7 @@ export default {
           <b-form-select
             id="input-state"
             v-model="form.state"
-            :options="states"
+            :options="founderStates"
             required
           />
         </b-form-group>
@@ -288,19 +321,31 @@ export default {
   </div>
 </template>
 
-<style scoped lang = sass>
-  .main-form
-    text-align: left
-    color: #039
-    .alerts
-      width: 35vw
-    .form-btn
-      display: inline-flex
+<style scoped lang="sass">
+  .container
+    .loader-container
+      display: flex
       flex-direction: row
-      justify-content: space-around
-      width: 10vw
-      height: 2.5rem
-      font-size: 16px
-      margin: 10px
-      font-weight: bold
+      justify-content: center
+      align-items: center
+    .main-form
+      text-align: left
+      color: #039
+      .form-btn
+        display: inline-flex
+        flex-direction: row
+        justify-content: space-around
+        width: 10vw
+        height: 2.5rem
+        font-size: 16px
+        margin: 10px
+        font-weight: bold
+  .alerts
+    text-align: center
+    padding-left: 3.75rem
+    ul
+      margin: 0
+      padding: 0
+      li
+        list-style: none
 </style>
