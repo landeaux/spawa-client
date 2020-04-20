@@ -1,23 +1,36 @@
 <script>
-import { mapGetters } from 'vuex';
-import BigButtonComponent from '@/components/BigButtonComponent';
+import { createNamespacedHelpers } from 'vuex';
 import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 
+const { mapActions } = createNamespacedHelpers('pitchDeck');
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * FounderDashboard
+ *
+ * The Founder dashboard component.
+ */
 export default {
   name: 'FounderDashboard',
-  components: { BigButtonComponent },
+  components: {
+    BigButtonComponent: () => import('@/components/BigButtonComponent'),
+  },
   data: () => ({
     videoId: 'jwLZVMI3q70',
   }),
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
   methods: {
+    ...mapActions({
+      downloadPitchDeck: DOWNLOAD_PITCH_DECK,
+    }),
     onDownloadButtonClick () {
-      const payload = {
+      this.downloadPitchDeck({
         id: this.currentUser.pitchDeck,
-      };
-      this.$store.dispatch(DOWNLOAD_PITCH_DECK, payload);
+      });
     },
   },
 };

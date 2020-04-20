@@ -1,6 +1,14 @@
 <script>
+import { createNamespacedHelpers } from 'vuex';
 import { UPDATE_USER_STATE } from '@/store/actions.type';
 
+const { mapActions } = createNamespacedHelpers('auth');
+
+/**
+ * BookPitchDate
+ *
+ * The Book Pitch Date view.
+ */
 export default {
   name: 'BookPitchDate',
   components: {
@@ -18,8 +26,11 @@ export default {
     title: 'Entrepreneur Information Form',
   }),
   methods: {
+    ...mapActions({
+      updateUserState: UPDATE_USER_STATE,
+    }),
     onNextButtonClick () {
-      this.$store.dispatch(UPDATE_USER_STATE, {
+      this.updateUserState({
         state: 'watch_pitch_video',
       });
     },
