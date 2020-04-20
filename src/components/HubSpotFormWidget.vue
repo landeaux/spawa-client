@@ -1,4 +1,9 @@
 <script>
+/**
+ * HubSpotFormWidget
+ *
+ * HubSpot Form Widget component for embedding HubSpot forms.
+ */
 export default {
   name: 'HubSpotFormWidget',
   components: {

@@ -1,10 +1,18 @@
 <script>
-import { mapGetters } from 'vuex';
+import {
+  mapActions,
+  mapGetters,
+} from 'vuex';
 import {
   FETCH_PROFILE,
   FETCH_PROFILE_BY_USERNAME,
 } from '@/store/actions.type';
 
+/**
+ * TheProfile
+ *
+ * The Profile view.
+ */
 export default {
   name: 'TheProfile',
   components: {
@@ -14,12 +22,12 @@ export default {
     state: 'INIT',
   }),
   computed: {
-    ...mapGetters([
-      'currentUser',
-      'profile',
-      'isAuthenticated',
-      'profileErrors',
-    ]),
+    ...mapGetters({
+      currentUser: 'auth/currentUser',
+      isAuthenticated: 'auth/isAuthenticated',
+      profile: 'profile/profile',
+      profileErrors: 'profile/profileErrors',
+    }),
     currentUserIsAdmin () {
       return this.currentUser
         ? this.currentUser.role === 'admin'
@@ -31,18 +39,16 @@ export default {
     showError () {
       return this.state === 'FETCH_ERROR';
     },
-    company () {
-      return this.profile.pitchDeck
-        ? this.profile.pitchDeck.company
-        : '';
+    profileHeaderText () {
+      return this.profile.pitchDeck.company;
     },
   },
   watch: {
     $route (to) {
-      this.fetchProfile(to.params);
+      this.handleFetchProfile(to.params);
     },
     currentUser () {
-      this.fetchProfile(this.$route.params);
+      this.handleFetchProfile(this.$route.params);
     },
     profileErrors () {
       if (this.profileErrors.length > 0) this.state = 'FETCH_ERROR';
@@ -52,16 +58,20 @@ export default {
     },
   },
   async mounted () {
-    await this.fetchProfile(this.$route.params);
+    await this.handleFetchProfile(this.$route.params);
   },
   methods: {
-    async fetchProfile (params) {
+    ...mapActions('profile', {
+      fetchProfile: FETCH_PROFILE,
+      fetchProfileByUsername: FETCH_PROFILE_BY_USERNAME,
+    }),
+    async handleFetchProfile (params) {
       const { username } = params;
       if (this.currentUser.username) {
         if (this.currentUser.username === username) {
-          await this.$store.dispatch(FETCH_PROFILE);
+          await this.fetchProfile();
         } else {
-          await this.$store.dispatch(FETCH_PROFILE_BY_USERNAME, params);
+          await this.fetchProfileByUsername(params);
         }
       }
     },
@@ -97,8 +107,8 @@ export default {
     >
       <div class="container">
         <div>
-          <div class="header">
-            <h1>{{ company }}</h1>
+          <div class="header jumbotron">
+            <h1>{{ profileHeaderText }}</h1>
             <div v-if="isCurrentUser()">
               <router-link
                 class="btn btn-sm btn-outline-secondary action-btn"
@@ -158,9 +168,10 @@ export default {
 <style scoped lang="sass">
   #view
     text-align: left
+    .user-info
+      width: 100%
     .header
       text-align: center
-      background: #f3f3f3
       padding: 2rem 0 1rem
     li
       list-style: none

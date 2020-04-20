@@ -1,6 +1,13 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * BaseHubSpotFormView
+ *
+ * Generic HubSpot Form component for embedding any HubSpot form needed.
+ */
 export default {
   name: 'BaseHubSpotFormView',
   components: {
@@ -73,7 +80,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
     showHubSpotFormWidget () {
       return this.userPopulated && !this.formSubmitted;
     },

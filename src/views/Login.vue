@@ -1,6 +1,10 @@
 <script>
-import { mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import { LOGIN } from '@/store/actions.type';
+const {
+  mapActions,
+  mapState,
+} = createNamespacedHelpers('auth');
 
 export default {
   name: 'Login',
@@ -11,17 +15,20 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      errors: state => state.auth.errors,
-    }),
+    ...mapState([
+      'errors',
+    ]),
   },
   methods: {
+    ...mapActions({
+      login: LOGIN,
+    }),
     async onSubmit (username, password) {
-      await this.$store.dispatch(LOGIN, {
+      await this.login({
         username,
         password,
       });
-      this.$router.push({ name: 'home' });
+      await this.$router.push({ name: 'home' });
     },
   },
 };
@@ -56,18 +63,20 @@ export default {
           </ul>
           <form @submit.prevent="onSubmit(username, password)">
             <fieldset class="form-group">
+              <label for="username">Username</label>
               <input
+                id="username"
                 v-model="username"
                 class="form-control form-control-lg"
-                placeholder="Username"
                 type="text"
               >
             </fieldset>
             <fieldset class="form-group">
+              <label for="password">Password</label>
               <input
+                id="password"
                 v-model="password"
                 class="form-control form-control-lg"
-                placeholder="Password"
                 type="password"
               >
             </fieldset>
@@ -80,3 +89,11 @@ export default {
     </div>
   </div>
 </template>
+
+<style scoped lang="sass">
+  fieldset
+    &.form-group
+      text-align: left
+      label
+        font-weight: bold
+</style>

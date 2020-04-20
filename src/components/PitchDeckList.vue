@@ -1,13 +1,28 @@
 <script>
 import {
-  FETCH_PITCH_DECKS,
-} from '@/store/actions.type';
-import {
+  mapActions,
   mapGetters,
 } from 'vuex';
+import {
+  FETCH_PITCH_DECKS,
+} from '@/store/actions.type';
+
+/**
+ * Vuex module names
+ */
+const AUTH = 'auth';
+const PITCH_DECK = 'pitchDeck';
+
+/**
+ * States
+ */
+const INIT = 0;
+const FETCH_COMPLETE = 1;
 
 /**
  * PitchDeckList
+ *
+ * The Pitch Deck List component.
  */
 export default {
   name: 'PitchDeckList',
@@ -17,7 +32,7 @@ export default {
   data: () => ({
     sortBy: 'createdAt',
     sortDesc: true,
-    state: 'INIT',
+    state: INIT,
     tableFields: [
       {
         key: 'userHasReviewed',
@@ -52,11 +67,11 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters([
-      'currentUser',
-      'pitchDeckErrors',
-      'pitchDeckList',
-    ]),
+    ...mapGetters({
+      currentUser: `${AUTH}/currentUser`,
+      pitchDeckErrors: `${PITCH_DECK}/pitchDeckErrors`,
+      pitchDeckList: `${PITCH_DECK}/pitchDeckList`,
+    }),
     pitchDeckListForDisplay () {
       return this.pitchDeckList
         .filter((p) => !p.accepted)
@@ -72,15 +87,17 @@ export default {
       return this.pitchDeckErrors.length > 0;
     },
     showLoader () {
-      return this.state === 'INIT';
+      return this.state === INIT;
     },
   },
   async created () {
-    await this.$store.dispatch(FETCH_PITCH_DECKS);
-    this.state = 'FETCH_COMPLETE';
-    console.log(this.currentUser);
+    await this.fetchPitchDecks();
+    this.state = FETCH_COMPLETE;
   },
   methods: {
+    ...mapActions({
+      fetchPitchDecks: `${PITCH_DECK}/${FETCH_PITCH_DECKS}`,
+    }),
     userHasReviewed (pitchDeck) {
       const pitchDeckReviews = pitchDeck.reviews;
       const currentUserReviews = this.currentUser.reviews;

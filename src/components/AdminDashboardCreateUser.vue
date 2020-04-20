@@ -1,6 +1,11 @@
 <script>
-import { mapGetters } from 'vuex';
 import { CREATE_USER } from '@/store/actions.type';
+import { createNamespacedHelpers } from 'vuex';
+
+const {
+  mapActions,
+  mapGetters,
+} = createNamespacedHelpers('user');
 
 export default {
   name: 'AdminDashboardCreateUser',
@@ -47,11 +52,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      createUser: CREATE_USER,
+    }),
     async onSubmit (evt) {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
       evt.preventDefault();
-      await this.$store.dispatch(CREATE_USER, {
+      await this.createUser({
         username: this.form.username,
         email: this.form.email,
         company: this.form.company,
@@ -98,38 +106,43 @@ export default {
     <b-alert
       v-model="showErrorAlert"
       variant="danger"
-      dismissible
       class="alerts"
+      fade
+      dismissible
+      dismiss-label="Close"
     >
-      An error has occurred!
-      <ul
-        class="error-messages"
-      >
-        <li
-          v-for="(v, k) in errors"
-          :key="k"
-        >
-          {{ k }} {{ v }}
-        </li>
-      </ul>
+      <div class="error-messages">
+        <p>An error has occurred!</p>
+        <ul>
+          <li
+            v-for="(v, k) in errors"
+            :key="k"
+          >
+            <strong>{{ k }}</strong> {{ v }}
+          </li>
+        </ul>
+      </div>
     </b-alert>
     <b-alert
       v-model="showSuccessAlert"
       variant="success"
-      dismissible
       class="alerts"
+      dismissible
+      fade
     >
-      User Created:
-      <router-link
-        class="nav-link"
-        active-class="active"
-        :to="{
-          name: 'profile',
-          params: { username: createdUsername }
-        }"
-      >
-        {{ createdUsername }}
-      </router-link>
+      <div class="success-messages">
+        User Created:
+        <router-link
+          class="nav-link"
+          active-class="active"
+          :to="{
+            name: 'profile',
+            params: { username: createdUsername }
+          }"
+        >
+          {{ createdUsername }}
+        </router-link>
+      </div>
     </b-alert>
     <b-form
       v-if="show"
@@ -259,5 +272,12 @@ export default {
     margin: 10px
     font-weight: bold
   .alerts
-    width: 45vw
+    .error-messages, .success-messages
+      padding-left: 2.5rem
+    .error-messages
+      ul
+        margin: 0
+        padding: 0
+        li
+          list-style: none
 </style>

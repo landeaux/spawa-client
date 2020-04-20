@@ -1,5 +1,7 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapGetters } = createNamespacedHelpers('auth');
 
 /**
  * FounderWalkthrough
@@ -15,7 +17,9 @@ export default {
     Loader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
     viewComponent () {
       const componentKey = this.currentUser && this.currentUser.state
         ? this.currentUser.state

@@ -1,23 +1,36 @@
 <script>
-import { mapGetters } from 'vuex';
-import BigButtonComponent from '@/components/BigButtonComponent';
+import { createNamespacedHelpers } from 'vuex';
 import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 
+const { mapActions } = createNamespacedHelpers('pitchDeck');
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * FounderDashboard
+ *
+ * The Founder dashboard component.
+ */
 export default {
   name: 'FounderDashboard',
-  components: { BigButtonComponent },
+  components: {
+    BigButtonComponent: () => import('@/components/BigButtonComponent'),
+  },
   data: () => ({
     videoId: 'jwLZVMI3q70',
   }),
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
   methods: {
+    ...mapActions({
+      downloadPitchDeck: DOWNLOAD_PITCH_DECK,
+    }),
     onDownloadButtonClick () {
-      const payload = {
+      this.downloadPitchDeck({
         id: this.currentUser.pitchDeck,
-      };
-      this.$store.dispatch(DOWNLOAD_PITCH_DECK, payload);
+      });
     },
   },
 };
@@ -56,7 +69,7 @@ export default {
           title="See My Feedback"
           subtitle="Total Reviews: "
           info="10"
-          class="right-flex"
+          class="right-flex big-button"
         />
 
         <button
@@ -128,8 +141,8 @@ export default {
     height: 4rem;
     border-radius: 8px;
   }
-  .btn {
-    width: 70%;
+  .btn, .big-button {
+    width: 70% !important;
   }
   .stat-display {
     margin-top: 1%;
