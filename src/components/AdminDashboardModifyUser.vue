@@ -80,7 +80,7 @@ export default {
         this.form.state !== this.user.state);
     },
     showForm () {
-      return !this.statusIsPending
+      return !this.statusIsPending;
     },
     statusIsPending () {
       return this.status === PENDING;
@@ -103,9 +103,9 @@ export default {
     setInitialFormValues () {
       // Only copy the user props for which we have form fields
       Object.keys(this.form).forEach((key) => {
-          this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
-            ? this.user[key]
-            : '';
+        this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
+          ? this.user[key]
+          : '';
       });
     },
     async onSubmit () {
@@ -119,7 +119,7 @@ export default {
         }
       });
       payload.id = this.user.id;
-      this.status = PENDING
+      this.status = PENDING;
       try {
         await this.updateUserById(payload);
         this.createdUsername = this.form.username;
@@ -136,7 +136,7 @@ export default {
       this.setInitialFormValues();
     },
     onErrorAlertDismissed () {
-      this.errors = {}
+      this.errors = {};
     },
   },
 };
