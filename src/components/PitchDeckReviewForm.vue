@@ -1,11 +1,13 @@
 <script>
-import { CREATE_REVIEW } from '@/store/actions.type';
-import { createNamespacedHelpers } from 'vuex';
-
-const {
+import { CREATE_REVIEW, DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
+import {
   mapActions,
   mapGetters,
-} = createNamespacedHelpers('user');
+} from 'vuex';
+
+const AUTH = 'auth';
+const PITCH_DECK = 'pitchDeck';
+const USER = 'user';
 
 export default {
   name: 'PitchDeckReviewForm',
@@ -35,16 +37,25 @@ export default {
         additionalComments: '',
         pitchReady: false,
       },
+      options: [
+        { text: '1', value: 0, disabled: false },
+        { text: '2', value: 1, disabled: false },
+        { text: '3', value: 2, disabled: false },
+        { text: '4', value: 3, disabled: false },
+        { text: '5', value: 4, disabled: false },
+      ],
       show: true,
       showErrorAlert: false,
       showSuccessAlert: false,
     };
   },
   computed: {
-    ...mapGetters([
-      'userErrors',
-      'currentUser',
-    ]),
+    ...mapGetters({
+      currentUser: `${AUTH}/currentUser`,
+      userErrors: `${USER}/userErrors`,
+      pitchDeckErrors: `${PITCH_DECK}/pitchDeckErrors`,
+      pitchDeckList: `${PITCH_DECK}/pitchDeckList`,
+    }),
     errors () {
       return this.userErrors[0];
     },
@@ -52,6 +63,7 @@ export default {
   methods: {
     ...mapActions({
       createReview: CREATE_REVIEW,
+      downloadPitchDeck: DOWNLOAD_PITCH_DECK,
     }),
     async onSubmit (evt) {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
@@ -112,6 +124,11 @@ export default {
         this.showSuccessAlert = true;
       }
     },
+    onDownloadButtonClick () {
+      this.downloadPitchDeck({
+        id: this.user.pitchDeck,
+      });
+    },
   },
 };
 </script>
@@ -159,6 +176,13 @@ export default {
         </router-link>
       </div>
     </b-alert>
+    <button
+      type="button"
+      class="right-flex btn btn-primary small-btn"
+      @click="onDownloadButtonClick"
+    >
+      Download Pitch Deck
+    </button>
     <b-form
       v-if="show"
       @submit="onSubmit"
@@ -228,39 +252,69 @@ export default {
             Is Contact Slide Present?
           </b-form-checkbox>
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Problem Statement Rating: ">
+          <b-form-radio-group
             v-model="form.problemStatementRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Solution Description Rating: ">
+          <b-form-radio-group
             v-model="form.solutionDescriptionRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Market Competition Rating: ">
+          <b-form-radio-group
             v-model="form.marketCompetitionRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Business Model Rating: ">
+          <b-form-radio-group
             v-model="form.businessModelRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Team Rating: ">
+          <b-form-radio-group
             v-model="form.teamRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-rating
+        <b-form-group label="Ask Rating: ">
+          <b-form-radio-group
             v-model="form.askRating"
+            :options="options"
+            class="mb-3"
+            value-field="value"
+            text-field="text"
+            disabled-field="notEnabled"
             required
           />
         </b-form-group>

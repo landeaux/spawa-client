@@ -199,40 +199,41 @@ export default {
             <AdminDashboardModifyUser
               :user="row.item"
             />
-          </b-modal>
-          <b-dropdown-item
-            v-b-modal="suspendModalId(row.item.id)"
-            class="inside-drop"
-          >
-            {{ row.item.active ? 'Suspend' : 'Activate' }}
-          </b-dropdown-item>
-          <b-modal
-            :id="suspendModalId(row.item.id)"
-            size="lg"
-            centered
-            title="Suspend User"
-            @ok="onSuspendButtonOk(row.item.id, row.item.active)"
-          >
-            <p class="mod-text">
-              Are you sure you want to {{ row.item.active ? 'suspend' : 'activate' }} {{ row.item.username }}?
-            </p>
-          </b-modal>
-          <b-dropdown-item
-            v-b-modal="deleteModalId(row.item.id)"
-            class="inside-drop"
-          >
-            Delete
-          </b-dropdown-item>
-          <b-modal
-            :id="deleteModalId(row.item.id)"
-            size="lg"
-            centered
-            title="Delete User"
-            @ok="onDeleteButtonOk(row.item.id)"
-          >
-            <p class="mod-text">
-              Are you sure you want to delete {{ row.item.username }}?
-            </p>
+
+            <b-dropdown-item
+              v-b-modal="suspendModalId(row.item.id)"
+              class="inside-drop"
+            >
+              {{ row.item.active ? 'Suspend' : 'Activate' }}
+            </b-dropdown-item>
+            <b-modal
+              :id="suspendModalId(row.item.id)"
+              size="lg"
+              centered
+              title="Suspend User"
+              @ok="onSuspendButtonOk(row.item.id, row.item.active)"
+            >
+              <p class="mod-text">
+                Are you sure you want to {{ row.item.active ? 'suspend' : 'activate' }} {{ row.item.username }}?
+              </p>
+            </b-modal>
+            <b-dropdown-item
+              v-b-modal="deleteModalId(row.item.id)"
+              class="inside-drop"
+            >
+              Delete
+            </b-dropdown-item>
+            <b-modal
+              :id="deleteModalId(row.item.id)"
+              size="lg"
+              centered
+              title="Delete User"
+              @ok="onDeleteButtonOk(row.item.id)"
+            >
+              <p class="mod-text">
+                Are you sure you want to delete {{ row.item.username }}?
+              </p>
+            </b-modal>
           </b-modal>
         </b-dropdown>
       </template>

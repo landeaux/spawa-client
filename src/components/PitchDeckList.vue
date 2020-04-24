@@ -6,7 +6,7 @@ import {
 import {
   FETCH_PITCH_DECKS,
 } from '@/store/actions.type';
-
+import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
 /**
  * Vuex module names
  */
@@ -27,6 +27,7 @@ const FETCH_COMPLETE = 1;
 export default {
   name: 'PitchDeckList',
   components: {
+    PitchDeckReviewForm,
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   data: () => ({
@@ -103,6 +104,9 @@ export default {
       const currentUserReviews = this.currentUser.reviews;
       return pitchDeckReviews.some((r) => currentUserReviews.includes(r));
     },
+    reviewModalId (id) {
+      return `review-${id}`;
+    },
   },
 };
 </script>
@@ -167,10 +171,22 @@ export default {
             class="table-actions"
           >
             <b-dropdown-item
+              v-b-modal="reviewModalId(row.item.id)"
               class="inside-drop"
             >
               Review
             </b-dropdown-item>
+            <b-modal
+              :id="reviewModalId(row.item.id)"
+              size="lg"
+              centered
+              :hide-footer="true"
+              title="Review User Pitchdeck"
+            >
+              <PitchDeckReviewForm
+                :user="row.item"
+              />
+            </b-modal>
           </b-dropdown>
         </template>
       </b-table>
