@@ -1,18 +1,60 @@
 <script>
-import { CREATE_REVIEW, DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
+import {
+  CREATE_REVIEW,
+  UPDATE_REVIEW,
+  DOWNLOAD_PITCH_DECK,
+  GET_REVIEW_BY_ID,
+} from '@/store/actions.type';
 import {
   mapActions,
   mapGetters,
 } from 'vuex';
 
+/**
+ * VUEX module names
+ */
 const AUTH = 'auth';
 const PITCH_DECK = 'pitchDeck';
-const USER = 'user';
+const REVIEW = 'review';
 
+/**
+ * component statuses
+ */
+const INIT = 'INIT';
+const PENDING = 'PENDING';
+const SUCCESS = 'SUCCESS';
+const ERROR = 'ERROR';
+
+const INIT_FORM = {
+  isProblemStatementPresent: false,
+  isSolutionDescriptionPresent: false,
+  isMarketCompetitionPresent: false,
+  isBusinessModelPresent: false,
+  isTeamPresent: false,
+  isAskPresent: false,
+  isContactSlidePresent: false,
+  problemStatementRating: 0,
+  solutionDescriptionRating: 0,
+  marketCompetitionRating: 0,
+  businessModelRating: 0,
+  teamRating: 0,
+  askRating: 0,
+  additionalComments: '',
+  pitchReady: false,
+};
+
+/**
+ * PitchDeckReviewForm
+ *
+ * The review form for reviewers to use to leave a review on a pitch deck.
+ */
 export default {
   name: 'PitchDeckReviewForm',
+  components: {
+    PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
+  },
   props: {
-    user: {
+    pitchDeck: {
       default: () => ({}),
       required: true,
       type: Object,
@@ -20,114 +62,103 @@ export default {
   },
   data () {
     return {
-      form: {
-        isProblemStatementPresent: false,
-        isSolutionDescriptionPresent: false,
-        isMarketCompetitionPresent: false,
-        isBusinessModelPresent: false,
-        isTeamPresent: false,
-        isAskPresent: false,
-        isContactSlidePresent: false,
-        problemStatementRating: 0,
-        solutionDescriptionRating: 0,
-        marketCompetitionRating: 0,
-        businessModelRating: 0,
-        teamRating: 0,
-        askRating: 0,
-        additionalComments: '',
-        pitchReady: false,
-      },
+      status: INIT,
+      form: { ...INIT_FORM },
       options: [
-        { text: '1', value: 0, disabled: false },
-        { text: '2', value: 1, disabled: false },
-        { text: '3', value: 2, disabled: false },
-        { text: '4', value: 3, disabled: false },
-        { text: '5', value: 4, disabled: false },
+        { text: '0', value: 0, disabled: false },
+        { text: '1', value: 1, disabled: false },
+        { text: '2', value: 2, disabled: false },
+        { text: '3', value: 3, disabled: false },
+        { text: '4', value: 4, disabled: false },
       ],
-      show: true,
-      showErrorAlert: false,
-      showSuccessAlert: false,
     };
   },
   computed: {
     ...mapGetters({
       currentUser: `${AUTH}/currentUser`,
-      userErrors: `${USER}/userErrors`,
-      pitchDeckErrors: `${PITCH_DECK}/pitchDeckErrors`,
-      pitchDeckList: `${PITCH_DECK}/pitchDeckList`,
+      reviewErrors: `${REVIEW}/reviewErrors`,
     }),
     errors () {
-      return this.userErrors[0];
+      return this.reviewErrors[0];
     },
+    showForm () {
+      return this.statusIsInit || this.statusIsError;
+    },
+    statusIsInit () {
+      return this.status === INIT;
+    },
+    statusIsPending () {
+      return this.status === PENDING;
+    },
+    statusIsSuccess () {
+      return this.status === SUCCESS;
+    },
+    statusIsError () {
+      return this.status === ERROR;
+    },
+    showDownloadButton () {
+      return this.statusIsInit || this.statusIsError;
+    },
+    userHasReviewed () {
+      return this.pitchDeck.userHasReviewed;
+    },
+  },
+  async created () {
+    // if the user has already reviewed this pitch deck
+    if (this.pitchDeck.usersReview !== '') {
+      // grab the user's review ...
+      const { review } = await this.getReviewById(this.pitchDeck.usersReview);
+
+      // ... and prefill the form with the existing review values
+      Object.keys(this.form).forEach((key) => {
+        // only fill the form fields which have matching keys with the review
+        if (Object.prototype.hasOwnProperty.call(review, key)) {
+          this.form[key] = review[key];
+        }
+      });
+    }
   },
   methods: {
     ...mapActions({
-      createReview: CREATE_REVIEW,
-      downloadPitchDeck: DOWNLOAD_PITCH_DECK,
+      createReview: `${REVIEW}/${CREATE_REVIEW}`,
+      updateReview: `${REVIEW}/${UPDATE_REVIEW}`,
+      getReviewById: `${REVIEW}/${GET_REVIEW_BY_ID}`,
+      downloadPitchDeck: `${PITCH_DECK}/${DOWNLOAD_PITCH_DECK}`,
     }),
-    async onSubmit (evt) {
-      Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
-      evt.preventDefault();
-      await this.createReview({
-        owner: this.user,
-        pitchDeck: this.user.pitchDeck,
-        reviewerName: this.currentUser,
-        isProblemStatementPresent: this.isProblemStatementPresent,
-        isSolutionDescriptionPresent: this.isSolutionDescriptionPresent,
-        isMarketCompetitionPresent: this.isMarketCompetitionPresent,
-        isBusinessModelPresent: this.isBusinessModelPresent,
-        isTeamPresent: this.isTeamPresent,
-        isAskPresent: this.isAskPresent,
-        isContactSlidePresent: this.isContactSlidePresent,
-        problemStatementRating: this.problemStatementRating,
-        solutionDescriptionRating: this.solutionDescriptionRating,
-        marketCompetitionRating: this.marketCompetitionRating,
-        businessModelRating: this.businessModelRating,
-        teamRating: this.teamRating,
-        askRating: this.askRating,
-        additionalComments: this.additionalComments,
-        pitchReady: this.pitchReady,
-      });
-      this.determineAlert();
-      this.onReset(evt);
-    },
-    onReset (evt) {
-      evt.preventDefault();
-      // Reset our form values
-      this.form.isProblemStatementPresent = false;
-      this.form.isSolutionDescriptionPresent = false;
-      this.form.isMarketCompetitionPresent = false;
-      this.form.isBusinessModelPresent = false;
-      this.form.isTeamPresent = false;
-      this.form.isAskPresent = false;
-      this.form.isContactSlidePresent = false;
-      this.form.problemStatementRating = 0;
-      this.form.solutionDescriptionRating = 0;
-      this.form.marketCompetitionRating = 0;
-      this.form.businessModelRating = 0;
-      this.form.teamRating = 0;
-      this.form.askRating = 0;
-      this.form.additionalComments = '';
-      this.form.pitchReady = false;
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
-    },
-    determineAlert () {
-      this.showErrorAlert = false;
-      this.showSuccessAlert = false;
-      if (Object.keys(this.userErrors).length !== 0) {
-        this.showErrorAlert = true;
-      } else if (Object.keys(this.userErrors).length === 0 && this.createdUsername !== '') {
-        this.showSuccessAlert = true;
+    async onSubmit () {
+      this.status = PENDING;
+      const action = this.pitchDeck.userHasReviewed
+        ? this.updateReview
+        : this.createReview;
+      const payload = {
+        ...this.form,
+        pitchDeck: this.pitchDeck._id,
+        reviewerName: this.currentUser.username,
+      };
+      if (this.usersReview !== '') {
+        payload.id = this.usersReview;
       }
+      await action(payload);
+      this.status = this.errors
+        ? ERROR
+        : SUCCESS;
+      if (this.statusIsSuccess) {
+        this.$emit('review-submit-success');
+      }
+      this.resetForm();
+    },
+    onReset () {
+      // Reset form state and reset our form values
+      this.status = INIT;
+      this.resetForm();
     },
     onDownloadButtonClick () {
       this.downloadPitchDeck({
-        id: this.user.pitchDeck,
+        id: this.pitchDeck._id,
       });
+    },
+    resetForm () {
+      this.form = { ...INIT_FORM };
     },
   },
 };
@@ -135,8 +166,19 @@ export default {
 
 <template>
   <div class="container">
+    <div
+      v-if="statusIsPending"
+      class="loader-container"
+    >
+      <PulseLoader
+        class="loader"
+        color="blue"
+        size="25px"
+      />
+    </div>
     <b-alert
-      v-model="showErrorAlert"
+      v-if="statusIsError"
+      show="true"
       variant="danger"
       class="alerts"
       fade
@@ -156,27 +198,17 @@ export default {
       </div>
     </b-alert>
     <b-alert
-      v-model="showSuccessAlert"
+      v-else-if="statusIsSuccess"
+      show="true"
       variant="success"
       class="alerts"
       dismissible
       fade
     >
-      <div class="success-messages">
-        Review Created For:
-        <router-link
-          class="nav-link"
-          active-class="active"
-          :to="{
-            name: 'profile',
-            params: { username: user.username }
-          }"
-        >
-          {{ user.username }}
-        </router-link>
-      </div>
+      Review created successfully!
     </b-alert>
     <button
+      v-if="showDownloadButton"
       type="button"
       class="right-flex btn btn-primary small-btn"
       @click="onDownloadButtonClick"
@@ -184,9 +216,9 @@ export default {
       Download Pitch Deck
     </button>
     <b-form
-      v-if="show"
-      @submit="onSubmit"
-      @reset="onReset"
+      v-if="showForm"
+      @submit.prevent="onSubmit"
+      @reset.prevent="onReset"
     >
       <div class="main-form">
         <b-form-group>
@@ -380,4 +412,9 @@ export default {
           padding: 0
           li
             list-style: none
+  .loader-container
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
 </style>
