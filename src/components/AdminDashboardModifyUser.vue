@@ -5,7 +5,6 @@ import { createNamespacedHelpers } from 'vuex';
 const {
   mapActions,
   mapGetters,
-  mapMutations,
 } = createNamespacedHelpers('user');
 
 /**
@@ -94,7 +93,6 @@ export default {
   },
   created () {
     this.setInitialFormValues();
-    this.showLoader = false;
   },
   methods: {
     ...mapActions({
