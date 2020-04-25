@@ -112,7 +112,7 @@ export default {
           </p>
           <b-alert
             v-if="stateIsError"
-            show="true"
+            :show="true"
             fade
             variant="danger"
           >

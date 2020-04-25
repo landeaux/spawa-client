@@ -178,7 +178,7 @@ export default {
     </div>
     <b-alert
       v-if="statusIsError"
-      show="true"
+      :show="true"
       variant="danger"
       class="alerts"
       fade
@@ -199,7 +199,7 @@ export default {
     </b-alert>
     <b-alert
       v-else-if="statusIsSuccess"
-      show="true"
+      :show="true"
       variant="success"
       class="alerts"
       dismissible

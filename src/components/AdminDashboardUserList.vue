@@ -121,7 +121,7 @@ export default {
     />
     <b-alert
       v-else-if="showError"
-      show="true"
+      :show="true"
       variant="danger"
     >
       There was an error fetching the user list.

@@ -148,7 +148,7 @@ export default {
 
     <b-alert
       v-else-if="showError"
-      show="true"
+      :show="true"
       variant="danger"
     >
       There was an error fetching the pitch deck list.
@@ -172,13 +172,11 @@ export default {
           <div style="vertical-align: center">
             <b-icon-check-circle
               v-if="row.item.userHasReviewed"
-              icon="check-box"
               variant="success"
               class="list-icon"
             />
-            <b-icon
+            <b-icon-exclamation-circle
               v-else
-              icon="alert-circle"
               class="list-icon"
             />
           </div>
