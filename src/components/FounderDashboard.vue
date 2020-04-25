@@ -22,6 +22,29 @@ export default {
     ...mapGetters([
       'currentUser',
     ]),
+    statusBadgeVariant () {
+      // #todo make dynamic based on user's pitch deck status
+      return 'info';
+    },
+    statusBadgeText () {
+      // #todo make dynamic based on user's pitch deck status
+      return 'UNDER REVIEW';
+    },
+    instructText () {
+      return `
+        Your pitch deck has been submitted and is under review by StartUpNV's
+        Reviewers. Once you have four or more reviews, the "See My Feedback"
+        button will be enabled and you can click it to see your recent reviews.
+        Additionally, once you have over four reviews, an admin will either
+        accept your pitch deck or send it back for re-work. If your pitch deck
+        was accepted, your status will change to "ACCEPTED" and you will be
+        given the next steps on what to do. If your pitch deck is sent back for
+        re-work, your status will remain in "UNDER REVIEW" and you will be able
+        review your feedback and re-submit a new version of your pitch deck.
+        Finally, if your pitch deck is not approved after the third submission,
+        then your status will change to "NOT APPROVED".
+      `;
+    },
   },
   methods: {
     ...mapActions({
@@ -45,31 +68,26 @@ export default {
     <div class="main-flex">
       <div class="column">
         <div class="stat-display">
-          Status Of My Pitch Deck:
+          <span>Status Of My Pitch Deck:</span>
           <b-badge
-            variant="light"
+            :variant="statusBadgeVariant"
             class="status"
           >
-            APPROVED
+            {{ statusBadgeText }}
           </b-badge>
         </div>
         <h2>What Should I Do Now?</h2>
         <div class="instruct-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Praesent sapien neque, tempor nec magna ac, tristique
-          sollicitudin sapien. Nullam placerat interdum ex, eget
-          vehicula eros sodales eu. Aenean non fermentum orci.
-          Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos.
-          Vivamus eleifend feugiat nisl ac luctus.
+          {{ instructText }}
         </div>
       </div>
       <div class="column">
         <BigButtonComponent
           title="See My Feedback"
           subtitle="Total Reviews: "
-          info="10"
+          info="0"
           class="right-flex big-button"
+          :disabled="true"
         />
 
         <button
@@ -145,19 +163,19 @@ export default {
     width: 70% !important;
   }
   .stat-display {
-    margin-top: 1%;
-    margin-bottom: 5%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     border-radius: 8px;
     background: rgba(40, 216, 255, 0.39);
-    padding: 5px;
+    padding: 10px;
     color: #039;
-    text-align: left;
     font-size: 20px;
+    margin-bottom: 20px;
   }
   .status{
     font-weight: bold;
-    width: 100%;
-    color: #039;
   }
 </style>
