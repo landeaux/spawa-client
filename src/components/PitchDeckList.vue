@@ -178,7 +178,7 @@ export default {
             />
             <b-icon
               v-else
-              icon="exclamation-circle"
+              icon="alert-circle"
               class="list-icon"
             />
           </div>
