@@ -6,6 +6,8 @@ import {
 import {
   FETCH_PITCH_DECKS,
 } from '@/store/actions.type';
+import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
+import { intersection } from 'lodash/array';
 
 /**
  * Vuex module names
@@ -27,6 +29,7 @@ const FETCH_COMPLETE = 1;
 export default {
   name: 'PitchDeckList',
   components: {
+    PitchDeckReviewForm,
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   data: () => ({
@@ -80,6 +83,7 @@ export default {
             ...p,
             numReviews: p.reviews.length,
             userHasReviewed: this.userHasReviewed(p),
+            usersReview: this.getUsersReviewId(p),
           };
         });
     },
@@ -103,6 +107,30 @@ export default {
       const currentUserReviews = this.currentUser.reviews;
       return pitchDeckReviews.some((r) => currentUserReviews.includes(r));
     },
+    getUsersReviewId (pitchDeck) {
+      if (this.userHasReviewed) {
+        const pitchDeckReviews = pitchDeck.reviews;
+        const currentUserReviews = this.currentUser.reviews;
+        let reviewId;
+        try {
+          reviewId = intersection(pitchDeckReviews, currentUserReviews)[0];
+        } catch (error) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(error);
+          }
+          return '';
+        }
+        return reviewId;
+      } else {
+        return '';
+      }
+    },
+    reviewModalId (id) {
+      return `review-${id}`;
+    },
+    async onReviewSubmitSuccess () {
+      await this.fetchPitchDecks();
+    },
   },
 };
 </script>
@@ -120,7 +148,7 @@ export default {
 
     <b-alert
       v-else-if="showError"
-      show="true"
+      :show="true"
       variant="danger"
     >
       There was an error fetching the pitch deck list.
@@ -142,15 +170,13 @@ export default {
       >
         <template v-slot:cell(userHasReviewed)="row">
           <div style="vertical-align: center">
-            <b-icon
+            <b-icon-check-circle
               v-if="row.item.userHasReviewed"
-              icon="check-circle"
               variant="success"
               class="list-icon"
             />
-            <b-icon
+            <b-icon-exclamation-circle
               v-else
-              icon="alert-circle"
               class="list-icon"
             />
           </div>
@@ -167,10 +193,23 @@ export default {
             class="table-actions"
           >
             <b-dropdown-item
+              v-b-modal="reviewModalId(row.item.id)"
               class="inside-drop"
             >
               Review
             </b-dropdown-item>
+            <b-modal
+              :id="reviewModalId(row.item.id)"
+              size="lg"
+              centered
+              :hide-footer="true"
+              title="Review User Pitchdeck"
+            >
+              <PitchDeckReviewForm
+                :pitch-deck="row.item"
+                @review-submit-success="onReviewSubmitSuccess"
+              />
+            </b-modal>
           </b-dropdown>
         </template>
       </b-table>

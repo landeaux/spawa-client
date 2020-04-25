@@ -121,7 +121,7 @@ export default {
     />
     <b-alert
       v-else-if="showError"
-      show="true"
+      :show="true"
       variant="danger"
     >
       There was an error fetching the user list.
@@ -200,6 +200,7 @@ export default {
               :user="row.item"
             />
           </b-modal>
+
           <b-dropdown-item
             v-b-modal="suspendModalId(row.item.id)"
             class="inside-drop"
@@ -217,6 +218,7 @@ export default {
               Are you sure you want to {{ row.item.active ? 'suspend' : 'activate' }} {{ row.item.username }}?
             </p>
           </b-modal>
+
           <b-dropdown-item
             v-b-modal="deleteModalId(row.item.id)"
             class="inside-drop"
