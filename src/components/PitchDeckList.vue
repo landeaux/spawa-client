@@ -7,6 +7,8 @@ import {
   FETCH_PITCH_DECKS,
 } from '@/store/actions.type';
 import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
+import { intersection } from 'lodash/array';
+
 /**
  * Vuex module names
  */
@@ -81,6 +83,7 @@ export default {
             ...p,
             numReviews: p.reviews.length,
             userHasReviewed: this.userHasReviewed(p),
+            usersReview: this.getUsersReviewId(p),
           };
         });
     },
@@ -104,8 +107,29 @@ export default {
       const currentUserReviews = this.currentUser.reviews;
       return pitchDeckReviews.some((r) => currentUserReviews.includes(r));
     },
+    getUsersReviewId (pitchDeck) {
+      if (this.userHasReviewed) {
+        const pitchDeckReviews = pitchDeck.reviews;
+        const currentUserReviews = this.currentUser.reviews;
+        let reviewId;
+        try {
+          reviewId = intersection(pitchDeckReviews, currentUserReviews)[0];
+        } catch (error) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(error);
+          }
+          return '';
+        }
+        return reviewId;
+      } else {
+        return '';
+      }
+    },
     reviewModalId (id) {
       return `review-${id}`;
+    },
+    async onReviewSubmitSuccess () {
+      await this.fetchPitchDecks();
     },
   },
 };
@@ -146,15 +170,15 @@ export default {
       >
         <template v-slot:cell(userHasReviewed)="row">
           <div style="vertical-align: center">
-            <b-icon
+            <b-icon-check-circle
               v-if="row.item.userHasReviewed"
-              icon="check-circle"
+              icon="check-box"
               variant="success"
               class="list-icon"
             />
             <b-icon
               v-else
-              icon="alert-circle"
+              icon="exclamation-circle"
               class="list-icon"
             />
           </div>
@@ -184,7 +208,8 @@ export default {
               title="Review User Pitchdeck"
             >
               <PitchDeckReviewForm
-                :user="row.item"
+                :pitch-deck="row.item"
+                @review-submit-success="onReviewSubmitSuccess"
               />
             </b-modal>
           </b-dropdown>
