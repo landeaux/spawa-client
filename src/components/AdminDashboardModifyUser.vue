@@ -5,7 +5,6 @@ import { createNamespacedHelpers } from 'vuex';
 const {
   mapActions,
   mapGetters,
-  mapMutations,
 } = createNamespacedHelpers('user');
 
 /**
@@ -80,7 +79,7 @@ export default {
         this.form.state !== this.user.state);
     },
     showForm () {
-      return !this.statusIsPending
+      return !this.statusIsPending;
     },
     statusIsPending () {
       return this.status === PENDING;
@@ -94,7 +93,6 @@ export default {
   },
   created () {
     this.setInitialFormValues();
-    this.showLoader = false;
   },
   methods: {
     ...mapActions({
@@ -103,9 +101,9 @@ export default {
     setInitialFormValues () {
       // Only copy the user props for which we have form fields
       Object.keys(this.form).forEach((key) => {
-          this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
-            ? this.user[key]
-            : '';
+        this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
+          ? this.user[key]
+          : '';
       });
     },
     async onSubmit () {
@@ -119,7 +117,7 @@ export default {
         }
       });
       payload.id = this.user.id;
-      this.status = PENDING
+      this.status = PENDING;
       try {
         await this.updateUserById(payload);
         this.createdUsername = this.form.username;
@@ -136,7 +134,7 @@ export default {
       this.setInitialFormValues();
     },
     onErrorAlertDismissed () {
-      this.errors = {}
+      this.errors = {};
     },
   },
 };
@@ -156,9 +154,9 @@ export default {
     </div>
     <b-alert
       v-else-if="statusIsError"
+      :show="true"
       variant="danger"
       class="alerts"
-      show="true"
       dismissible
       fade
       @dismissed="onErrorAlertDismissed"
@@ -177,9 +175,9 @@ export default {
     </b-alert>
     <b-alert
       v-else-if="statusIsSuccess"
+      :show="true"
       variant="success"
       class="alerts"
-      show="true"
       dismissible
       fade
     >
