@@ -57,16 +57,8 @@ const actions = {
   async [UPDATE_REVIEW] ({ commit, dispatch }, review) {
     commit(CLEAR_ERRORS);
     try {
-      // #todo Uncomment these lines when PUT /api/reviews/:id is implemented
-      // const { id } = review;
-      // const { data } = await ApiService.update('reviews', id, { review });
-
-      // #todo Remove this block when PUT /api/reviews/:id is implemented
-      const { data } = {
-        data: {
-          review,
-        },
-      };
+      const { id } = review;
+      const { data } = await ApiService.update('reviews', id, { review });
 
       return data;
     } catch ({ response }) {
