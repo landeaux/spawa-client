@@ -27,15 +27,15 @@ export default {
       'currentUser',
     ]),
     statusBadgeVariant () {
-      // #todo Make dynamic based on user's status
+      // #todo Make dynamic based on user's pitch deck status
       return 'info';
     },
     statusBadgeText () {
-      // #todo Make dynamic based on user's status
+      // #todo Make dynamic based on user's pitch deck status
       return 'UNDER REVIEW';
     },
     instructText () {
-      // #todo Make dynamic based on user's status
+      // #todo Make dynamic based on user's pitch deck status
       return `
         Your pitch deck has been submitted and is under review by StartUpNV's
         Reviewers. Once you have four or more reviews, the "See My Feedback"
