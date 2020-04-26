@@ -135,8 +135,8 @@ export default {
         pitchDeck: this.pitchDeck._id,
         reviewerName: this.currentUser.username,
       };
-      if (this.usersReview !== '') {
-        payload.id = this.usersReview;
+      if (this.pitchDeck.usersReview !== '') {
+        payload.id = this.pitchDeck.usersReview;
       }
       await action(payload);
       this.status = this.errors
