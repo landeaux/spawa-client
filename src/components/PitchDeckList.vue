@@ -111,16 +111,15 @@ export default {
       if (this.userHasReviewed) {
         const pitchDeckReviews = pitchDeck.reviews;
         const currentUserReviews = this.currentUser.reviews;
-        let reviewId;
         try {
-          reviewId = intersection(pitchDeckReviews, currentUserReviews)[0];
+          const reviewId = intersection(pitchDeckReviews, currentUserReviews)[0];
+          return reviewId || '';
         } catch (error) {
           if (process.env.NODE_ENV !== 'production') {
             console.error(error);
           }
           return '';
         }
-        return reviewId;
       } else {
         return '';
       }
