@@ -5,6 +5,10 @@ import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 const { mapActions } = createNamespacedHelpers('pitchDeck');
 const { mapGetters } = createNamespacedHelpers('auth');
 
+const MIN_REVIEW_COUNT = 4;
+// #todo Will need to make this updatable by admins somehow
+const YT_VIDEO_ID = 'jwLZVMI3q70';
+
 /**
  * FounderDashboard
  *
@@ -16,12 +20,47 @@ export default {
     BigButtonComponent: () => import('@/components/BigButtonComponent'),
   },
   data: () => ({
-    videoId: 'jwLZVMI3q70',
+    videoId: YT_VIDEO_ID,
   }),
   computed: {
     ...mapGetters([
       'currentUser',
     ]),
+    statusBadgeVariant () {
+      // #todo Make dynamic based on user's status
+      return 'info';
+    },
+    statusBadgeText () {
+      // #todo Make dynamic based on user's status
+      return 'UNDER REVIEW';
+    },
+    instructText () {
+      // #todo Make dynamic based on user's status
+      return `
+        Your pitch deck has been submitted and is under review by StartUpNV's
+        Reviewers. Once you have four or more reviews, the "See My Feedback"
+        button will be enabled and you can click it to see your recent reviews.
+        Additionally, once you have over four reviews, an admin will either
+        accept your pitch deck or send it back for re-work. If your pitch deck
+        was accepted, your status will change to "ACCEPTED" and you will be
+        given the next steps on what to do. If your pitch deck is sent back for
+        re-work, your status will remain in "UNDER REVIEW" and you will be able
+        review your feedback and re-submit a new version of your pitch deck.
+        Finally, if your pitch deck is not approved after the third submission,
+        then your status will change to "NOT APPROVED".
+      `;
+    },
+    reviewCount () {
+      // #todo Make dynamic based on the number of reviews on their pitchdeck
+      return 0;
+    },
+    feedbackButtonDisabled () {
+      return this.reviewCount < MIN_REVIEW_COUNT;
+    },
+    showResubmitPitchDeckButton () {
+      // #todo Make dynamic based on user pitch deck lock date
+      return true;
+    },
   },
   methods: {
     ...mapActions({
@@ -31,6 +70,17 @@ export default {
       this.downloadPitchDeck({
         id: this.currentUser.pitchDeck,
       });
+    },
+    onFeedbackButtonClick () {
+      // #todo trigger modal window showing all reviews on pitchdeck
+      console.log('onFeedbackButtonClick triggered!');
+      if (!this.feedbackButtonDisabled) {
+        // only trigger modal if the button is not disabled
+      }
+    },
+    onResubmitPitchDeckButtonClick () {
+      // #todo trigger modal window for re-submitting the pitch deck
+      console.log('onResubmitPitchDeckButtonClick triggered!');
     },
   },
 };
@@ -45,31 +95,27 @@ export default {
     <div class="main-flex">
       <div class="column">
         <div class="stat-display">
-          Status Of My Pitch Deck:
+          <span>Status Of My Pitch Deck:</span>
           <b-badge
-            variant="light"
+            :variant="statusBadgeVariant"
             class="status"
           >
-            APPROVED
+            {{ statusBadgeText }}
           </b-badge>
         </div>
         <h2>What Should I Do Now?</h2>
         <div class="instruct-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Praesent sapien neque, tempor nec magna ac, tristique
-          sollicitudin sapien. Nullam placerat interdum ex, eget
-          vehicula eros sodales eu. Aenean non fermentum orci.
-          Class aptent taciti sociosqu ad litora torquent per conubia
-          nostra, per inceptos himenaeos.
-          Vivamus eleifend feugiat nisl ac luctus.
+          {{ instructText }}
         </div>
       </div>
       <div class="column">
         <BigButtonComponent
           title="See My Feedback"
           subtitle="Total Reviews: "
-          info="10"
+          :info="reviewCount"
           class="right-flex big-button"
+          :disabled="feedbackButtonDisabled"
+          @click="onFeedbackButtonClick"
         />
 
         <button
@@ -101,8 +147,10 @@ export default {
         </button>
 
         <button
+          v-if="showResubmitPitchDeckButton"
           type="button"
           class="right-flex btn btn-primary small-btn"
+          @click="onResubmitPitchDeckButtonClick"
         >
           Re-submit Pitch Deck
         </button>
@@ -145,19 +193,19 @@ export default {
     width: 70% !important;
   }
   .stat-display {
-    margin-top: 1%;
-    margin-bottom: 5%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     border-radius: 8px;
     background: rgba(40, 216, 255, 0.39);
-    padding: 5px;
+    padding: 10px;
     color: #039;
-    text-align: left;
     font-size: 20px;
+    margin-bottom: 20px;
   }
   .status{
     font-weight: bold;
-    width: 100%;
-    color: #039;
   }
 </style>
