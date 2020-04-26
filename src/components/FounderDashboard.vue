@@ -5,6 +5,10 @@ import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
 const { mapActions } = createNamespacedHelpers('pitchDeck');
 const { mapGetters } = createNamespacedHelpers('auth');
 
+const MIN_REVIEW_COUNT = 4;
+// #todo Will need to make this updatable by admins somehow
+const YT_VIDEO_ID = 'jwLZVMI3q70';
+
 /**
  * FounderDashboard
  *
@@ -16,21 +20,22 @@ export default {
     BigButtonComponent: () => import('@/components/BigButtonComponent'),
   },
   data: () => ({
-    videoId: 'jwLZVMI3q70',
+    videoId: YT_VIDEO_ID,
   }),
   computed: {
     ...mapGetters([
       'currentUser',
     ]),
     statusBadgeVariant () {
-      // #todo make dynamic based on user's pitch deck status
+      // #todo Make dynamic based on user's status
       return 'info';
     },
     statusBadgeText () {
-      // #todo make dynamic based on user's pitch deck status
+      // #todo Make dynamic based on user's status
       return 'UNDER REVIEW';
     },
     instructText () {
+      // #todo Make dynamic based on user's status
       return `
         Your pitch deck has been submitted and is under review by StartUpNV's
         Reviewers. Once you have four or more reviews, the "See My Feedback"
@@ -45,6 +50,17 @@ export default {
         then your status will change to "NOT APPROVED".
       `;
     },
+    reviewCount () {
+      // #todo Make dynamic based on the number of reviews on their pitchdeck
+      return 0;
+    },
+    feedbackButtonDisabled () {
+      return this.reviewCount < MIN_REVIEW_COUNT;
+    },
+    showResubmitPitchDeckButton () {
+      // #todo Make dynamic based on user pitch deck lock date
+      return true;
+    },
   },
   methods: {
     ...mapActions({
@@ -54,6 +70,17 @@ export default {
       this.downloadPitchDeck({
         id: this.currentUser.pitchDeck,
       });
+    },
+    onFeedbackButtonClick () {
+      // #todo trigger modal window showing all reviews on pitchdeck
+      console.log('onFeedbackButtonClick triggered!');
+      if (!this.feedbackButtonDisabled) {
+        // only trigger modal if the button is not disabled
+      }
+    },
+    onResubmitPitchDeckButtonClick () {
+      // #todo trigger modal window for re-submitting the pitch deck
+      console.log('onResubmitPitchDeckButtonClick triggered!');
     },
   },
 };
@@ -85,9 +112,10 @@ export default {
         <BigButtonComponent
           title="See My Feedback"
           subtitle="Total Reviews: "
-          info="0"
+          :info="reviewCount"
           class="right-flex big-button"
-          :disabled="true"
+          :disabled="feedbackButtonDisabled"
+          @click="onFeedbackButtonClick"
         />
 
         <button
@@ -119,8 +147,10 @@ export default {
         </button>
 
         <button
+          v-if="showResubmitPitchDeckButton"
           type="button"
           class="right-flex btn btn-primary small-btn"
+          @click="onResubmitPitchDeckButtonClick"
         >
           Re-submit Pitch Deck
         </button>
