@@ -15,7 +15,7 @@ export default {
     info: {
       default: '',
       required: false,
-      type: String,
+      type: [String, Number],
     },
   },
 };
