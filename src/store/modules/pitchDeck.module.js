@@ -1,6 +1,6 @@
 import ApiService from '@/common/api.service';
 import {
-  CREATE_PITCH_DECK,
+  UPLOAD_PITCH_DECK,
   FETCH_PITCH_DECKS,
   FETCH_PITCH_DECK_BY_ID,
   DOWNLOAD_PITCH_DECK,
@@ -25,9 +25,9 @@ const getters = {
 };
 
 const actions = {
-  async [CREATE_PITCH_DECK] (context, payload) {
+  async [UPLOAD_PITCH_DECK] (context, payload) {
     try {
-      const { data } = await ApiService.post('pitchdecks', payload);
+      const { data } = await ApiService.put('pitchdecks', payload);
       context.commit(SET_PITCH_DECK, data);
       return data;
     } catch ({ response }) {
