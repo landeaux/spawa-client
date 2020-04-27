@@ -390,7 +390,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang = sass>
+<style scoped lang="sass">
   .main-form
     text-align: left
     color: #039
