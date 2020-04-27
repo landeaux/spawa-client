@@ -1,6 +1,13 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * Home
+ *
+ * The Home view.
+ */
 export default {
   name: 'Home',
   components: {
@@ -11,7 +18,9 @@ export default {
     Loader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
     dashboardComponent () {
       const componentKey = this.currentUser && this.currentUser.role
         ? this.currentUser.role

@@ -1,26 +1,84 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import {
-  LOGOUT,
   UPDATE_USER,
 } from '@/store/actions.type';
 
+const {
+  mapActions,
+  mapGetters,
+} = createNamespacedHelpers('auth');
+
+/**
+ * component states
+ */
+const INIT = 'INIT';
+const SUCCESS = 'SUCCESS';
+const ERROR = 'ERROR';
+
+/**
+ * other constants
+ */
+const TOAST_TIMEOUT = 10000; // timeout in ms
+
+/**
+ * TheSettings
+ *
+ * The Settings view.
+ */
 export default {
   name: 'TheSettings',
+  data: () => ({
+    state: INIT,
+    showToast: false,
+    form: {
+      username: '',
+      email: '',
+      company: '',
+      password: '',
+    },
+  }),
   computed: {
     ...mapGetters([
       'currentUser',
     ]),
+    stateIsInit () {
+      return this.state === INIT;
+    },
+    stateIsSuccess () {
+      return this.state === SUCCESS;
+    },
+    toastMessage () {
+      if (this.stateIsInit) return '';
+      return this.stateIsSuccess
+        ? 'Profile Updated!'
+        : 'There was an error updating your profile.';
+    },
+    toastVariant () {
+      return this.stateIsSuccess
+        ? 'success'
+        : 'danger';
+    },
+  },
+  created () {
+    this.form.username = this.currentUser.username;
+    this.form.email = this.currentUser.email;
+    this.form.company = this.currentUser.company;
+    this.form.password = this.currentUser.password;
   },
   methods: {
-    async updateSettings () {
-      await this.$store.dispatch(UPDATE_USER, this.currentUser);
-      // #todo, nice toast and no redirect
-      await this.$router.push({ name: 'home' });
-    },
-    async logout () {
-      await this.$store.dispatch(LOGOUT);
-      await this.$router.push({ name: 'home' });
+    ...mapActions({
+      updateUser: UPDATE_USER,
+    }),
+    async onSubmit () {
+      try {
+        await this.updateUser(this.form);
+        this.state = SUCCESS;
+      } catch (error) {
+        this.state = ERROR;
+      }
+      this.showToast = true;
+      setTimeout(() => { this.showToast = false; }, TOAST_TIMEOUT);
     },
   },
 };
@@ -37,13 +95,22 @@ export default {
           <h1 class="text-xs-center">
             Your Settings
           </h1>
-          <form @submit.prevent="updateSettings()">
+          <b-alert
+            v-model="showToast"
+            class="mb-3 rounded-1"
+            :variant="toastVariant"
+            dismissible
+            fade
+          >
+            {{ toastMessage }}
+          </b-alert>
+          <form @submit.prevent="onSubmit()">
             <fieldset>
               <fieldset class="form-group">
                 <label for="username">Username</label>
                 <input
                   id="username"
-                  v-model="currentUser.username"
+                  v-model="form.username"
                   class="form-control form-control-lg"
                   type="text"
                   required
@@ -53,7 +120,7 @@ export default {
                 <label for="email">Email</label>
                 <input
                   id="email"
-                  v-model="currentUser.email"
+                  v-model="form.email"
                   class="form-control form-control-lg"
                   type="email"
                   required
@@ -63,7 +130,7 @@ export default {
                 <label for="company">Company</label>
                 <input
                   id="company"
-                  v-model="currentUser.company"
+                  v-model="form.company"
                   class="form-control form-control-lg"
                   type="text"
                   required
@@ -73,7 +140,7 @@ export default {
                 <label for="new-password">New Password</label>
                 <input
                   id="new-password"
-                  v-model="currentUser.password"
+                  v-model="form.password"
                   class="form-control form-control-lg"
                   type="password"
                 >

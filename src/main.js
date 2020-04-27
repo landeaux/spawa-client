@@ -28,8 +28,9 @@ ApiService.init();
 
 // Ensure we checked auth before each page load.
 router.beforeEach(async (to, from, next) => {
-  await Promise.all([store.dispatch(CHECK_AUTH)]);
-  if (store.getters.isAuthenticated || to.name === 'login' || to.name === 'register') {
+  await Promise.all([store.dispatch(`auth/${CHECK_AUTH}`)]);
+  const isAuthenticated = store.getters['auth/isAuthenticated'];
+  if (isAuthenticated || to.name === 'login' || to.name === 'register') {
     next();
   } else {
     next({ name: 'login' });

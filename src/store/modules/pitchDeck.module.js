@@ -9,6 +9,7 @@ import {
   SET_ERROR,
   SET_PITCH_DECK,
   SET_PITCH_DECK_LIST,
+  CLEAR_ERRORS,
 } from '@/store/mutations.type';
 
 const state = {
@@ -80,6 +81,9 @@ const mutations = {
   [SET_ERROR] (state, error) {
     state.pitchDeckErrors.push(error);
   },
+  [CLEAR_ERRORS] (state) {
+    state.pitchDeckErrors = [];
+  },
   [SET_PITCH_DECK] (state, payload) {
     state.pitchDeck = payload;
   },
@@ -89,6 +93,7 @@ const mutations = {
 };
 
 export default {
+  namespaced: true,
   state,
   actions,
   mutations,

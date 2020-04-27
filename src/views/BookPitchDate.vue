@@ -1,8 +1,15 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import CalendlyWidget from '../components/CalendlyWidget';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * BookPitchDate
+ *
+ * The Book Pitch Date view.
+ */
 export default {
   name: 'BookPitchDate',
   components: {
@@ -19,7 +26,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
     showLoader () {
       return this.state === 'init';
     },

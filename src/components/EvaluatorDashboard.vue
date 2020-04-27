@@ -1,10 +1,19 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * EvaluatorDashboard
+ *
+ * The Evalutor Dashboard component.
+ */
 export default {
   name: 'EvaluatorDashboard',
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
 };
 </script>

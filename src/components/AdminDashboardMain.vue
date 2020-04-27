@@ -1,9 +1,13 @@
 <script>
-import BigButtonComponent from '@/components/BigButtonComponent';
+/**
+ * AdminDashboardMain
+ *
+ * The Main Admin Dashboard view component.
+ */
 export default {
-  name: 'AdminDashboardMainVue',
+  name: 'AdminDashboardMain',
   components: {
-    BigButtonComponent,
+    BigButtonComponent: () => import('@/components/BigButtonComponent'),
   },
   methods: {
     onPitchDeckListButtonClick () {
@@ -20,7 +24,7 @@ export default {
 </script>
 
 <template>
-  <div class="main-flex">
+  <div class="container">
     <BigButtonComponent
       title="Pitch Deck List"
       class="btn-flex"
@@ -40,12 +44,6 @@ export default {
 </template>
 
 <style scoped lang="sass">
-  .main-flex
-    display: flex
-    flex-direction: row
-    flex-wrap: wrap
-    justify-content: center
-    width: 70vw
   .btn-flex
     margin: 1%
 </style>

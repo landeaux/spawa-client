@@ -1,5 +1,8 @@
 <script>
 import { UPDATE_USER_STATE } from '@/store/actions.type';
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapActions } = createNamespacedHelpers('auth');
 
 /**
  * TakePitchQuiz
@@ -20,8 +23,11 @@ export default {
     title: 'Take Pitch Quiz',
   }),
   methods: {
+    ...mapActions({
+      updateUserState: UPDATE_USER_STATE,
+    }),
     onNextButtonClick () {
-      this.$store.dispatch(UPDATE_USER_STATE, {
+      this.updateUserState({
         state: 'submit_pitch_deck',
       });
     },

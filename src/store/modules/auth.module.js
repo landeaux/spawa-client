@@ -7,15 +7,16 @@ import {
   CHECK_AUTH,
   UPDATE_USER,
   UPDATE_USER_STATE,
-} from './actions.type';
+} from '@/store/actions.type';
 import {
   SET_AUTH,
   PURGE_AUTH,
   SET_ERROR,
-} from './mutations.type';
+  CLEAR_ERRORS,
+} from '@/store/mutations.type';
 
 const state = {
-  errors: null,
+  errors: {},
   user: {},
   isAuthenticated: !!JwtService.getToken(),
 };
@@ -83,6 +84,9 @@ const mutations = {
   [SET_ERROR] (state, error) {
     state.errors = error;
   },
+  [CLEAR_ERRORS] (state) {
+    state.errors = {};
+  },
   [SET_AUTH] (state, user) {
     state.isAuthenticated = true;
     state.user = user;
@@ -98,6 +102,7 @@ const mutations = {
 };
 
 export default {
+  namespaced: true,
   state,
   actions,
   mutations,

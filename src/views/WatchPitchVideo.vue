@@ -1,5 +1,9 @@
 <script>
 import { UPDATE_USER_STATE } from '@/store/actions.type';
+import { createNamespacedHelpers } from 'vuex';
+
+const { mapActions } = createNamespacedHelpers('auth');
+
 /*
  * WATCH_THRESHOLD controls how much of the video must be watched before
  * allowing the user to continue.
@@ -20,6 +24,7 @@ export default {
     player: {},
     state: 'init',
     timer: 0,
+    // #todo this video id needs to be pulled in from the database
     videoId: 'jwLZVMI3q70',
     videoWatched: false,
   }),
@@ -41,6 +46,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      updateUserState: UPDATE_USER_STATE,
+    }),
     onReady (e) {
       this.state = 'ready';
       this.player = e.target;
@@ -75,7 +83,7 @@ export default {
       }
     },
     onNextButtonClicked () {
-      this.$store.dispatch(UPDATE_USER_STATE, {
+      this.updateUserState({
         state: 'take_pitch_quiz',
       });
     },

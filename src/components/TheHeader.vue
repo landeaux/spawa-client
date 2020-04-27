@@ -1,9 +1,17 @@
 <script>
-import { mapGetters } from 'vuex';
-import {
-  LOGOUT,
-} from '@/store/actions.type';
+import { createNamespacedHelpers } from 'vuex';
+import { LOGOUT } from '@/store/actions.type';
 
+const {
+  mapGetters,
+  mapActions,
+} = createNamespacedHelpers('auth');
+
+/**
+ * TheHeader
+ *
+ * The main application header component.
+ */
 export default {
   name: 'TheHeader',
   computed: {
@@ -13,8 +21,11 @@ export default {
     ]),
   },
   methods: {
-    logout () {
-      this.$store.dispatch(LOGOUT).then(() => {
+    ...mapActions({
+      logout: LOGOUT,
+    }),
+    onLogoutButtonClick () {
+      this.logout().then(() => {
         this.$router.push({ name: 'login' });
       });
     },
@@ -109,7 +120,7 @@ export default {
               </router-link>
               <button
                 class="btn btn-outline-danger"
-                @click="logout"
+                @click="onLogoutButtonClick"
               >
                 Logout
               </button>

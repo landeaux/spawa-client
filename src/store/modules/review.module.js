@@ -3,10 +3,12 @@ import {
   CREATE_REVIEW,
   GET_REVIEW_BY_ID,
   GET_REVIEWS,
+  UPDATE_REVIEW,
   DELETE_REVIEW,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
+  CLEAR_ERRORS,
 } from '@/store/mutations.type';
 
 const state = {
@@ -18,13 +20,14 @@ const getters = {
 };
 
 const actions = {
-  async [CREATE_REVIEW] (context, review) {
+  async [CREATE_REVIEW] ({ commit, dispatch }, review) {
+    commit(CLEAR_ERRORS);
     try {
       const { data } = await ApiService.post('reviews', { review });
       return data;
     } catch ({ response }) {
       const { errors } = response.data;
-      context.commit(SET_ERROR, errors);
+      commit(SET_ERROR, errors);
       return response.data;
     }
   },
@@ -51,6 +54,19 @@ const actions = {
       return error;
     }
   },
+  async [UPDATE_REVIEW] ({ commit, dispatch }, review) {
+    commit(CLEAR_ERRORS);
+    try {
+      const { id } = review;
+      const { data } = await ApiService.update('reviews', id, { review });
+
+      return data;
+    } catch ({ response }) {
+      const { errors } = response.data;
+      commit(SET_ERROR, errors);
+      return response.data;
+    }
+  },
   async [DELETE_REVIEW] (context, id) {
     try {
       return await ApiService.delete('reviews', id);
@@ -68,9 +84,13 @@ const mutations = {
   [SET_ERROR] (state, error) {
     state.reviewErrors.push(error);
   },
+  [CLEAR_ERRORS] (state) {
+    state.reviewErrors = [];
+  },
 };
 
 export default {
+  namespaced: true,
   state,
   getters,
   actions,

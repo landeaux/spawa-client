@@ -1,13 +1,22 @@
 <script>
-import { mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
+const { mapGetters } = createNamespacedHelpers('auth');
+
+/**
+ * ReviewerDashboard
+ *
+ * The Reviewer Dashboard component.
+ */
 export default {
   name: 'ReviewerDashboard',
   components: {
     PitchDeckList: () => import('@/components/PitchDeckList'),
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters([
+      'currentUser',
+    ]),
   },
 };
 </script>

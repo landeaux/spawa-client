@@ -1,23 +1,41 @@
 <script>
 import {
-  FETCH_PITCH_DECKS,
-} from '@/store/actions.type';
-import {
+  mapActions,
   mapGetters,
 } from 'vuex';
+import {
+  FETCH_PITCH_DECKS,
+} from '@/store/actions.type';
+import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
+import { intersection } from 'lodash/array';
+
+/**
+ * Vuex module names
+ */
+const AUTH = 'auth';
+const PITCH_DECK = 'pitchDeck';
+
+/**
+ * States
+ */
+const INIT = 0;
+const FETCH_COMPLETE = 1;
 
 /**
  * PitchDeckList
+ *
+ * The Pitch Deck List component.
  */
 export default {
   name: 'PitchDeckList',
   components: {
+    PitchDeckReviewForm,
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   data: () => ({
     sortBy: 'createdAt',
     sortDesc: true,
-    state: 'INIT',
+    state: INIT,
     tableFields: [
       {
         key: 'userHasReviewed',
@@ -52,11 +70,11 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters([
-      'currentUser',
-      'pitchDeckErrors',
-      'pitchDeckList',
-    ]),
+    ...mapGetters({
+      currentUser: `${AUTH}/currentUser`,
+      pitchDeckErrors: `${PITCH_DECK}/pitchDeckErrors`,
+      pitchDeckList: `${PITCH_DECK}/pitchDeckList`,
+    }),
     pitchDeckListForDisplay () {
       return this.pitchDeckList
         .filter((p) => !p.accepted)
@@ -65,6 +83,7 @@ export default {
             ...p,
             numReviews: p.reviews.length,
             userHasReviewed: this.userHasReviewed(p),
+            usersReview: this.getUsersReviewId(p),
           };
         });
     },
@@ -72,19 +91,44 @@ export default {
       return this.pitchDeckErrors.length > 0;
     },
     showLoader () {
-      return this.state === 'INIT';
+      return this.state === INIT;
     },
   },
   async created () {
-    await this.$store.dispatch(FETCH_PITCH_DECKS);
-    this.state = 'FETCH_COMPLETE';
-    console.log(this.currentUser);
+    await this.fetchPitchDecks();
+    this.state = FETCH_COMPLETE;
   },
   methods: {
+    ...mapActions({
+      fetchPitchDecks: `${PITCH_DECK}/${FETCH_PITCH_DECKS}`,
+    }),
     userHasReviewed (pitchDeck) {
       const pitchDeckReviews = pitchDeck.reviews;
       const currentUserReviews = this.currentUser.reviews;
       return pitchDeckReviews.some((r) => currentUserReviews.includes(r));
+    },
+    getUsersReviewId (pitchDeck) {
+      if (this.userHasReviewed) {
+        const pitchDeckReviews = pitchDeck.reviews;
+        const currentUserReviews = this.currentUser.reviews;
+        try {
+          const reviewId = intersection(pitchDeckReviews, currentUserReviews)[0];
+          return reviewId || '';
+        } catch (error) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(error);
+          }
+          return '';
+        }
+      } else {
+        return '';
+      }
+    },
+    reviewModalId (id) {
+      return `review-${id}`;
+    },
+    async onReviewSubmitSuccess () {
+      await this.fetchPitchDecks();
     },
   },
 };
@@ -103,7 +147,7 @@ export default {
 
     <b-alert
       v-else-if="showError"
-      show="true"
+      :show="true"
       variant="danger"
     >
       There was an error fetching the pitch deck list.
@@ -125,15 +169,13 @@ export default {
       >
         <template v-slot:cell(userHasReviewed)="row">
           <div style="vertical-align: center">
-            <b-icon
+            <b-icon-check-circle
               v-if="row.item.userHasReviewed"
-              icon="check-circle"
               variant="success"
               class="list-icon"
             />
-            <b-icon
+            <b-icon-exclamation-circle
               v-else
-              icon="alert-circle"
               class="list-icon"
             />
           </div>
@@ -150,10 +192,23 @@ export default {
             class="table-actions"
           >
             <b-dropdown-item
+              v-b-modal="reviewModalId(row.item.id)"
               class="inside-drop"
             >
               Review
             </b-dropdown-item>
+            <b-modal
+              :id="reviewModalId(row.item.id)"
+              size="lg"
+              centered
+              :hide-footer="true"
+              title="Review User Pitchdeck"
+            >
+              <PitchDeckReviewForm
+                :pitch-deck="row.item"
+                @review-submit-success="onReviewSubmitSuccess"
+              />
+            </b-modal>
           </b-dropdown>
         </template>
       </b-table>

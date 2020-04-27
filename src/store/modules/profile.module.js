@@ -2,11 +2,11 @@ import ApiService from '@/common/api.service';
 import {
   FETCH_PROFILE,
   FETCH_PROFILE_BY_USERNAME,
-} from './actions.type';
+} from '@/store/actions.type';
 import {
   SET_PROFILE,
   SET_ERROR,
-} from './mutations.type';
+} from '@/store/mutations.type';
 
 const state = {
   profileErrors: [],
@@ -57,6 +57,7 @@ const mutations = {
 };
 
 export default {
+  namespaced: true,
   state,
   actions,
   mutations,
