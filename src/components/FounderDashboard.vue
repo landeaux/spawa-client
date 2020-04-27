@@ -1,19 +1,24 @@
 <script>
-import { DOWNLOAD_PITCH_DECK, FETCH_PITCH_DECK_BY_ID } from '@/store/actions.type';
-
+import {
+  DOWNLOAD_PITCH_DECK,
+  FETCH_PITCH_DECK_BY_ID,
+} from '@/store/actions.type';
 import {
   mapActions,
   mapGetters,
 } from 'vuex';
-import SubmitPitchDeck from '../views/SubmitPitchDeck';
+
 /**
  * VUEX module names
  */
 const AUTH = 'auth';
 const PITCH_DECK = 'pitchDeck';
 
+/**
+ * Other constants
+ */
 const MIN_REVIEW_COUNT = 4;
-// #todo Will need to make this updatable by admins somehow
+// #todo Will need to make this update-able by admins somehow
 const YT_VIDEO_ID = 'jwLZVMI3q70';
 
 /**
@@ -37,56 +42,66 @@ export default {
       currentUser: `${AUTH}/currentUser`,
     }),
     statusBadgeVariant () {
-      // #todo Make dynamic based on user's pitch deck status
-      if (this.pitchDeck.status === 'UNDER_REVIEW') { return 'info'; } else if
-      (this.pitchDeck.status === 'ACCEPTED') { return 'success'; } else { return 'danger'; }
+      if (this.pitchDeck.status === 'UNDER_REVIEW') {
+        return 'info';
+      } else if (this.pitchDeck.status === 'ACCEPTED') {
+        return 'success';
+      } else {
+        return 'danger';
+      }
     },
     statusBadgeText () {
-      // #todo Make dynamic based on user's pitch deck status
-      if (this.pitchDeck.status === 'UNDER_REVIEW') { return 'UNDER REVIEW'; } else if
-      (this.pitchDeck.status === 'ACCEPTED') { return 'ACCEPTED'; } else { return 'NOT ACCEPTED'; }
+      if (this.pitchDeck.status === 'UNDER_REVIEW') {
+        return 'UNDER REVIEW';
+      } else if (this.pitchDeck.status === 'ACCEPTED') {
+        return 'ACCEPTED';
+      } else {
+        return 'NOT ACCEPTED';
+      }
     },
     instructText () {
-      // #todo Make dynamic based on user's pitch deck status
       if (this.pitchDeck.status === 'UNDER_REVIEW') {
         return `
-        Your pitch deck has been submitted and is under review by StartUpNV's
-        Reviewers. Once you have four or more reviews, the "See My Feedback"
-        button will be enabled and you can click it to see your recent reviews.
-        Additionally, once you have over four reviews, an admin will either
-        accept your pitch deck or send it back for re-work. If your pitch deck
-        was accepted, your status will change to "ACCEPTED" and you will be
-        given the next steps on what to do. If your pitch deck is sent back for
-        re-work, your status will remain in "UNDER REVIEW" and you will be able
-        review your feedback and re-submit a new version of your pitch deck.
-        Finally, if your pitch deck is not approved after the third submission,
-        then your status will change to "NOT APPROVED".
-      `;
-      } else if
-      (this.pitchDeck.status === 'ACCEPTED') {
+          Your pitch deck has been submitted and is under review by StartUpNV's
+          Reviewers. Once you have four or more reviews, the "See My Feedback"
+          button will be enabled and you can click it to see your recent reviews.
+          Additionally, once you have over four reviews, an admin will either
+          accept your pitch deck or send it back for re-work. If your pitch deck
+          was accepted, your status will change to "ACCEPTED" and you will be
+          given the next steps on what to do. If your pitch deck is sent back for
+          re-work, your status will remain in "UNDER REVIEW" and you will be able
+          review your feedback and re-submit a new version of your pitch deck.
+          Finally, if your pitch deck is not approved after the third submission,
+          then your status will change to "NOT APPROVED".
+        `;
+      } else if (this.pitchDeck.status === 'ACCEPTED') {
         return `
-        Your pitch deck has been accepted by StartUpNV's Reviewers. You can
-        click the "See My Feedback" button  to see your recent reviews.You may
-        now select the "Book a Pitch Date" button to book a date to pitch your
-        pitch deck with StartUpNV.
-      `;
+          Your pitch deck has been accepted by StartUpNV's Reviewers. You can
+          click the "See My Feedback" button  to see your recent reviews.You may
+          now select the "Book a Pitch Date" button to book a date to pitch your
+          pitch deck with StartUpNV.
+        `;
       } else {
         return `
-        Your pitch deck has not been accepted by StartUpNV's Reviewers. You can
-        click the "See My Feedback" button  to see your recent reviews.
-      `;
+          Your pitch deck has not been accepted by StartUpNV's Reviewers. You can
+          click the "See My Feedback" button  to see your recent reviews.
+        `;
       }
     },
     reviewCount () {
-      // #todo Make dynamic based on the number of reviews on their pitchdeck'
-      if (this.pitchDeck.reviews !== undefined) { return this.pitchDeck.reviews.length; } else { return ''; }
+      if (this.pitchDeck.reviews !== undefined) {
+        return this.pitchDeck.reviews.length;
+      } else {
+        return '';
+      }
     },
     feedbackButtonDisabled () {
       return this.reviewCount < MIN_REVIEW_COUNT;
     },
     showResubmitPitchDeckButton () {
-      // #todo Make dynamic based on user pitch deck lock date
-      return true;
+      // #todo Make dynamic based on user pitch deck lock date and status
+      return this.pitchDeck.status === 'NOT_READY' ||
+        this.pitchDeck.status === 'NEEDS_REWORK';
     },
   },
   async created () {
@@ -105,13 +120,11 @@ export default {
       });
     },
     onFeedbackButtonClick () {
-      // #todo trigger modal window showing all reviews on pitchdeck
       if (!this.feedbackButtonDisabled) {
         this.$refs['see-review-modal'].show();
       }
     },
     onResubmitPitchDeckButtonClick () {
-      // #todo trigger modal window for re-submitting the pitch deck
       this.$refs['resubmit-pitchdeck-modal'].show();
     },
   },
