@@ -8,6 +8,11 @@ export default {
       type: Object,
     },
   },
+  methods: {
+    getAdjustedValue (value) {
+      return (value + 1);
+    },
+  },
 };
 </script>
 
@@ -43,7 +48,7 @@ export default {
           </b-col>
           <b-col>
             <b-button
-              v-b-toggle.collapse-1
+              v-b-toggle="'collapse-'+ index.toString()"
               variant="primary"
             >
               Toggle Review
@@ -52,7 +57,7 @@ export default {
         </b-row>
       </b-container>
       <b-collapse
-        id="collapse-1"
+        :id="'collapse-'+ index.toString()"
         class="mt-2"
       >
         <b-card>
@@ -145,42 +150,42 @@ export default {
             Problem Statement Rating:
           </p>
           <b-form-rating
-            v-model="review.problemStatementRating"
+            :value="getAdjustedValue(review.problemStatementRating)"
             readonly
           />
           <p class="mt-2">
             Solution Description Rating:
           </p>
           <b-form-rating
-            v-model="review.solutionDescriptionRating"
+            :value="getAdjustedValue(review.solutionDescriptionRating)"
             readonly
           />
           <p class="mt-2">
             Market Competition Rating:
           </p>
           <b-form-rating
-            v-model="review.marketCompetitionRating"
+            :value="getAdjustedValue(review.marketCompetitionRating)"
             readonly
           />
           <p class="mt-2">
             Business Model Rating:
           </p>
           <b-form-rating
-            v-model="review.businessModelRating"
+            :value="getAdjustedValue(review.businessModelRating)"
             readonly
           />
           <p class="mt-2">
             Team Rating:
           </p>
           <b-form-rating
-            v-model="review.teamRating"
+            :value="getAdjustedValue(review.teamRating)"
             readonly
           />
           <p class="mt-2">
             Ask Rating:
           </p>
           <b-form-rating
-            v-model="review.askRating"
+            :value="getAdjustedValue(review.askRating)"
             readonly
           />
         </b-card>

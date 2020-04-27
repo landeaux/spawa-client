@@ -93,7 +93,6 @@ export default {
     // grab the user's pitchDeck ...
     const response = await this.fetchPitchDeckById(this.currentUser.pitchDeck);
     this.pitchDeck = response.pitchDeck;
-    console.log(this.pitchDeck);
   },
   methods: {
     ...mapActions({
