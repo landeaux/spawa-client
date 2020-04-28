@@ -100,11 +100,19 @@ export default {
      * Handle form submission
      * @param evt The event object
      */
-    onFormSubmit (evt) {
-      if (!this.file) return;
-      const formData = new FormData();
-      formData.append(this.uploadFieldName, this.file, this.file.name);
-      this.uploadFile(formData);
+    async onFormSubmit (evt) {
+      try {
+        if (!this.file) return;
+        const formData = new FormData();
+        formData.append(this.uploadFieldName, this.file, this.file.name);
+        await this.uploadFile(formData);
+        this.$emit('form-submit-success');
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error);
+        }
+        this.$emit('form-submit-failure');
+      }
     },
     onNextButtonClick () {
       this.updateUserState({
