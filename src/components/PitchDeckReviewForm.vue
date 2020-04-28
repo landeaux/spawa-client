@@ -132,7 +132,7 @@ export default {
         : this.createReview;
       const payload = {
         ...this.form,
-        pitchDeck: this.pitchDeck._id,
+        pitchDeck: this.pitchDeck.id,
         reviewerName: this.currentUser.username,
       };
       if (this.pitchDeck.usersReview !== '') {
@@ -145,7 +145,6 @@ export default {
       if (this.statusIsSuccess) {
         this.$emit('review-submit-success');
       }
-      this.resetForm();
     },
     onReset () {
       // Reset form state and reset our form values
@@ -154,7 +153,7 @@ export default {
     },
     onDownloadButtonClick () {
       this.downloadPitchDeck({
-        id: this.pitchDeck._id,
+        id: this.pitchDeck.id,
       });
     },
     resetForm () {
@@ -390,7 +389,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang = sass>
+<style scoped lang="sass">
   .main-form
     text-align: left
     color: #039

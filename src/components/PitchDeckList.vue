@@ -5,8 +5,12 @@ import {
 } from 'vuex';
 import {
   FETCH_PITCH_DECKS,
+  REWORK_PITCH_DECK,
+  ACCEPT_PITCH_DECK,
+  REJECT_PITCH_DECK,
 } from '@/store/actions.type';
 import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
+import AdminSeeReviewModal from '@/components/AdminSeeReviewModal';
 import { intersection } from 'lodash/array';
 
 /**
@@ -30,6 +34,7 @@ export default {
   name: 'PitchDeckList',
   components: {
     PitchDeckReviewForm,
+    AdminSeeReviewModal,
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
   data: () => ({
@@ -101,6 +106,9 @@ export default {
   methods: {
     ...mapActions({
       fetchPitchDecks: `${PITCH_DECK}/${FETCH_PITCH_DECKS}`,
+      reworkPitchDeck: `${PITCH_DECK}/${REWORK_PITCH_DECK}`,
+      acceptPitchDeck: `${PITCH_DECK}/${ACCEPT_PITCH_DECK}`,
+      rejectPitchDeck: `${PITCH_DECK}/${REJECT_PITCH_DECK}`,
     }),
     userHasReviewed (pitchDeck) {
       const pitchDeckReviews = pitchDeck.reviews;
@@ -127,7 +135,37 @@ export default {
     reviewModalId (id) {
       return `review-${id}`;
     },
+    acceptModalId (id) {
+      return `accept-${id}`;
+    },
+    reworkModalId (id) {
+      return `rework-${id}`;
+    },
+    rejectModalId (id) {
+      return `reject-${id}`;
+    },
+    seeReviewsModalId (id) {
+      return `see-reviews-${id}`;
+    },
     async onReviewSubmitSuccess () {
+      await this.fetchPitchDecks();
+    },
+    async onAcceptButtonOk (pitchDeckId) {
+      await this.acceptPitchDeck({
+        id: pitchDeckId,
+      });
+      await this.fetchPitchDecks();
+    },
+    async onReworkButtonOk (pitchDeckId) {
+      await this.reworkPitchDeck({
+        id: pitchDeckId,
+      });
+      await this.fetchPitchDecks();
+    },
+    async onRejectButtonOk (pitchDeckId) {
+      await this.rejectPitchDeck({
+        id: pitchDeckId,
+      });
       await this.fetchPitchDecks();
     },
   },
@@ -190,6 +228,7 @@ export default {
             variant="primary"
             text="Actions"
             class="table-actions"
+            boundary="viewport"
           >
             <b-dropdown-item
               v-b-modal="reviewModalId(row.item.id)"
@@ -207,6 +246,81 @@ export default {
               <PitchDeckReviewForm
                 :pitch-deck="row.item"
                 @review-submit-success="onReviewSubmitSuccess"
+              />
+            </b-modal>
+
+            <b-dropdown-item
+              v-if="currentUser.role === 'admin'"
+              v-b-modal="acceptModalId(row.item.id)"
+              class="inside-drop"
+            >
+              Accept Pitchdeck
+            </b-dropdown-item>
+            <b-modal
+              :id="acceptModalId(row.item.id)"
+              size="lg"
+              centered
+              title="Suspend User"
+              @ok="onAcceptButtonOk(row.item.id)"
+            >
+              <p class="mod-text">
+                Are you sure you want to accept {{ row.item.company }}'s pitch deck?
+              </p>
+            </b-modal>
+
+            <b-dropdown-item
+              v-if="currentUser.role === 'admin'"
+              v-b-modal="reworkModalId(row.item.id)"
+              class="inside-drop"
+            >
+              Return For Rework
+            </b-dropdown-item>
+            <b-modal
+              :id="reworkModalId(row.item.id)"
+              size="lg"
+              centered
+              title="Suspend User"
+              @ok="onReworkButtonOk(row.item.id)"
+            >
+              <p class="mod-text">
+                Are you sure you want to send {{ row.item.company }}'s pitch deck back for rework?
+              </p>
+            </b-modal>
+
+            <b-dropdown-item
+              v-if="currentUser.role === 'admin'"
+              v-b-modal="rejectModalId(row.item.id)"
+              class="inside-drop"
+            >
+              Reject Pitchdeck
+            </b-dropdown-item>
+            <b-modal
+              :id="rejectModalId(row.item.id)"
+              size="lg"
+              centered
+              title="Suspend User"
+              @ok="onRejectButtonOk(row.item.id)"
+            >
+              <p class="mod-text">
+                Are you sure you want to reject {{ row.item.company }}'s pitch deck?
+              </p>
+            </b-modal>
+
+            <b-dropdown-item
+              v-if="currentUser.role === 'admin'"
+              v-b-modal="seeReviewsModalId(row.item.id)"
+              class="inside-drop"
+            >
+              See All Reviews
+            </b-dropdown-item>
+            <b-modal
+              :id="seeReviewsModalId(row.item.id)"
+              size="lg"
+              centered
+              title="All Reviews"
+            >
+              <AdminSeeReviewModal
+                :pitch-deck="row.item"
               />
             </b-modal>
           </b-dropdown>

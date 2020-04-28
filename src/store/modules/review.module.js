@@ -3,6 +3,7 @@ import {
   CREATE_REVIEW,
   GET_REVIEW_BY_ID,
   GET_REVIEWS,
+  GET_REVIEWS_BY_PITCH_DECK_ID,
   UPDATE_REVIEW,
   DELETE_REVIEW,
 } from '@/store/actions.type';
@@ -52,6 +53,17 @@ const actions = {
         console.error(error);
       }
       return error;
+    }
+  },
+  async [GET_REVIEWS_BY_PITCH_DECK_ID] (context, id) {
+    try {
+      const { data } = await ApiService.get('reviews/pitchdeck', id);
+      return data;
+    } catch (error) {
+      context.commit(SET_ERROR, error);
+      if (process.NODE_ENV !== 'production') {
+        console.error(error);
+      }
     }
   },
   async [UPDATE_REVIEW] ({ commit, dispatch }, review) {

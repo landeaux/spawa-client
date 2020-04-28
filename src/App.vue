@@ -31,12 +31,15 @@ body
   box-sizing: border-box
   color: #2c3e50
   font-family: 'Avenir', Helvetica, Arial, sans-serif
+  font-size: 1.25rem
   display: flex
   flex-direction: column
   height: 100%
   -moz-osx-font-smoothing: grayscale
   text-align: center
   -webkit-font-smoothing: antialiased
+  button
+    font-size: 1.25rem
   #view
     display: flex
     flex-direction: column

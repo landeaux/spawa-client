@@ -1,12 +1,25 @@
 <script>
-import { createNamespacedHelpers } from 'vuex';
-import { DOWNLOAD_PITCH_DECK } from '@/store/actions.type';
+import {
+  DOWNLOAD_PITCH_DECK,
+  FETCH_PITCH_DECK_BY_ID,
+  SUBMIT_PITCH_DECK_FOR_REVIEW,
+} from '@/store/actions.type';
+import {
+  mapActions,
+  mapGetters,
+} from 'vuex';
 
-const { mapActions } = createNamespacedHelpers('pitchDeck');
-const { mapGetters } = createNamespacedHelpers('auth');
+/**
+ * VUEX module names
+ */
+const AUTH = 'auth';
+const PITCH_DECK = 'pitchDeck';
 
+/**
+ * Other constants
+ */
 const MIN_REVIEW_COUNT = 4;
-// #todo Will need to make this updatable by admins somehow
+// #todo Will need to make this update-able by admins somehow
 const YT_VIDEO_ID = 'jwLZVMI3q70';
 
 /**
@@ -17,54 +30,104 @@ const YT_VIDEO_ID = 'jwLZVMI3q70';
 export default {
   name: 'FounderDashboard',
   components: {
+    ReUploadPitchDeckModal: () => import('@/components/ReUploadPitchDeckModal'),
+    FounderReviewModal: () => import('@/components/FounderReviewModal'),
     BigButtonComponent: () => import('@/components/BigButtonComponent'),
   },
   data: () => ({
     videoId: YT_VIDEO_ID,
+    pitchDeck: {},
   }),
   computed: {
-    ...mapGetters([
-      'currentUser',
-    ]),
+    ...mapGetters({
+      currentUser: `${AUTH}/currentUser`,
+    }),
     statusBadgeVariant () {
-      // #todo Make dynamic based on user's pitch deck status
-      return 'info';
+      return {
+        NOT_READY: 'secondary',
+        NEEDS_REWORK: 'warning',
+        UNDER_REVIEW: 'primary',
+        ACCEPTED: 'success',
+        REJECTED: 'danger',
+      }[this.pitchDeck.status];
     },
     statusBadgeText () {
-      // #todo Make dynamic based on user's pitch deck status
-      return 'UNDER REVIEW';
+      return {
+        NOT_READY: 'NOT READY',
+        NEEDS_REWORK: 'NEEDS REWORK',
+        UNDER_REVIEW: 'UNDER REVIEW',
+        ACCEPTED: 'ACCEPTED',
+        REJECTED: 'NOT ACCEPTED',
+      }[this.pitchDeck.status];
     },
     instructText () {
-      // #todo Make dynamic based on user's pitch deck status
-      return `
-        Your pitch deck has been submitted and is under review by StartUpNV's
-        Reviewers. Once you have four or more reviews, the "See My Feedback"
-        button will be enabled and you can click it to see your recent reviews.
-        Additionally, once you have over four reviews, an admin will either
-        accept your pitch deck or send it back for re-work. If your pitch deck
-        was accepted, your status will change to "ACCEPTED" and you will be
-        given the next steps on what to do. If your pitch deck is sent back for
-        re-work, your status will remain in "UNDER REVIEW" and you will be able
-        review your feedback and re-submit a new version of your pitch deck.
-        Finally, if your pitch deck is not approved after the third submission,
-        then your status will change to "NOT APPROVED".
-      `;
+      return {
+        NOT_READY: `
+          Your pitch deck has been uploaded but you have not submitted it for
+          review yet. Click the "Submit Pitch Deck For Review" button when your
+          pitch deck is ready to be reviewed by StartUpNV's Reviewers.
+        `,
+        NEEDS_REWORK: `
+          Your pitch deck has been reviewed by our reviewers, but has been sent
+          back for re-work. Click the "See My Feedback" button to see the
+          feedback left by our reviewers and update your pitch deck accordingly.
+          When you think your pitch deck is ready to re-submit for review, click
+          the 'Submit Pitch Deck For Review' button to re-initiate the review
+          process.
+        `,
+        UNDER_REVIEW: `
+          Your pitch deck has been submitted and is under review by StartUpNV's
+          Reviewers. Once you have four or more reviews, the "See My Feedback"
+          button will be enabled, allowing you to click it to see your recent
+          reviews. Additionally, once you have over four reviews, an admin will
+          either accept your pitch deck or send it back for re-work. Check back
+          here periodically for updates.
+        `,
+        ACCEPTED: `
+          Your pitch deck has been accepted by StartUpNV's Reviewers. You can
+          click the "See My Feedback" button  to see your recent reviews. You
+          may now select the "Book a Pitch Date" button to book a date to pitch
+          your pitch deck with StartUpNV.
+        `,
+        REJECTED: `
+          Your pitch deck has not been accepted by StartUpNV's Reviewers. You
+          can click the "See My Feedback" button to see your recent reviews.
+        `,
+      }[this.pitchDeck.status];
     },
     reviewCount () {
-      // #todo Make dynamic based on the number of reviews on their pitchdeck
-      return 0;
+      try {
+        return this.pitchDeck.reviews.length;
+      } catch {
+        return 0;
+      }
     },
     feedbackButtonDisabled () {
       return this.reviewCount < MIN_REVIEW_COUNT;
     },
-    showResubmitPitchDeckButton () {
-      // #todo Make dynamic based on user pitch deck lock date
-      return true;
+    showReUploadPitchDeckButton () {
+      const { status, isLocked } = this.pitchDeck;
+      return !isLocked && (status === 'NOT_READY' || status === 'NEEDS_REWORK');
     },
+    showSubmitForReviewButton () {
+      const { status, isLocked } = this.pitchDeck;
+      return !isLocked && status === 'NOT_READY';
+    },
+    showBookPitchDateButton () {
+      const { status } = this.pitchDeck;
+      return status === 'ACCEPTED';
+    },
+  },
+  async created () {
+    // grab the user's pitchDeck ...
+    const response = await this.fetchPitchDeckById(this.currentUser.pitchDeck);
+    this.pitchDeck = response.pitchDeck;
   },
   methods: {
     ...mapActions({
-      downloadPitchDeck: DOWNLOAD_PITCH_DECK,
+      fetchPitchDeckById: `${PITCH_DECK}/${FETCH_PITCH_DECK_BY_ID}`,
+      downloadPitchDeck: `${PITCH_DECK}/${DOWNLOAD_PITCH_DECK}`,
+      submitPitchDeckForReview: `${PITCH_DECK}/${SUBMIT_PITCH_DECK_FOR_REVIEW}`,
     }),
     onDownloadButtonClick () {
       this.downloadPitchDeck({
@@ -72,15 +135,24 @@ export default {
       });
     },
     onFeedbackButtonClick () {
-      // #todo trigger modal window showing all reviews on pitchdeck
-      console.log('onFeedbackButtonClick triggered!');
       if (!this.feedbackButtonDisabled) {
-        // only trigger modal if the button is not disabled
+        this.$refs['see-review-modal'].show();
       }
     },
-    onResubmitPitchDeckButtonClick () {
-      // #todo trigger modal window for re-submitting the pitch deck
-      console.log('onResubmitPitchDeckButtonClick triggered!');
+    onReUploadPitchDeckButtonClick () {
+      this.$refs['reupload-pitchdeck-modal'].show();
+    },
+    async onSubmitForReviewButtonClick () {
+      const { pitchDeck } = await this.submitPitchDeckForReview();
+      this.pitchDeck = pitchDeck;
+    },
+    async onBookPitchDateButtonClick () {
+      await this.$router.push({ name: 'book-pitch-date' });
+    },
+    async onUploadSuccess () {
+      // grab the user's pitchDeck ...
+      const response = await this.fetchPitchDeckById(this.currentUser.pitchDeck);
+      this.pitchDeck = response.pitchDeck;
     },
   },
 };
@@ -115,9 +187,20 @@ export default {
           :info="reviewCount"
           class="right-flex big-button"
           :disabled="feedbackButtonDisabled"
-          @click="onFeedbackButtonClick"
+          @click.native="onFeedbackButtonClick"
         />
-
+        <b-modal
+          id="seeReviewModal"
+          ref="see-review-modal"
+          size="lg"
+          centered
+          :hide-footer="true"
+          title="My Reviews"
+        >
+          <FounderReviewModal
+            :pitch-deck="pitchDeck"
+          />
+        </b-modal>
         <button
           v-b-modal.vid-model
           type="button"
@@ -147,65 +230,83 @@ export default {
         </button>
 
         <button
-          v-if="showResubmitPitchDeckButton"
+          v-if="showReUploadPitchDeckButton"
           type="button"
           class="right-flex btn btn-primary small-btn"
-          @click="onResubmitPitchDeckButtonClick"
+          @click="onReUploadPitchDeckButtonClick"
         >
-          Re-submit Pitch Deck
+          Re-upload Pitch Deck
+        </button>
+        <b-modal
+          id="reUploadPitchDeckModal"
+          ref="reupload-pitchdeck-modal"
+          size="lg"
+          centered
+          :hide-footer="true"
+          title="Re-upload Pitch Deck"
+        >
+          <ReUploadPitchDeckModal
+            @form-submit-success="onUploadSuccess"
+          />
+        </b-modal>
+        <button
+          v-if="showSubmitForReviewButton"
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onSubmitForReviewButtonClick"
+        >
+          Submit Pitch Deck For Review
+        </button>
+        <button
+          v-if="showBookPitchDateButton"
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onBookPitchDateButtonClick"
+        >
+          Book a Pitch Date
         </button>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped >
-  h1, h2 {
-    color: #039;
-  }
-  p, .instruct-text {
-    color: #007bff;
-  }
-  .main-flex {
-    display: flex;
-    flex-direction: row;
-    margin-top: 5%;
-    margin-left: 10%;
-    margin-right: 10%;
-  }
-  .column {
-    flex: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .instruct-text {
-    text-align: left;
-  }
-  .right-flex {
-    margin-top: 10px;
-  }
-  .small-btn {
-    height: 4rem;
-    border-radius: 8px;
-  }
-  .btn, .big-button {
-    width: 70% !important;
-  }
-  .stat-display {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    border-radius: 8px;
-    background: rgba(40, 216, 255, 0.39);
-    padding: 10px;
-    color: #039;
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  .status{
-    font-weight: bold;
-  }
+<style scoped lang='sass'>
+  h1, h2
+    color: #039
+  p, .instruct-text
+    color: #007bff
+  .main-flex
+    display: flex
+    flex-direction: row
+    margin-top: 5%
+    margin-left: 10%
+    margin-right: 10%
+  .column
+    flex: 50%
+    display: flex
+    flex-direction: column
+    align-items: center
+  .instruct-text
+    text-align: left
+  .right-flex
+    margin-top: 10px
+  .small-btn
+    height: 4rem
+    border-radius: 8px
+  .btn, .big-button
+    width: 70% !important
+  .stat-display
+    display: flex
+    flex-flow: row nowrap
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    border-radius: 8px
+    background: rgba(40, 216, 255, 0.39)
+    padding: 10px
+    color: #039
+    font-size: 20px
+    margin-bottom: 20px
+  .status
+    font-weight: bold
 </style>
