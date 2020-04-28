@@ -114,8 +114,8 @@ export default {
       return !isLocked && status === 'NOT_READY';
     },
     showBookPitchDateButton () {
-      const { status, isLocked } = this.pitchDeck;
-      return !isLocked && status === 'ACCEPTED';
+      const { status } = this.pitchDeck;
+      return status === 'ACCEPTED';
     },
   },
   async created () {
