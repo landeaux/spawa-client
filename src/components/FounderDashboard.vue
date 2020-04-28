@@ -149,6 +149,11 @@ export default {
     async onBookPitchDateButtonClick () {
       await this.$router.push({ name: 'book-pitch-date' });
     },
+    async onUploadSuccess () {
+      // grab the user's pitchDeck ...
+      const response = await this.fetchPitchDeckById(this.currentUser.pitchDeck);
+      this.pitchDeck = response.pitchDeck;
+    },
   },
 };
 </script>
@@ -240,7 +245,9 @@ export default {
           :hide-footer="true"
           title="Re-upload Pitch Deck"
         >
-          <ReUploadPitchDeckModal />
+          <ReUploadPitchDeckModal
+            @form-submit-success="onUploadSuccess"
+          />
         </b-modal>
         <button
           v-if="showSubmitForReviewButton"
