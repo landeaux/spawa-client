@@ -5,6 +5,9 @@ import {
 } from 'vuex';
 import {
   FETCH_PITCH_DECKS,
+  REWORK_PITCH_DECK,
+  ACCEPT_PITCH_DECK,
+  REJECT_PITCH_DECK,
 } from '@/store/actions.type';
 import PitchDeckReviewForm from '@/components/PitchDeckReviewForm';
 import AdminSeeReviewModal from '@/components/AdminSeeReviewModal';
@@ -103,6 +106,9 @@ export default {
   methods: {
     ...mapActions({
       fetchPitchDecks: `${PITCH_DECK}/${FETCH_PITCH_DECKS}`,
+      reworkPitchDeck: `${PITCH_DECK}/${REWORK_PITCH_DECK}`,
+      acceptPitchDeck: `${PITCH_DECK}/${ACCEPT_PITCH_DECK}`,
+      rejectPitchDeck: `${PITCH_DECK}/${REJECT_PITCH_DECK}`,
     }),
     userHasReviewed (pitchDeck) {
       const pitchDeckReviews = pitchDeck.reviews;
@@ -145,13 +151,22 @@ export default {
       await this.fetchPitchDecks();
     },
     async onAcceptButtonOk (pitchDeckId) {
-      await this.acceptPitchDeck(pitchDeckId);
+      await this.acceptPitchDeck({
+        id: pitchDeckId,
+      });
+      await this.fetchPitchDecks();
     },
     async onReworkButtonOk (pitchDeckId) {
-      await this.reworkPitchDeck(pitchDeckId);
+      await this.reworkPitchDeck({
+        id: pitchDeckId,
+      });
+      await this.fetchPitchDecks();
     },
     async onRejectButtonOk (pitchDeckId) {
-      await this.rejectPitchDeck(pitchDeckId);
+      await this.rejectPitchDeck({
+        id: pitchDeckId,
+      });
+      await this.fetchPitchDecks();
     },
   },
 };
