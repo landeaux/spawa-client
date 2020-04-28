@@ -63,7 +63,7 @@ export default {
     instructText () {
       return {
         NOT_READY: `
-          Your pitch deck has been uploaded but you have not submitted to for
+          Your pitch deck has been uploaded but you have not submitted it for
           review yet. Click the "Submit Pitch Deck For Review" button when your
           pitch deck is ready to be reviewed by StartUpNV's Reviewers.
         `,
