@@ -152,6 +152,7 @@ export default {
     position: relative;
     display: inline-block;
     color: #039;
+    z-index: 10;
   }
   .dropbtn {
     padding-top: .425rem;
