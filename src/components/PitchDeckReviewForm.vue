@@ -145,7 +145,6 @@ export default {
       if (this.statusIsSuccess) {
         this.$emit('review-submit-success');
       }
-      this.resetForm();
     },
     onReset () {
       // Reset form state and reset our form values
