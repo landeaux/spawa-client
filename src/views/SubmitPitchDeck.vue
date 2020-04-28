@@ -4,7 +4,7 @@ import {
   mapGetters,
 } from 'vuex';
 import {
-  CREATE_PITCH_DECK,
+  UPLOAD_PITCH_DECK,
   UPDATE_USER_STATE,
 } from '@/store/actions.type';
 
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      createPitchDeck: `${PITCH_DECK}/${CREATE_PITCH_DECK}`,
+      uploadPitchDeck: `${PITCH_DECK}/${UPLOAD_PITCH_DECK}`,
       updateUserState: `${AUTH}/${UPDATE_USER_STATE}`,
     }),
     /**
@@ -87,7 +87,7 @@ export default {
     async uploadFile (formData) {
       this.currentStatus = STATUS_SAVING;
       try {
-        await this.createPitchDeck(formData);
+        await this.uploadPitchDeck(formData);
         this.currentStatus = STATUS_SUCCESS;
       } catch (err) {
         this.uploadError = err.response;
