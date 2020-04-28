@@ -32,6 +32,10 @@ export const FETCH_PITCH_DECK_BY_ID = 'fetchPitchDeckById';
 export const UPLOAD_PITCH_DECK = 'uploadPitchDeck';
 export const DOWNLOAD_PITCH_DECK = 'downloadPitchDeckById';
 export const SUBMIT_PITCH_DECK_FOR_REVIEW = 'submitPitchDeckForReview';
+export const SEND_PITCH_DECK_EVENT = 'sendPitchDeckEvent';
+export const REWORK_PITCH_DECK = 'reworkPitchDeck';
+export const ACCEPT_PITCH_DECK = 'acceptPitchDeck';
+export const REJECT_PITCH_DECK = 'rejectPitchDeck';
 
 /**
  * Review module actions
