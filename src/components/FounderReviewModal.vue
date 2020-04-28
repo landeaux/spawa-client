@@ -1,4 +1,7 @@
 <script>
+import { GET_REVIEWS_BY_PITCH_DECK_ID } from '@/store/actions.type';
+import { mapActions } from 'vuex';
+
 export default {
   name: 'FounderReviewModal',
   props: {
@@ -8,7 +11,16 @@ export default {
       type: Object,
     },
   },
+  data: () => ({
+    reviews: {},
+  }),
+  async created () {
+    this.reviews = await this.getReviewsByPitchDeckId(this.pitchDeck.id);
+  },
   methods: {
+    ...mapActions({
+      getReviewsByPitchDeckId: `review/${GET_REVIEWS_BY_PITCH_DECK_ID}`,
+    }),
     getAdjustedValue (value) {
       return (value + 1);
     },
@@ -32,7 +44,7 @@ export default {
       </b-row>
     </b-container>
     <div
-      v-for="(review,index) in pitchDeck.reviews"
+      v-for="(review, index) in reviews"
       :key="review.updatedAt"
       class="review-div"
     >
