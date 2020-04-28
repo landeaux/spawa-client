@@ -113,6 +113,10 @@ export default {
       const { status, isLocked } = this.pitchDeck;
       return !isLocked && status === 'NOT_READY';
     },
+    showBookPitchDateButton () {
+      const { status, isLocked } = this.pitchDeck;
+      return !isLocked && status === 'ACCEPTED';
+    },
   },
   async created () {
     // grab the user's pitchDeck ...
@@ -141,6 +145,9 @@ export default {
     async onSubmitForReviewButtonClick () {
       const { pitchDeck } = await this.submitPitchDeckForReview();
       this.pitchDeck = pitchDeck;
+    },
+    async onBookPitchDateButtonClick () {
+      await this.$router.push({ name: 'book-pitch-date' });
     },
   },
 };
@@ -242,6 +249,14 @@ export default {
           @click="onSubmitForReviewButtonClick"
         >
           Submit Pitch Deck For Review
+        </button>
+        <button
+          v-if="showBookPitchDateButton"
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onBookPitchDateButtonClick"
+        >
+          Book a Pitch Date
         </button>
       </div>
     </div>
