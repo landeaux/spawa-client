@@ -63,7 +63,7 @@ export default {
     instructText () {
       return {
         NOT_READY: `
-          Your pitch deck has been uploaded but you have not submitted to for
+          Your pitch deck has been uploaded but you have not submitted it for
           review yet. Click the "Submit Pitch Deck For Review" button when your
           pitch deck is ready to be reviewed by StartUpNV's Reviewers.
         `,
@@ -113,6 +113,10 @@ export default {
       const { status, isLocked } = this.pitchDeck;
       return !isLocked && status === 'NOT_READY';
     },
+    showBookPitchDateButton () {
+      const { status } = this.pitchDeck;
+      return status === 'ACCEPTED';
+    },
   },
   async created () {
     // grab the user's pitchDeck ...
@@ -141,6 +145,14 @@ export default {
     async onSubmitForReviewButtonClick () {
       const { pitchDeck } = await this.submitPitchDeckForReview();
       this.pitchDeck = pitchDeck;
+    },
+    async onBookPitchDateButtonClick () {
+      await this.$router.push({ name: 'book-pitch-date' });
+    },
+    async onUploadSuccess () {
+      // grab the user's pitchDeck ...
+      const response = await this.fetchPitchDeckById(this.currentUser.pitchDeck);
+      this.pitchDeck = response.pitchDeck;
     },
   },
 };
@@ -233,7 +245,9 @@ export default {
           :hide-footer="true"
           title="Re-upload Pitch Deck"
         >
-          <ReUploadPitchDeckModal />
+          <ReUploadPitchDeckModal
+            @form-submit-success="onUploadSuccess"
+          />
         </b-modal>
         <button
           v-if="showSubmitForReviewButton"
@@ -242,6 +256,14 @@ export default {
           @click="onSubmitForReviewButtonClick"
         >
           Submit Pitch Deck For Review
+        </button>
+        <button
+          v-if="showBookPitchDateButton"
+          type="button"
+          class="right-flex btn btn-primary small-btn"
+          @click="onBookPitchDateButtonClick"
+        >
+          Book a Pitch Date
         </button>
       </div>
     </div>
