@@ -14,30 +14,30 @@ import {
 } from '@/store/mutations.type';
 
 // #todo remove dummy fetch function when backend is written for it.
-import { wait } from '@/assets/utils';
-async function fakeSubmitPitchDeckForReview (id) {
-  return Promise.resolve({
-    data: {
-      pitchDeck: {
-        id,
-        status: 'UNDER_REVIEW',
-        owner: {
-          _id: '5ea739310c88831a96d43cca',
-          email: 'founder@coalamails.com',
-          username: 'founder',
-          company: 'Founder LLC',
-        },
-        lockDate: '2020-04-28T19:58:35.091Z',
-        isLocked: true,
-        createdAt: '2020-04-27T19:58:41.030Z',
-        updatedAt: new Date(),
-        s3Key: 'Your big idea_2a9f4ac8-f85b-4613-bb4f-b0df81c2f6eb.pdf',
-        filename: 'Your big idea.pdf',
-        reviews: [],
-      },
-    },
-  }).then(wait(3000));
-}
+// import { wait } from '@/assets/utils';
+// async function fakeSubmitPitchDeckForReview (id) {
+//   return Promise.resolve({
+//     data: {
+//       pitchDeck: {
+//         id,
+//         status: 'UNDER_REVIEW',
+//         owner: {
+//           _id: '5ea739310c88831a96d43cca',
+//           email: 'founder@coalamails.com',
+//           username: 'founder',
+//           company: 'Founder LLC',
+//         },
+//         lockDate: '2020-04-28T19:58:35.091Z',
+//         isLocked: true,
+//         createdAt: '2020-04-27T19:58:41.030Z',
+//         updatedAt: new Date(),
+//         s3Key: 'Your big idea_2a9f4ac8-f85b-4613-bb4f-b0df81c2f6eb.pdf',
+//         filename: 'Your big idea.pdf',
+//         reviews: [],
+//       },
+//     },
+//   }).then(wait(3000));
+// }
 
 const state = {
   pitchDeckErrors: [],
@@ -102,18 +102,16 @@ const actions = {
         URL.revokeObjectURL(link.href);
       }).catch(console.error);
   },
-  async [SUBMIT_PITCH_DECK_FOR_REVIEW] ({ commit, dispatch }, payload) {
+  async [SUBMIT_PITCH_DECK_FOR_REVIEW] ({ commit }) {
     try {
-      const { id } = payload;
-
-      // #todo Replace this dummy api call with the actual api call
-      const { data } = await fakeSubmitPitchDeckForReview(id);
-
+      const { data } = await ApiService.put('pitchdecks/submit', {});
       return data;
     } catch (error) {
-      return {
+      const errorObject = {
         error: error.message || 'There was an error updating the status.',
       };
+      commit(SET_ERROR, errorObject);
+      return errorObject;
     }
   },
 };

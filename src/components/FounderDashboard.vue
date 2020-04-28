@@ -139,9 +139,7 @@ export default {
       this.$refs['reupload-pitchdeck-modal'].show();
     },
     async onSubmitForReviewButtonClick () {
-      const { pitchDeck } = await this.submitPitchDeckForReview({
-        id: this.pitchDeck.id,
-      });
+      const { pitchDeck } = await this.submitPitchDeckForReview();
       this.pitchDeck = pitchDeck;
     },
   },
