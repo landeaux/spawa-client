@@ -23,10 +23,12 @@ const STATUS_SUCCESS = 2;
 const STATUS_FAILED = 3;
 
 /**
- * SubmitPitchDeck
+ * ReUploadPitchDeckModal
+ *
+ * The form modal for re-uploading a pitch deck.
  */
 export default {
-  name: 'SubmitPitchDeck',
+  name: 'ReUploadPitchDeckModal',
   components: {
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
   },
@@ -37,10 +39,10 @@ export default {
       uploadFieldName: 'pitchdeck',
       file: null,
       fileName: '',
-      instructions: 'Please submit your pitch deck using the form below.',
-      title: 'Submit Pitch Deck',
+      instructions: 'Please upload your pitch deck using the form below.',
+      title: 'Upload Pitch Deck',
       routerLinkTo: 'home',
-      successMessage: 'Thank you for submitting your pitch deck! Click "Next" to continue.',
+      successMessage: 'Thank you for uploading your pitch deck!',
       inputHelp: 'We prefer PowerPoint, but you may submit .pdf',
     };
   },
@@ -69,7 +71,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      uploadPitchDeck: `${PITCH_DECK}/${UPLOAD_PITCH_DECK}`,
+      createPitchDeck: `${PITCH_DECK}/${UPLOAD_PITCH_DECK}`,
       updateUserState: `${AUTH}/${UPDATE_USER_STATE}`,
     }),
     /**
@@ -87,7 +89,7 @@ export default {
     async uploadFile (formData) {
       this.currentStatus = STATUS_SAVING;
       try {
-        await this.uploadPitchDeck(formData);
+        await this.createPitchDeck(formData);
         this.currentStatus = STATUS_SUCCESS;
       } catch (err) {
         this.uploadError = err.response;
@@ -114,7 +116,10 @@ export default {
 </script>
 
 <template>
-  <div id="view">
+  <div
+    id="view"
+    class="root"
+  >
     <h1>{{ title }}</h1>
     <p>{{ instructions }}</p>
 
@@ -133,7 +138,7 @@ export default {
               :for="uploadFieldName"
               class="col-form-label col-form-label-lg"
             >
-              Submit your pitch deck here
+              Upload your pitch deck here
             </label>
             <p class="text-muted">
               {{ inputHelp }}
@@ -154,7 +159,7 @@ export default {
           <input
             type="submit"
             :disabled="!inputValid"
-            value="Submit"
+            value="Upload"
             class="btn btn-lg btn-primary"
           >
         </fieldset>
@@ -197,41 +202,18 @@ export default {
       </p>
       <pre>{{ uploadError }}</pre>
     </div>
-
-    <button
-      v-if="isSuccess"
-      type="button"
-      class="btn btn-primary next-button"
-      @click="onNextButtonClick"
-    >
-      Next
-    </button>
-
-    <button
-      v-else
-      type="button"
-      class="btn btn-primary next-button"
-      style="cursor: not-allowed"
-      disabled
-      title="Please fill out the form to continue."
-    >
-      Please Fill Out The Form To Continue
-    </button>
   </div>
 </template>
 
 <style lang="sass">
   @import '../assets/sass/vars'
-  #view
-    display: flex
-    flex-direction: column
+  .root
     .message, .form-container
       position: relative
       height: 100%
       display: flex
       flex-direction: column
       justify-content: center
-      align-items: center
     form
       fieldset
         &.form-group

@@ -1,9 +1,10 @@
 import ApiService from '@/common/api.service';
 import {
-  CREATE_PITCH_DECK,
+  UPLOAD_PITCH_DECK,
   FETCH_PITCH_DECKS,
   FETCH_PITCH_DECK_BY_ID,
   DOWNLOAD_PITCH_DECK,
+  SUBMIT_PITCH_DECK_FOR_REVIEW,
 } from '@/store/actions.type';
 import {
   SET_ERROR,
@@ -11,6 +12,32 @@ import {
   SET_PITCH_DECK_LIST,
   CLEAR_ERRORS,
 } from '@/store/mutations.type';
+
+// #todo remove dummy fetch function when backend is written for it.
+// import { wait } from '@/assets/utils';
+// async function fakeSubmitPitchDeckForReview (id) {
+//   return Promise.resolve({
+//     data: {
+//       pitchDeck: {
+//         id,
+//         status: 'UNDER_REVIEW',
+//         owner: {
+//           _id: '5ea739310c88831a96d43cca',
+//           email: 'founder@coalamails.com',
+//           username: 'founder',
+//           company: 'Founder LLC',
+//         },
+//         lockDate: '2020-04-28T19:58:35.091Z',
+//         isLocked: true,
+//         createdAt: '2020-04-27T19:58:41.030Z',
+//         updatedAt: new Date(),
+//         s3Key: 'Your big idea_2a9f4ac8-f85b-4613-bb4f-b0df81c2f6eb.pdf',
+//         filename: 'Your big idea.pdf',
+//         reviews: [],
+//       },
+//     },
+//   }).then(wait(3000));
+// }
 
 const state = {
   pitchDeckErrors: [],
@@ -25,9 +52,9 @@ const getters = {
 };
 
 const actions = {
-  async [CREATE_PITCH_DECK] (context, payload) {
+  async [UPLOAD_PITCH_DECK] (context, payload) {
     try {
-      const { data } = await ApiService.post('pitchdecks', payload);
+      const { data } = await ApiService.put('pitchdecks', payload);
       context.commit(SET_PITCH_DECK, data);
       return data;
     } catch ({ response }) {
@@ -74,6 +101,18 @@ const actions = {
         link.click();
         URL.revokeObjectURL(link.href);
       }).catch(console.error);
+  },
+  async [SUBMIT_PITCH_DECK_FOR_REVIEW] ({ commit }) {
+    try {
+      const { data } = await ApiService.put('pitchdecks/submit', {});
+      return data;
+    } catch (error) {
+      const errorObject = {
+        error: error.message || 'There was an error updating the status.',
+      };
+      commit(SET_ERROR, errorObject);
+      return errorObject;
+    }
   },
 };
 
