@@ -1,6 +1,15 @@
 <script>
-import { createNamespacedHelpers } from 'vuex';
-import { LOGIN } from '@/store/actions.type';
+import {
+  createNamespacedHelpers,
+} from 'vuex';
+import {
+  LOGIN,
+} from '@/store/actions.type';
+import {
+  ValidationObserver,
+  ValidationProvider,
+} from 'vee-validate';
+
 const {
   mapActions,
   mapState,
@@ -8,6 +17,10 @@ const {
 
 export default {
   name: 'Login',
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
   data () {
     return {
       username: null,
@@ -61,29 +74,50 @@ export default {
               {{ k }} {{ v | error }}
             </li>
           </ul>
-          <form @submit.prevent="onSubmit(username, password)">
-            <fieldset class="form-group">
-              <label for="username">Username</label>
-              <input
-                id="username"
-                v-model="username"
-                class="form-control form-control-lg"
-                type="text"
-              >
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="password">Password</label>
-              <input
-                id="password"
-                v-model="password"
-                class="form-control form-control-lg"
-                type="password"
-              >
-            </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
-              Sign in
-            </button>
-          </form>
+
+          <ValidationObserver
+            ref="form"
+            v-slot="{ handleSubmit, invalid }"
+            tag="div"
+          >
+            <form @submit.prevent="onSubmit(username, password)">
+              <fieldset class="form-group">
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  name="Username"
+                >
+                  <label for="username">Username</label>
+                  <input
+                    id="username"
+                    v-model="username"
+                    class="form-control form-control-lg"
+                    type="text"
+                    required
+                  >
+                  <span class="form-field-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </fieldset>
+              <fieldset class="form-group">
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  name="Password"
+                >
+                  <label for="password">Password</label>
+                  <input
+                    id="password"
+                    v-model="password"
+                    class="form-control form-control-lg"
+                    type="password"
+                    required
+                  >
+                  <span class="form-field-error">{{ errors[0] }}</span>
+                </ValidationProvider>
+              </fieldset>
+              <button class="btn btn-lg btn-primary pull-xs-right">
+                Sign in
+              </button>
+            </form>
+          </ValidationObserver>
         </div>
       </div>
     </div>
@@ -96,4 +130,7 @@ export default {
       text-align: left
       label
         font-weight: bold
+      .form-field-error
+        color: red
+        font-size: 1rem
 </style>
