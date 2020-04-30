@@ -80,24 +80,20 @@ export default {
             tag="div"
           >
             <form @submit.prevent="handleSubmit(onSubmit)">
-              <fieldset class="form-group">
-                <TextInputWithValidation
-                  id="username"
-                  v-model="username"
-                  label="Username"
-                  type="text"
-                  required
-                />
-              </fieldset>
-              <fieldset class="form-group">
-                <TextInputWithValidation
-                  id="password"
-                  v-model="password"
-                  label="Password"
-                  type="password"
-                  required
-                />
-              </fieldset>
+              <TextInputWithValidation
+                id="username"
+                v-model="username"
+                label="Username"
+                type="text"
+                required
+              />
+              <TextInputWithValidation
+                id="password"
+                v-model="password"
+                label="Password"
+                type="password"
+                required
+              />
               <button
                 class="btn btn-lg btn-primary pull-xs-right"
                 :disabled="invalid"
@@ -111,14 +107,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style scoped lang="sass">
-  fieldset
-    &.form-group
-      text-align: left
-      label
-        font-weight: bold
-      .form-field-error
-        color: red
-        font-size: 1rem
-</style>
