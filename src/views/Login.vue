@@ -7,7 +7,6 @@ import {
 } from '@/store/actions.type';
 import {
   ValidationObserver,
-  ValidationProvider,
 } from 'vee-validate';
 
 const {
@@ -18,8 +17,8 @@ const {
 export default {
   name: 'Login',
   components: {
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
     ValidationObserver,
-    ValidationProvider,
   },
   data () {
     return {
@@ -36,10 +35,10 @@ export default {
     ...mapActions({
       login: LOGIN,
     }),
-    async onSubmit (username, password) {
+    async onSubmit () {
       await this.login({
-        username,
-        password,
+        username: this.username,
+        password: this.password,
       });
       await this.$router.push({ name: 'home' });
     },
@@ -80,40 +79,29 @@ export default {
             v-slot="{ handleSubmit, invalid }"
             tag="div"
           >
-            <form @submit.prevent="onSubmit(username, password)">
+            <form @submit.prevent="handleSubmit(onSubmit(username, password))">
               <fieldset class="form-group">
-                <ValidationProvider
-                  v-slot="{ errors }"
-                  name="Username"
-                >
-                  <label for="username">Username</label>
-                  <input
-                    id="username"
-                    v-model="username"
-                    class="form-control form-control-lg"
-                    type="text"
-                    required
-                  >
-                  <span class="form-field-error">{{ errors[0] }}</span>
-                </ValidationProvider>
+                <TextInputWithValidation
+                  id="username"
+                  v-model="username"
+                  label="Username"
+                  type="text"
+                  required
+                />
               </fieldset>
               <fieldset class="form-group">
-                <ValidationProvider
-                  v-slot="{ errors }"
-                  name="Password"
-                >
-                  <label for="password">Password</label>
-                  <input
-                    id="password"
-                    v-model="password"
-                    class="form-control form-control-lg"
-                    type="password"
-                    required
-                  >
-                  <span class="form-field-error">{{ errors[0] }}</span>
-                </ValidationProvider>
+                <TextInputWithValidation
+                  id="password"
+                  v-model="password"
+                  label="Password"
+                  type="password"
+                  required
+                />
               </fieldset>
-              <button class="btn btn-lg btn-primary pull-xs-right">
+              <button
+                class="btn btn-lg btn-primary pull-xs-right"
+                :disabled="invalid"
+              >
                 Sign in
               </button>
             </form>
