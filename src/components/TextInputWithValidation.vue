@@ -91,7 +91,7 @@ export default {
 
 <template>
   <ValidationProvider
-    v-slot="{ errors, touched, ariaInput, ariaMsg, classes }"
+    v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
     :name="label"
     :rules="rules"
   >
@@ -103,17 +103,21 @@ export default {
         :placeholder="placeholder"
         :required="required"
         :type="type"
-        class="form-control form-control-lg"
-        :class="classes"
+        :class="{
+          'form-control': true,
+          'form-control-lg': true,
+          'is-invalid': failed,
+        }"
         v-bind="ariaInput"
       >
     </label>
-    <span
+    <b-form-invalid-feedback
+      :id="`${id}-error`"
+      :state="passed"
       v-bind="ariaMsg"
-      class="form-field-error"
     >
       {{ errors[0] }}
-    </span>
+    </b-form-invalid-feedback>
   </ValidationProvider>
 </template>
 
