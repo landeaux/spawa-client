@@ -94,12 +94,13 @@ export default {
                 type="password"
                 required
               />
-              <button
-                class="btn btn-lg btn-primary pull-xs-right"
+              <b-button
                 :disabled="invalid"
+                variant="primary"
+                type="submit"
               >
                 Sign in
-              </button>
+              </b-button>
             </form>
           </ValidationObserver>
         </div>
