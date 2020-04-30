@@ -79,7 +79,7 @@ export default {
             v-slot="{ handleSubmit, invalid }"
             tag="div"
           >
-            <form @submit.prevent="handleSubmit(onSubmit(username, password))">
+            <form @submit.prevent="handleSubmit(onSubmit)">
               <fieldset class="form-group">
                 <TextInputWithValidation
                   id="username"
