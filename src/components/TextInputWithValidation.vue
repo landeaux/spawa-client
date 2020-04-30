@@ -1,9 +1,15 @@
 <script>
-// #todo Pass all implied rules as native html input props
 import {
   ValidationProvider,
 } from 'vee-validate';
 
+/**
+ * TextInputWithValidation
+ *
+ * The TextInputWithValidation component. Wraps all markup and logic related to
+ * a textual-based input (type = text, email, url, etc) and provides validation
+ * via VeeValidate.
+ */
 export default {
   name: 'TextInputWithValidation',
   components: {
@@ -95,7 +101,12 @@ export default {
     :name="label"
     :rules="rules"
   >
-    <label>{{ label }}
+    <b-form-group
+      :id="`${id}-group`"
+      :label="label"
+      :label-for="id"
+      class="form-group"
+    >
       <input
         :id="id"
         v-model="innerValue"
@@ -110,23 +121,18 @@ export default {
         }"
         v-bind="ariaInput"
       >
-    </label>
-    <b-form-invalid-feedback
-      :id="`${id}-error`"
-      :state="passed"
-      v-bind="ariaMsg"
-    >
-      {{ errors[0] }}
-    </b-form-invalid-feedback>
+      <b-form-invalid-feedback
+        :id="`${id}-feedback`"
+        :state="passed"
+        v-bind="ariaMsg"
+      >
+        {{ errors[0] }}
+      </b-form-invalid-feedback>
+    </b-form-group>
   </ValidationProvider>
 </template>
 
 <style scoped lang="sass">
-  label
-    font-weight: bold
-    margin-bottom: 0
-    width: 100%
-  .form-field-error
-    color: red
-    font-size: 1rem
+  .form-group
+    text-align: left
 </style>
