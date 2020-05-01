@@ -2,16 +2,12 @@ import en from 'vee-validate/dist/locale/en.json';
 import {
   extend,
   localize,
-  setInteractionMode,
 } from 'vee-validate';
 import {
   alpha_num as alphaNum,
   email,
-  // regex,
   required,
 } from 'vee-validate/dist/rules';
-
-setInteractionMode('eager');
 
 localize('en', en);
 
