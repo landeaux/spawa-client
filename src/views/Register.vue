@@ -205,11 +205,6 @@ export default {
 </template>
 
 <style scoped lang="sass">
-  fieldset
-    &.form-group
-      text-align: left
-      label
-        font-weight: bold
   ul
     margin: 0
     padding: 0
