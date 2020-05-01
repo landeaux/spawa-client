@@ -1,8 +1,13 @@
 <script>
-import { createNamespacedHelpers } from 'vuex';
+import {
+  createNamespacedHelpers,
+} from 'vuex';
 import {
   UPDATE_USER,
 } from '@/store/actions.type';
+import {
+  ValidationObserver,
+} from 'vee-validate';
 
 const {
   mapActions,
@@ -28,6 +33,10 @@ const TOAST_TIMEOUT = 10000; // timeout in ms
  */
 export default {
   name: 'TheSettings',
+  components: {
+    ValidationObserver,
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+  },
   data: () => ({
     state: INIT,
     showToast: false,
@@ -36,7 +45,9 @@ export default {
       email: '',
       company: '',
       password: '',
+      confirmPassword: '',
     },
+    initialForm: {},
   }),
   computed: {
     ...mapGetters([
@@ -59,12 +70,22 @@ export default {
         ? 'success'
         : 'danger';
     },
+    fieldsHaveChanged () {
+      return Object.keys(this.form).some((field) => {
+        if (Object.prototype.hasOwnProperty.call(this.initialForm, field)) {
+          return this.form[field] !== this.initialForm[field];
+        }
+        return false;
+      });
+    },
   },
   created () {
-    this.form.username = this.currentUser.username;
-    this.form.email = this.currentUser.email;
-    this.form.company = this.currentUser.company;
-    this.form.password = this.currentUser.password;
+    Object.keys(this.form).forEach((key) => {
+      if (Object.prototype.hasOwnProperty.call(this.currentUser, key)) {
+        this.form[key] = this.currentUser[key];
+      }
+    });
+    this.initialForm = { ...this.form };
   },
   methods: {
     ...mapActions({
@@ -79,6 +100,9 @@ export default {
       }
       this.showToast = true;
       setTimeout(() => { this.showToast = false; }, TOAST_TIMEOUT);
+    },
+    submitDisabled (invalid, pristine) {
+      return invalid || pristine || !this.fieldsHaveChanged;
     },
   },
 };
@@ -104,62 +128,63 @@ export default {
           >
             {{ toastMessage }}
           </b-alert>
-          <form @submit.prevent="onSubmit()">
-            <fieldset>
-              <fieldset class="form-group">
-                <label for="username">Username</label>
-                <input
+          <ValidationObserver
+            ref="form"
+            v-slot="{ handleSubmit, invalid, pristine }"
+            tag="div"
+          >
+            <form @submit.prevent="handleSubmit(onSubmit)">
+              <fieldset>
+                <TextInputWithValidation
                   id="username"
                   v-model="form.username"
-                  class="form-control form-control-lg"
+                  label="Username"
                   type="text"
+                  rules="alpha_num"
                   required
-                >
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="email">Email</label>
-                <input
+                />
+                <TextInputWithValidation
                   id="email"
                   v-model="form.email"
-                  class="form-control form-control-lg"
+                  label="Email"
                   type="email"
                   required
-                >
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="company">Company</label>
-                <input
+                />
+                <TextInputWithValidation
                   id="company"
                   v-model="form.company"
-                  class="form-control form-control-lg"
+                  label="Company"
                   type="text"
                   required
-                >
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="new-password">New Password</label>
-                <input
-                  id="new-password"
+                />
+                <TextInputWithValidation
+                  id="password"
                   v-model="form.password"
-                  class="form-control form-control-lg"
+                  label="Password"
+                  rules="password:@confirm-password"
                   type="password"
+                  vid="password"
+                />
+                <TextInputWithValidation
+                  id="confirm-password"
+                  v-model="form.confirmPassword"
+                  label="Confirm Password"
+                  rules="password:@password"
+                  type="password"
+                  vid="confirm-password"
+                />
+                <b-button
+                  :disabled="submitDisabled(invalid, pristine)"
+                  type="submit"
+                  variant="primary"
                 >
+                  Update Settings
+                </b-button>
               </fieldset>
-              <button class="btn btn-lg btn-primary pull-xs-right">
-                Update Settings
-              </button>
-            </fieldset>
-          </form>
+            </form>
+          </ValidationObserver>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="sass">
-  fieldset
-    &.form-group
-      text-align: left
-      label
-        font-weight: bold
-</style>
