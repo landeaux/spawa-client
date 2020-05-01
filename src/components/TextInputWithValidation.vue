@@ -20,6 +20,11 @@ export default {
       required: true,
       type: String,
     },
+    vid: {
+      default: '',
+      required: false,
+      type: String,
+    },
     disabled: {
       default: false,
       required: false,
@@ -100,6 +105,7 @@ export default {
     v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
     :name="label"
     :rules="rules"
+    :vid="vid"
   >
     <b-form-group
       :id="`${id}-group`"
