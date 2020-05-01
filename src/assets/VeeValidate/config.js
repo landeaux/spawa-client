@@ -7,6 +7,7 @@ import {
   alpha_num as alphaNum,
   email,
   required,
+  required_if as requiredIf,
 } from 'vee-validate/dist/rules';
 
 localize('en', en);
@@ -17,6 +18,7 @@ localize('en', en);
 extend('alpha_num', alphaNum);
 extend('email', email);
 extend('required', required);
+extend('required_if', requiredIf);
 
 /**
  * Custom rules
