@@ -13,7 +13,7 @@ import StartCaseFilter from './common/startCase.filter';
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 import { IconsPlugin } from 'bootstrap-vue';
-import '@/assets/VeeValidate/rules';
+import '@/assets/VeeValidate/config';
 
 Vue.use(IconsPlugin);
 
