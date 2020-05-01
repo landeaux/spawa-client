@@ -49,6 +49,18 @@ export default {
       required: false,
       type: [Object, String],
     },
+    size: {
+      default: 'lg',
+      required: false,
+      type: String,
+      validator: (value) => {
+        return [
+          'sm',
+          'md',
+          'lg',
+        ].indexOf(value) !== -1;
+      },
+    },
     type: {
       type: String,
       default: 'text',
@@ -122,7 +134,9 @@ export default {
         :type="type"
         :class="{
           'form-control': true,
-          'form-control-lg': true,
+          'form-control-sm': size === 'sm',
+          'form-control-md': size === 'md',
+          'form-control-lg': size === 'lg',
           'is-invalid': failed,
         }"
         v-bind="ariaInput"
