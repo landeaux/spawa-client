@@ -1,7 +1,16 @@
 <script>
-import { createNamespacedHelpers } from 'vuex';
-import { REGISTER } from '@/store/actions.type';
-import { CLEAR_ERRORS } from '@/store/mutations.type';
+import {
+  createNamespacedHelpers,
+} from 'vuex';
+import {
+  REGISTER,
+} from '@/store/actions.type';
+import {
+  CLEAR_ERRORS,
+} from '@/store/mutations.type';
+import {
+  ValidationObserver,
+} from 'vee-validate';
 
 const {
   mapActions,
@@ -26,6 +35,8 @@ export default {
   name: 'TheRegister',
   components: {
     PulseLoader: () => import('vue-spinner/src/PulseLoader'),
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+    ValidationObserver,
   },
   data () {
     return {
@@ -35,6 +46,7 @@ export default {
       email: '',
       company: '',
       password: '',
+      confirmPassword: '',
     };
   },
   computed: {
@@ -131,47 +143,61 @@ export default {
               There was an error registering your account.
             </span>
           </b-alert>
-          <form @submit.prevent="onSubmit">
-            <fieldset class="form-group">
-              <label for="username">Username</label>
-              <input
+
+          <ValidationObserver
+            ref="form"
+            v-slot="{ handleSubmit, invalid }"
+            tag="div"
+          >
+            <form @submit.prevent="handleSubmit(onSubmit)">
+              <TextInputWithValidation
                 id="username"
                 v-model="username"
-                class="form-control form-control-lg"
+                label="Username"
                 type="text"
-              >
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="email">Email</label>
-              <input
+                rules="alpha_num"
+                required
+              />
+              <TextInputWithValidation
                 id="email"
                 v-model="email"
-                class="form-control form-control-lg"
-                type="text"
-              >
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="company">Company</label>
-              <input
+                label="Email"
+                type="email"
+                required
+              />
+              <TextInputWithValidation
                 id="company"
                 v-model="company"
-                class="form-control form-control-lg"
+                label="Company"
                 type="text"
-              >
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="password">Password</label>
-              <input
+                required
+              />
+              <TextInputWithValidation
                 id="password"
                 v-model="password"
-                class="form-control form-control-lg"
+                label="Password"
+                required
                 type="password"
+                vid="password"
+              />
+              <TextInputWithValidation
+                id="confirm-password"
+                v-model="confirmPassword"
+                label="Confirm Password"
+                required
+                rules="password:@password"
+                type="password"
+                vid="confirm-password"
+              />
+              <b-button
+                :disabled="invalid"
+                type="submit"
+                variant="primary"
               >
-            </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
-              Sign up
-            </button>
-          </form>
+                Sign up
+              </b-button>
+            </form>
+          </ValidationObserver>
         </div>
       </div>
     </div>
