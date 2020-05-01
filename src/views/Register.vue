@@ -177,6 +177,7 @@ export default {
                 v-model="password"
                 label="Password"
                 required
+                rules="password:@confirm-password"
                 type="password"
                 vid="password"
               />
