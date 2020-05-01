@@ -3,6 +3,7 @@ import { CREATE_USER } from '@/store/actions.type';
 import { createNamespacedHelpers } from 'vuex';
 import {
   ValidationObserver,
+  ValidationProvider,
 } from 'vee-validate';
 
 const {
@@ -13,8 +14,9 @@ const {
 export default {
   name: 'AdminDashboardCreateUser',
   components: {
-    ValidationObserver,
     TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+    ValidationObserver,
+    ValidationProvider,
   },
   data () {
     return {
@@ -30,9 +32,9 @@ export default {
       },
       roles: [
         { text: 'Select One', value: null },
-        { text: 'Founder', value: 'founder' },
-        { text: 'Admin', value: 'admin' },
         { text: 'Reviewer', value: 'reviewer' },
+        { text: 'Admin', value: 'admin' },
+        { text: 'Founder', value: 'founder' },
       ],
       states: [
         { text: 'Select One', value: null },
@@ -222,34 +224,62 @@ export default {
             </b-form-checkbox>
           </b-form-group>
 
-          <b-form-group
-            id="input-group-role"
-            label="Role:"
-            label-for="input-role"
+          <ValidationProvider
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="Role"
+            rules="required"
+            vid="role"
           >
-            <b-form-select
-              id="input-role"
-              v-model="form.role"
-              :options="roles"
-              required
-              size="lg"
-            />
-          </b-form-group>
+            <b-form-group
+              id="input-group-role"
+              label="Role"
+              label-for="input-role"
+            >
+              <b-form-select
+                id="input-role"
+                v-model="form.role"
+                :options="roles"
+                required
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-role-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
 
-          <b-form-group
+          <ValidationProvider
             v-if="form.role === 'founder'"
-            id="input-group-state"
-            label="State:"
-            label-for="input-state"
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="State"
+            rules="required_if:role"
           >
-            <b-form-select
-              id="input-state"
-              v-model="form.state"
-              :options="states"
-              required
-              size="lg"
-            />
-          </b-form-group>
+            <b-form-group
+              id="input-group-state"
+              label="State"
+              label-for="input-state"
+            >
+              <b-form-select
+                id="input-state"
+                v-model="form.state"
+                :options="states"
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-state-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
         </div>
         <b-button
           type="submit"
