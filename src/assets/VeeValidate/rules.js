@@ -1,23 +1,31 @@
-import { extend } from 'vee-validate';
+import en from 'vee-validate/dist/locale/en.json';
 import {
+  extend,
+  localize,
+} from 'vee-validate';
+import {
+  alpha_num as alphaNum,
   email,
+  // regex,
   required,
 } from 'vee-validate/dist/rules';
 
-extend('email', email);
+localize('en', en);
 
-extend('required', {
-  ...required,
-  message: '{_field_} is required.',
-});
+/**
+ * Built-in rules
+ */
+extend('alpha_num', alphaNum);
+extend('email', email);
+extend('required', required);
 
 /**
  * Custom rules
  */
-extend('equivalent', {
+extend('password', {
   params: ['target'],
   validate (value, { target }) {
     return value === target;
   },
-  message: '{_field_} field does not match {target} field.',
+  message: 'Password confirmation does not match',
 });
