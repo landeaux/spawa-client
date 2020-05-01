@@ -40,6 +40,7 @@ export default {
   data: () => ({
     state: INIT,
     showToast: false,
+    toastTimer: null,
     form: {
       username: '',
       email: '',
@@ -80,29 +81,68 @@ export default {
     },
   },
   created () {
-    Object.keys(this.form).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(this.currentUser, key)) {
-        this.form[key] = this.currentUser[key];
-      }
-    });
-    this.initialForm = { ...this.form };
+    this.hydrateForm();
   },
   methods: {
     ...mapActions({
       updateUser: UPDATE_USER,
     }),
+    /**
+     * Generates a payload object of the fields to update for the user by
+     * copying the form values and deleting those fields which have not changed
+     * from the original values.
+     */
+    generatePayload () {
+      // make a copy of the form for moulding into the payload
+      const payload = { ...this.form };
+
+      // delete the confirm password field as we don't need to save it
+      delete payload.confirmPassword;
+
+      // for each field on the payload
+      Object.keys(payload).forEach((field) => {
+        // check if initialForm has a matching field with the payload
+        if (Object.prototype.hasOwnProperty.call(this.initialForm, field)) {
+          // if field hasn't changed from initial value
+          if (payload[field] === this.initialForm[field]) {
+            // then let's get rid of it
+            delete payload[field];
+          }
+        }
+      });
+
+      return payload;
+    },
+    hydrateForm () {
+      Object.keys(this.form).forEach((key) => {
+        if (Object.prototype.hasOwnProperty.call(this.currentUser, key)) {
+          this.form[key] = this.currentUser[key];
+        }
+      });
+      this.initialForm = { ...this.form };
+    },
+    submitDisabled (invalid, pristine) {
+      return invalid || pristine || !this.fieldsHaveChanged;
+    },
     async onSubmit () {
+      const payload = this.generatePayload();
       try {
-        await this.updateUser(this.form);
+        await this.updateUser(payload);
         this.state = SUCCESS;
+        this.hydrateForm();
       } catch (error) {
         this.state = ERROR;
       }
       this.showToast = true;
-      setTimeout(() => { this.showToast = false; }, TOAST_TIMEOUT);
+      this.toastTimer = setTimeout(() => {
+        this.showToast = false;
+      }, TOAST_TIMEOUT);
     },
-    submitDisabled (invalid, pristine) {
-      return invalid || pristine || !this.fieldsHaveChanged;
+    onToastDismissed () {
+      if (this.toastTimer) {
+        clearTimeout(this.toastTimer);
+        this.toastTimer = null;
+      }
     },
   },
 };
@@ -125,6 +165,7 @@ export default {
             :variant="toastVariant"
             dismissible
             fade
+            @dismissed="onToastDismissed"
           >
             {{ toastMessage }}
           </b-alert>
