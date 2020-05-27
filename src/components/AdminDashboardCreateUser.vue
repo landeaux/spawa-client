@@ -1,6 +1,10 @@
 <script>
 import { CREATE_USER } from '@/store/actions.type';
 import { createNamespacedHelpers } from 'vuex';
+import {
+  ValidationObserver,
+  ValidationProvider,
+} from 'vee-validate';
 
 const {
   mapActions,
@@ -9,6 +13,11 @@ const {
 
 export default {
   name: 'AdminDashboardCreateUser',
+  components: {
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+    ValidationObserver,
+    ValidationProvider,
+  },
   data () {
     return {
       form: {
@@ -16,15 +25,16 @@ export default {
         email: '',
         company: '',
         password: '',
+        confirmPassword: '',
         active: true,
         role: '',
         state: '',
       },
       roles: [
         { text: 'Select One', value: null },
-        { text: 'Founder', value: 'founder' },
-        { text: 'Admin', value: 'admin' },
         { text: 'Reviewer', value: 'reviewer' },
+        { text: 'Admin', value: 'admin' },
+        { text: 'Founder', value: 'founder' },
       ],
       states: [
         { text: 'Select One', value: null },
@@ -55,10 +65,9 @@ export default {
     ...mapActions({
       createUser: CREATE_USER,
     }),
-    async onSubmit (evt) {
+    async onSubmit () {
       Object.keys(this.userErrors).forEach(k => delete this.userErrors[k]);
       if (this.form.role !== 'founder') { this.form.state = ''; }
-      evt.preventDefault();
       await this.createUser({
         username: this.form.username,
         email: this.form.email,
@@ -70,15 +79,15 @@ export default {
       });
       this.createdUsername = this.form.username;
       this.determineAlert();
-      this.onReset(evt);
+      this.onReset(this.$refs.form.reset);
     },
-    onReset (evt) {
-      evt.preventDefault();
+    onReset (reset) {
       // Reset our form values
       this.form.username = '';
       this.form.email = '';
       this.form.company = '';
       this.form.password = '';
+      this.form.confirmPassword = '';
       this.form.active = true;
       this.form.role = '';
       this.form.state = '';
@@ -87,6 +96,9 @@ export default {
       this.$nextTick(() => {
         this.show = true;
       });
+
+      // reset form validation state
+      reset();
     },
     determineAlert () {
       this.showErrorAlert = false;
@@ -144,117 +156,149 @@ export default {
         </router-link>
       </div>
     </b-alert>
-    <b-form
-      v-if="show"
-      @submit="onSubmit"
-      @reset="onReset"
+
+    <ValidationObserver
+      ref="form"
+      v-slot="{ handleSubmit, reset, invalid, pristine }"
+      tag="div"
     >
-      <div class="main-form">
-        <b-form-group
-          id="input-group-username"
-          label="Username:"
-          label-for="input-username"
-        >
-          <b-form-input
-            id="input-username"
+      <b-form
+        v-if="show"
+        @submit.prevent="handleSubmit(onSubmit)"
+        @reset.prevent="onReset(reset)"
+      >
+        <div class="main-form">
+          <TextInputWithValidation
+            id="username"
             v-model="form.username"
-            required
+            label="Username"
             placeholder="Enter Username"
+            rules="alpha_num"
+            required
+            type="text"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-email"
-          label="Email:"
-          label-for="input-email"
-        >
-          <b-form-input
-            id="input-email"
+          <TextInputWithValidation
+            id="email"
             v-model="form.email"
-            type="email"
-            required
+            label="Email"
             placeholder="Enter Email"
+            required
+            type="email"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-company"
-          label="Company:"
-          label-for="input-company"
-        >
-          <b-form-input
-            id="input-company"
+          <TextInputWithValidation
+            id="company"
             v-model="form.company"
-            required
+            label="Company"
             placeholder="Enter Company"
+            required
+            type="text"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-password"
-          label="Password:"
-          label-for="input-password"
-        >
-          <b-form-input
-            id="input-password"
+          <TextInputWithValidation
+            id="password"
             v-model="form.password"
-            type="password"
-            required
+            label="Password"
             placeholder="Enter Password"
+            required
+            rules="password:@confirm-password"
+            type="password"
+            vid="password"
           />
-        </b-form-group>
+          <TextInputWithValidation
+            id="confirm-password"
+            v-model="form.confirmPassword"
+            label="Confirm Password"
+            placeholder="Re-type Password"
+            required
+            rules="password:@password"
+            type="password"
+            vid="confirm-password"
+          />
 
-        <b-form-group>
-          <b-form-checkbox
-            id="input-active"
-            v-model="form.active"
+          <b-form-group>
+            <b-form-checkbox
+              id="input-active"
+              v-model="form.active"
+              size="lg"
+            >
+              Active Account?
+            </b-form-checkbox>
+          </b-form-group>
+
+          <ValidationProvider
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="Role"
+            rules="required"
+            vid="role"
           >
-            Active Account?
-          </b-form-checkbox>
-        </b-form-group>
+            <b-form-group
+              id="input-group-role"
+              label="Role"
+              label-for="input-role"
+            >
+              <b-form-select
+                id="input-role"
+                v-model="form.role"
+                :options="roles"
+                required
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-role-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
 
-        <b-form-group
-          id="input-group-role"
-          label="Role:"
-          label-for="input-role"
+          <ValidationProvider
+            v-if="form.role === 'founder'"
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="State"
+            rules="required_if:role"
+          >
+            <b-form-group
+              id="input-group-state"
+              label="State"
+              label-for="input-state"
+            >
+              <b-form-select
+                id="input-state"
+                v-model="form.state"
+                :options="states"
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-state-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
+        </div>
+        <b-button
+          type="submit"
+          :disabled="invalid"
+          variant="primary"
+          class="form-btn"
         >
-          <b-form-select
-            id="input-role"
-            v-model="form.role"
-            :options="roles"
-            required
-          />
-        </b-form-group>
-
-        <b-form-group
-          v-if="form.role === 'founder'"
-          id="input-group-state"
-          label="State:"
-          label-for="input-state"
+          Submit
+        </b-button>
+        <b-button
+          type="reset"
+          :disabled="pristine"
+          variant="danger"
+          class="form-btn"
         >
-          <b-form-select
-            id="input-state"
-            v-model="form.state"
-            :options="states"
-            required
-          />
-        </b-form-group>
-      </div>
-      <b-button
-        type="submit"
-        variant="primary"
-        class="form-btn"
-      >
-        Submit
-      </b-button>
-      <b-button
-        type="reset"
-        variant="danger"
-        class="form-btn"
-      >
-        Reset
-      </b-button>
-    </b-form>
+          Reset
+        </b-button>
+      </b-form>
+    </ValidationObserver>
   </div>
 </template>
 
@@ -271,6 +315,8 @@ export default {
     font-size: 16px
     margin: 10px
     font-weight: bold
+    &[disabled]
+      cursor: not-allowed
   .alerts
     .error-messages, .success-messages
       padding-left: 2.5rem

@@ -1,11 +1,12 @@
 <script>
 import { UPDATE_USER_BY_ID } from '@/store/actions.type';
 import { createNamespacedHelpers } from 'vuex';
+import {
+  ValidationObserver,
+  ValidationProvider,
+} from 'vee-validate';
 
-const {
-  mapActions,
-  mapGetters,
-} = createNamespacedHelpers('user');
+const { mapActions } = createNamespacedHelpers('user');
 
 /**
  * component statuses
@@ -24,6 +25,9 @@ export default {
   name: 'AdminDashboardModifyUser',
   components: {
     PulseLoader: () => import('vue-spinner/src/PulseLoader.vue'),
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+    ValidationObserver,
+    ValidationProvider,
   },
   props: {
     user: {
@@ -35,17 +39,19 @@ export default {
   data () {
     return {
       status: INIT,
-      errors: {},
+      responseErrors: {},
       form: {
         // Note: these prop names must exactly match user prop names
         username: '',
         email: '',
         company: '',
         password: '',
+        confirmPassword: '',
         active: true,
         role: '',
         state: '',
       },
+      initialForm: {},
       roles: [
         { text: 'Select One', value: null },
         { text: 'Founder', value: 'founder' },
@@ -63,20 +69,17 @@ export default {
         { text: 'Pitch Cancelled', value: 'pitch_cancelled' },
       ],
       createdUsername: '',
+      show: true,
     };
   },
   computed: {
-    ...mapGetters([
-      'userErrors',
-    ]),
-    determineCanSubmit () {
-      return (this.form.username !== this.user.username ||
-        this.form.email !== this.user.email ||
-        this.form.company !== this.user.company ||
-        this.form.password !== '' ||
-        this.form.active !== this.user.active ||
-        this.form.role !== this.user.role ||
-        this.form.state !== this.user.state);
+    fieldsHaveChanged () {
+      return Object.keys(this.form).some((field) => {
+        if (Object.prototype.hasOwnProperty.call(this.initialForm, field)) {
+          return this.form[field] !== this.initialForm[field];
+        }
+        return false;
+      });
     },
     showForm () {
       return !this.statusIsPending;
@@ -92,22 +95,51 @@ export default {
     },
   },
   created () {
-    this.setInitialFormValues();
+    this.hydrateForm();
   },
   methods: {
     ...mapActions({
       updateUserById: UPDATE_USER_BY_ID,
     }),
-    setInitialFormValues () {
-      // Only copy the user props for which we have form fields
-      Object.keys(this.form).forEach((key) => {
-        this.form[key] = Object.prototype.hasOwnProperty.call(this.user, key)
-          ? this.user[key]
-          : '';
+    clearErrors () {
+      this.responseErrors = {};
+    },
+    /**
+     * Generates a payload object of the fields to update for the user by
+     * copying the form values and deleting those fields which have not changed
+     * from the original values.
+     */
+    generatePayload () {
+      // make a copy of the form for moulding into the payload
+      const payload = { ...this.form };
+
+      // delete the confirm password field as we don't need to save it
+      delete payload.confirmPassword;
+
+      // for each field on the payload
+      Object.keys(payload).forEach((field) => {
+        // check if initialForm has a matching field with the payload
+        if (Object.prototype.hasOwnProperty.call(this.initialForm, field)) {
+          // if field hasn't changed from initial value
+          if (payload[field] === this.initialForm[field]) {
+            // then let's get rid of it
+            delete payload[field];
+          }
+        }
       });
+
+      return payload;
+    },
+    hydrateForm () {
+      Object.keys(this.form).forEach((key) => {
+        if (Object.prototype.hasOwnProperty.call(this.user, key)) {
+          this.form[key] = this.user[key];
+        }
+      });
+      this.initialForm = { ...this.form };
     },
     async onSubmit () {
-      this.errors = {};
+      this.clearErrors();
       if (this.form.role !== 'founder') { this.form.state = ''; }
       const payload = { ...this.form };
       // Remove props which didn't change or are empty
@@ -121,20 +153,34 @@ export default {
       try {
         await this.updateUserById(payload);
         this.createdUsername = this.form.username;
+        this.resetForm();
+        this.$refs.form.reset();
         this.status = SUCCESS;
       } catch ({ response }) {
-        this.errors = response.data.errors;
+        const { errors } = response.data;
         this.status = ERROR;
+        this.responseErrors = errors;
       }
     },
-    onReset () {
-      // Reset our form values
+    onReset (reset) {
+      this.createdUsername = '';
+      this.resetForm();
+      this.clearErrors();
       this.status = INIT;
-      this.errors = {};
-      this.setInitialFormValues();
+
+      // reset form validation state
+      reset();
     },
     onErrorAlertDismissed () {
-      this.errors = {};
+      this.clearErrors();
+    },
+    resetForm () {
+      this.form.password = '';
+      this.form.confirmPassword = '';
+      this.hydrateForm();
+    },
+    submitDisabled (invalid, pristine) {
+      return invalid || pristine || !this.fieldsHaveChanged;
     },
   },
 };
@@ -166,7 +212,7 @@ export default {
         class="error-messages"
       >
         <li
-          v-for="(v, k) in errors"
+          v-for="(v, k) in responseErrors"
           :key="k"
         >
           <strong>{{ k }}</strong> {{ v }}
@@ -193,129 +239,147 @@ export default {
         {{ createdUsername }}
       </router-link>
     </b-alert>
-    <b-form
-      v-if="showForm"
-      @submit.prevent="onSubmit"
-      @reset.prevent="onReset"
+
+    <ValidationObserver
+      ref="form"
+      v-slot="{ handleSubmit, reset, invalid, pristine }"
+      tag="div"
     >
-      <div class="main-form">
-        <b-form-group
-          id="input-group-username"
-          label="Username:"
-          label-for="input-username"
-        >
-          <b-form-input
-            id="input-username"
+      <b-form
+        v-if="show"
+        @submit.prevent="handleSubmit(onSubmit)"
+        @reset.prevent="onReset(reset)"
+      >
+        <div class="main-form">
+          <TextInputWithValidation
+            id="username"
             v-model="form.username"
-            required
+            label="Username"
             placeholder="Enter Username"
+            rules="alpha_num"
+            required
+            type="text"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-email"
-          label="Email:"
-          label-for="input-email"
-        >
-          <b-form-input
-            id="input-email"
+          <TextInputWithValidation
+            id="email"
             v-model="form.email"
-            type="email"
-            required
+            label="Email"
             placeholder="Enter Email"
+            required
+            type="email"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-company"
-          label="Company:"
-          label-for="input-company"
-        >
-          <b-form-input
-            id="input-company"
+          <TextInputWithValidation
+            id="company"
             v-model="form.company"
-            required
+            label="Company"
             placeholder="Enter Company"
+            required
+            type="text"
           />
-        </b-form-group>
-
-        <b-form-group
-          id="input-group-password"
-          label="Password:"
-          label-for="input-password"
-        >
-          <b-form-input
-            id="input-password"
+          <TextInputWithValidation
+            id="password"
             v-model="form.password"
-            type="password"
+            label="Password"
             placeholder="Enter Password"
+            rules="password:@confirm-password"
+            type="password"
+            vid="password"
           />
-        </b-form-group>
+          <TextInputWithValidation
+            id="confirm-password"
+            v-model="form.confirmPassword"
+            label="Confirm Password"
+            placeholder="Re-type Password"
+            rules="password:@password"
+            type="password"
+            vid="confirm-password"
+          />
 
-        <b-form-group>
-          <b-form-checkbox
-            id="input-active"
-            v-model="form.active"
+          <b-form-group>
+            <b-form-checkbox
+              id="input-active"
+              v-model="form.active"
+              size="lg"
+            >
+              Active Account?
+            </b-form-checkbox>
+          </b-form-group>
+
+          <ValidationProvider
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="Role"
+            rules="required"
+            vid="role"
           >
-            Active Account?
-          </b-form-checkbox>
-        </b-form-group>
+            <b-form-group
+              id="input-group-role"
+              label="Role"
+              label-for="input-role"
+            >
+              <b-form-select
+                id="input-role"
+                v-model="form.role"
+                :options="roles"
+                required
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-role-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
 
-        <b-form-group
-          id="input-group-role"
-          label="Role:"
-          label-for="input-role"
+          <ValidationProvider
+            v-if="form.role === 'founder'"
+            v-slot="{ errors, ariaInput, ariaMsg, failed, passed }"
+            name="State"
+            rules="required_if:role"
+          >
+            <b-form-group
+              id="input-group-state"
+              label="State"
+              label-for="input-state"
+            >
+              <b-form-select
+                id="input-state"
+                v-model="form.state"
+                :options="founderStates"
+                size="lg"
+                v-bind="ariaInput"
+              />
+              <b-form-invalid-feedback
+                id="input-state-feedback"
+                :state="passed"
+                v-bind="ariaMsg"
+              >
+                {{ errors[0] }}
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </ValidationProvider>
+        </div>
+        <b-button
+          type="submit"
+          :disabled="submitDisabled(invalid, pristine)"
+          variant="primary"
+          class="form-btn"
         >
-          <b-form-select
-            id="input-role"
-            v-model="form.role"
-            :options="roles"
-            required
-          />
-        </b-form-group>
-
-        <b-form-group
-          v-if="form.role === 'founder'"
-          id="input-group-state"
-          label="State:"
-          label-for="input-state"
+          Submit
+        </b-button>
+        <b-button
+          type="reset"
+          :disabled="!fieldsHaveChanged"
+          variant="danger"
+          class="form-btn"
         >
-          <b-form-select
-            id="input-state"
-            v-model="form.state"
-            :options="founderStates"
-            required
-          />
-        </b-form-group>
-      </div>
-      <b-button
-        v-if="determineCanSubmit"
-        type="submit"
-        block
-        variant="primary"
-        class="form-btn"
-      >
-        Submit
-      </b-button>
-      <b-button
-        v-else
-        type="fake-submit"
-        block
-        disabled
-        variant="primary"
-        class="form-btn"
-      >
-        Submit
-      </b-button>
-      <b-button
-        type="reset"
-        block
-        variant="danger"
-        class="form-btn"
-      >
-        Reset
-      </b-button>
-    </b-form>
+          Reset
+        </b-button>
+      </b-form>
+    </ValidationObserver>
   </div>
 </template>
 

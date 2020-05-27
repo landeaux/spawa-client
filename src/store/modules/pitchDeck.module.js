@@ -94,8 +94,14 @@ const actions = {
   },
   async [SEND_PITCH_DECK_EVENT] ({ commit }, payload) {
     try {
-      const { id, event } = payload;
-      const { data } = await ApiService.update(`pitchdecks/${event}`, id);
+      const {
+        id,
+        event,
+        adminComments,
+      } = payload;
+      const { data } = await ApiService.update(`pitchdecks/${event}`, id, {
+        adminComments,
+      });
       return data;
     } catch (error) {
       const errorObject = {
@@ -106,23 +112,20 @@ const actions = {
     }
   },
   [REWORK_PITCH_DECK] ({ dispatch }, payload) {
-    const { id } = payload;
     return dispatch(SEND_PITCH_DECK_EVENT, {
-      id,
+      ...payload,
       event: 'rework',
     });
   },
   [ACCEPT_PITCH_DECK] ({ dispatch }, payload) {
-    const { id } = payload;
     return dispatch(SEND_PITCH_DECK_EVENT, {
-      id,
+      ...payload,
       event: 'accept',
     });
   },
   [REJECT_PITCH_DECK] ({ dispatch }, payload) {
-    const { id } = payload;
     return dispatch(SEND_PITCH_DECK_EVENT, {
-      id,
+      ...payload,
       event: 'reject',
     });
   },
