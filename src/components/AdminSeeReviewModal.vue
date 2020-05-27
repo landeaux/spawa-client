@@ -238,14 +238,23 @@ export default {
             disabled
             placeholder="Additional Comments"
           />
-          <b-form-group>
-            <b-form-checkbox
-              id="input-pitchReady"
+          <b-form-group label="Is this pitch ready to be scheduled?">
+            <b-form-radio
               v-model="review.pitchReady"
-              required
+              name="Yes"
+              :value="true"
+              disabled
             >
-              Is this pitch ready to be scheduled?
-            </b-form-checkbox>
+              Yes
+            </b-form-radio>
+            <b-form-radio
+              v-model="review.pitchReady"
+              name="No"
+              :value="false"
+              disabled
+            >
+              No
+            </b-form-radio>
           </b-form-group>
         </b-card>
       </b-collapse>

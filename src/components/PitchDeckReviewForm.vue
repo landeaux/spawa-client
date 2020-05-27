@@ -406,14 +406,14 @@ export default {
           <b-form-radio
             v-model="form.pitchReady"
             name="Yes"
-            value="true"
+            :value="true"
           >
             Yes
           </b-form-radio>
           <b-form-radio
             v-model="form.pitchReady"
             name="No"
-            value="false"
+            :value="false"
           >
             No
           </b-form-radio>
