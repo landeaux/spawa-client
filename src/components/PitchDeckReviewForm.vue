@@ -209,7 +209,10 @@ export default {
       v-if="showDownloadButton"
       class="instruct-text"
     >
-      To download the pitch deck to review please select the button below labeled "Download Pitch Deck"
+      To download the pitch deck to review please select the button below labeled "Download Pitch Deck". This will
+      download the pitch deck to either your set downloads folder for your browser or will open a prop to save the file.
+      This saved file can then be opened either directly in your browser or in a program appropriate for the file type
+      by clicking on the file in its download location.
     </p>
     <hr>
     <button
@@ -312,7 +315,7 @@ export default {
             />
           </b-form-group>
         </b-form-group>
-        <b-form-group label="Solution Description Rating): ">
+        <b-form-group label="Solution Description Rating: ">
           <b-form-group label="(Vague and Hard to Understand vs Clear and Concise)">
             <b-form-radio-group
               v-model="form.solutionDescriptionRating"
@@ -399,14 +402,21 @@ export default {
           />
         </b-form-group>
         <hr>
-        <b-form-group>
-          <b-form-checkbox
-            id="input-pitchReady"
+        <b-form-group label="Is this pitch ready to be scheduled?">
+          <b-form-radio
             v-model="form.pitchReady"
-            required
+            name="Yes"
+            value="true"
           >
-            Is this pitch ready to be scheduled?
-          </b-form-checkbox>
+            Yes
+          </b-form-radio>
+          <b-form-radio
+            v-model="form.pitchReady"
+            name="No"
+            value="false"
+          >
+            No
+          </b-form-radio>
         </b-form-group>
       </div>
       <b-button
