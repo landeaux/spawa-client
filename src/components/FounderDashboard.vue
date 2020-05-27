@@ -175,6 +175,14 @@ export default {
             {{ statusBadgeText }}
           </b-badge>
         </div>
+        <div
+          v-if="this.pitchDeck.status !== 'NOT_READY' && this.pitchDeck.status !== 'UNDER_REVIEW'"
+          class="instruct-text"
+        >
+          <h2>Submission Comments</h2>
+          {{ pitchDeck.adminComments }}
+          <hr>
+        </div>
         <h2>What Should I Do Now?</h2>
         <div class="instruct-text">
           {{ instructText }}
