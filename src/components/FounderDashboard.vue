@@ -175,6 +175,16 @@ export default {
             {{ statusBadgeText }}
           </b-badge>
         </div>
+        <div
+          v-if="this.pitchDeck.status !== 'NOT_READY' && this.pitchDeck.status !== 'UNDER_REVIEW'"
+          class="admin-comments"
+        >
+          <h2>Submission Comments</h2>
+          <div class="instruct-text">
+            {{ pitchDeck.adminComments }}
+          </div>
+          <hr>
+        </div>
         <h2>What Should I Do Now?</h2>
         <div class="instruct-text">
           {{ instructText }}
@@ -270,7 +280,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang='sass'>
+<style scoped lang="sass">
   h1, h2
     color: #039
   p, .instruct-text
@@ -309,4 +319,6 @@ export default {
     margin-bottom: 20px
   .status
     font-weight: bold
+  .admin-comments
+    width: 100%
 </style>
