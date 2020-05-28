@@ -201,15 +201,24 @@ export default {
       :show="true"
       variant="success"
       class="alerts"
-      dismissible
       fade
     >
       Review created successfully!
     </b-alert>
+    <p
+      v-if="showDownloadButton"
+      class="instruct-text"
+    >
+      To download the pitch deck to review please select the button below labeled "Download Pitch Deck". This will
+      download the pitch deck to either your set downloads folder for your browser or will open a prop to save the file.
+      This saved file can then be opened either directly in your browser or in a program appropriate for the file type
+      by clicking on the file in its download location.
+    </p>
+    <hr>
     <button
       v-if="showDownloadButton"
       type="button"
-      class="right-flex btn btn-primary small-btn"
+      class="btn btn-primary small-btn"
       @click="onDownloadButtonClick"
     >
       Download Pitch Deck
@@ -220,13 +229,18 @@ export default {
       @reset.prevent="onReset"
     >
       <div class="main-form">
+        <hr>
+        <p class="instruct-text">
+          Are these topics covered? Check all that are present:
+        </p>
+        <hr>
         <b-form-group>
           <b-form-checkbox
             id="input-isProblemStatementPresent"
             v-model="form.isProblemStatementPresent"
             required
           >
-            Is Problem Statement Present?
+            Problem Statement
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -235,7 +249,7 @@ export default {
             v-model="form.isSolutionDescriptionPresent"
             required
           >
-            Is Solution Description Present?
+            Solution With Description of Product or Service
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -244,7 +258,7 @@ export default {
             v-model="form.isMarketCompetitionPresent"
             required
           >
-            Is Market Competition Present?
+            Market & Competition
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -253,7 +267,7 @@ export default {
             v-model="form.isBusinessModelPresent"
             required
           >
-            Is Business Model Present?
+            Business Model
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -262,7 +276,7 @@ export default {
             v-model="form.isTeamPresent"
             required
           >
-            Is Team Present?
+            Team
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -271,7 +285,7 @@ export default {
             v-model="form.isAskPresent"
             required
           >
-            Is Ask Present?
+            Ask
           </b-form-checkbox>
         </b-form-group>
         <b-form-group>
@@ -280,95 +294,129 @@ export default {
             v-model="form.isContactSlidePresent"
             required
           >
-            Is Contact Slide Present?
+            Contact Slide
           </b-form-checkbox>
         </b-form-group>
+        <hr>
+        <p class="instruct-text">
+          Please rate the topics for content, using 0 for missing or not addressed and 1 (low) - 4 (high) for quality:
+        </p>
+        <hr>
         <b-form-group label="Problem Statement Rating: ">
-          <b-form-radio-group
-            v-model="form.problemStatementRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Vague and Rambling vs Clear and Concise)">
+            <b-form-radio-group
+              v-model="form.problemStatementRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
         <b-form-group label="Solution Description Rating: ">
-          <b-form-radio-group
-            v-model="form.solutionDescriptionRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Vague and Hard to Understand vs Clear and Concise)">
+            <b-form-radio-group
+              v-model="form.solutionDescriptionRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
+
         <b-form-group label="Market Competition Rating: ">
-          <b-form-radio-group
-            v-model="form.marketCompetitionRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Not Addressed or Too Vague vs SOM Defined, Bottom Up Calculation with Competition Info)">
+            <b-form-radio-group
+              v-model="form.marketCompetitionRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
+
         <b-form-group label="Business Model Rating: ">
-          <b-form-radio-group
-            v-model="form.businessModelRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Vague and Leaves Many Questions Unanswered vs Clear and Sensible)">
+            <b-form-radio-group
+              v-model="form.businessModelRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
+
         <b-form-group label="Team Rating: ">
-          <b-form-radio-group
-            v-model="form.teamRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Multiple Slides and Too Much Information, Including Advisors vs 1 Slide and Concrete)">
+            <b-form-radio-group
+              v-model="form.teamRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
+
         <b-form-group label="Ask Rating: ">
-          <b-form-radio-group
-            v-model="form.askRating"
-            :options="options"
-            class="mb-3"
-            value-field="value"
-            text-field="text"
-            disabled-field="notEnabled"
-            required
-          />
+          <b-form-group label="(Unclear or Missing vs Clear and Brief)">
+            <b-form-radio-group
+              v-model="form.askRating"
+              :options="options"
+              class="mb-3"
+              value-field="value"
+              text-field="text"
+              disabled-field="notEnabled"
+              required
+            />
+          </b-form-group>
         </b-form-group>
+        <hr>
+        <p class="instruct-text">
+          Please rate the deck for appearance and style. Is there too much text, more than one idea per slide, too many slides dedicated to one topic, words or spreadsheets where a graph will do the job more clearly? Does it appear that the business model is adequately explained?
+        </p>
+        <hr>
         <b-form-group
           id="input-group-additional-comments"
-          label="Additional Comments:"
+          label="Please enter additional advice on the deck's style, appearance and content:"
           label-for="input-additional-comments"
         >
           <b-form-input
             id="input-additional-comments"
             v-model="form.additionalComments"
             required
-            placeholder="Enter Additional Comments"
+            placeholder="Your Response"
           />
         </b-form-group>
-        <b-form-group>
-          <b-form-checkbox
-            id="input-pitchReady"
+        <hr>
+        <b-form-group label="Is this pitch ready to be scheduled?">
+          <b-form-radio
             v-model="form.pitchReady"
-            required
+            name="Yes"
+            :value="true"
           >
-            Is Deck Pitch Ready?
-          </b-form-checkbox>
+            Yes
+          </b-form-radio>
+          <b-form-radio
+            v-model="form.pitchReady"
+            name="No"
+            :value="false"
+          >
+            No
+          </b-form-radio>
         </b-form-group>
       </div>
       <b-button
@@ -416,4 +464,7 @@ export default {
     flex-direction: row
     justify-content: center
     align-items: center
+  .instruct-text
+    font-weight: bold
+    color: #039
 </style>
