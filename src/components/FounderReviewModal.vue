@@ -73,6 +73,10 @@ export default {
         class="mt-2"
       >
         <b-card>
+          <p class="instruct-text">
+            Are these topics covered? All components are necessary in a pitch deck:
+          </p>
+          <hr>
           <b-container
             class="review-checks"
           >
@@ -85,7 +89,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Problem Statement Present
+                  Problem Statement
                 </b-form-checkbox>
               </b-col>
               <b-col>
@@ -96,7 +100,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Solution Description Present
+                  Solution Description
                 </b-form-checkbox>
               </b-col>
               <b-col>
@@ -107,7 +111,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Market Competition Present
+                  Market Competition
                 </b-form-checkbox>
               </b-col>
             </b-row>
@@ -120,7 +124,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Business Model Present
+                  Business Model
                 </b-form-checkbox>
               </b-col>
               <b-col>
@@ -131,7 +135,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Team Present
+                  Team
                 </b-form-checkbox>
               </b-col>
               <b-col>
@@ -142,7 +146,7 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Ask Present
+                  Ask
                 </b-form-checkbox>
               </b-col>
               <b-col>
@@ -153,52 +157,86 @@ export default {
                   class="checks"
                   disabled
                 >
-                  Is Contact Slide Present
+                  Contact Slide
                 </b-form-checkbox>
               </b-col>
             </b-row>
           </b-container>
-          <p class="mt-2">
+          <hr>
+          <p class="instruct-text">
+            Topics rated 1 to 5, using 1 for missing or not addressed and 2 (low) - 5 (high) for quality:
+          </p>
+          <hr>
+          <p class="instruct-text">
             Problem Statement Rating:
+          </p>
+          <p class="mt-2">
+            (Vague and Rambling vs Clear and Concise)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.problemStatementRating)"
             readonly
           />
-          <p class="mt-2">
+          <p class="instruct-text">
             Solution Description Rating:
+          </p>
+          <p class="mt-2">
+            (Vague and Hard to Understand vs Clear and Concise)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.solutionDescriptionRating)"
             readonly
           />
-          <p class="mt-2">
+          <p class="instruct-text">
             Market Competition Rating:
+          </p>
+          <p class="mt-2">
+            (Not Addressed or Too Vague vs SOM Defined, Bottom Up Calculation with Competition Info)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.marketCompetitionRating)"
             readonly
           />
-          <p class="mt-2">
+          <p class="instruct-text">
             Business Model Rating:
+          </p>
+          <p class="mt-2">
+            (Vague and Leaves Many Questions Unanswered vs Clear and Sensible)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.businessModelRating)"
             readonly
           />
-          <p class="mt-2">
+          <p class="instruct-text">
             Team Rating:
+          </p>
+          <p class="mt-2">
+            (Multiple Slides and Too Much Information, Including Advisors vs 1 Slide and Concrete)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.teamRating)"
             readonly
           />
-          <p class="mt-2">
+          <p class="instruct-text">
             Ask Rating:
+          </p>
+          <p class="mt-2">
+            (Unclear or Missing vs Clear and Brief)
           </p>
           <b-form-rating
             :value="getAdjustedValue(review.askRating)"
             readonly
+          />
+          <hr>
+          <p class="instruct-text">
+            Additional advice on the deck's style, appearance and content:
+          </p>
+          <hr>
+          <b-form-input
+            id="input-additional-comments"
+            v-model="review.additionalComments"
+            disabled
+            placeholder="Additional Comments"
           />
         </b-card>
       </b-collapse>
@@ -211,5 +249,7 @@ export default {
     font-weight: bold
   .review-container
      margin-top: 10px
-
+  .instruct-text
+    font-weight: bold
+    color: #039
 </style>
