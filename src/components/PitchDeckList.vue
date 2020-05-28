@@ -267,7 +267,7 @@ export default {
               :id="acceptModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Accept Pitch Deck"
               @ok="onAcceptButtonOk(row.item.id)"
             >
               <p class="mod-text">
@@ -297,7 +297,7 @@ export default {
               :id="reworkModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Send Pitch Deck Back For Rework"
               @ok="onReworkButtonOk(row.item.id)"
             >
               <p class="mod-text">
@@ -327,7 +327,7 @@ export default {
               :id="rejectModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Reject Pitch Deck"
               @ok="onRejectButtonOk(row.item.id)"
             >
               <p class="mod-text">
