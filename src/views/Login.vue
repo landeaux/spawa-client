@@ -1,6 +1,14 @@
 <script>
-import { createNamespacedHelpers } from 'vuex';
-import { LOGIN } from '@/store/actions.type';
+import {
+  createNamespacedHelpers,
+} from 'vuex';
+import {
+  LOGIN,
+} from '@/store/actions.type';
+import {
+  ValidationObserver,
+} from 'vee-validate';
+
 const {
   mapActions,
   mapState,
@@ -8,6 +16,10 @@ const {
 
 export default {
   name: 'Login',
+  components: {
+    TextInputWithValidation: () => import('@/components/TextInputWithValidation'),
+    ValidationObserver,
+  },
   data () {
     return {
       username: null,
@@ -23,10 +35,10 @@ export default {
     ...mapActions({
       login: LOGIN,
     }),
-    async onSubmit (username, password) {
+    async onSubmit () {
       await this.login({
-        username,
-        password,
+        username: this.username,
+        password: this.password,
       });
       await this.$router.push({ name: 'home' });
     },
@@ -61,39 +73,38 @@ export default {
               {{ k }} {{ v | error }}
             </li>
           </ul>
-          <form @submit.prevent="onSubmit(username, password)">
-            <fieldset class="form-group">
-              <label for="username">Username</label>
-              <input
+
+          <ValidationObserver
+            ref="form"
+            v-slot="{ handleSubmit, invalid }"
+            tag="div"
+          >
+            <form @submit.prevent="handleSubmit(onSubmit)">
+              <TextInputWithValidation
                 id="username"
                 v-model="username"
-                class="form-control form-control-lg"
+                label="Username"
                 type="text"
-              >
-            </fieldset>
-            <fieldset class="form-group">
-              <label for="password">Password</label>
-              <input
+                required
+              />
+              <TextInputWithValidation
                 id="password"
                 v-model="password"
-                class="form-control form-control-lg"
+                label="Password"
                 type="password"
+                required
+              />
+              <b-button
+                :disabled="invalid"
+                variant="primary"
+                type="submit"
               >
-            </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
-              Sign in
-            </button>
-          </form>
+                Sign in
+              </b-button>
+            </form>
+          </ValidationObserver>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped lang="sass">
-  fieldset
-    &.form-group
-      text-align: left
-      label
-        font-weight: bold
-</style>

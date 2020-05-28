@@ -73,6 +73,7 @@ export default {
         tdClass: 'table-cell',
       },
     ],
+    submitComments: '',
   }),
   computed: {
     ...mapGetters({
@@ -153,19 +154,25 @@ export default {
     async onAcceptButtonOk (pitchDeckId) {
       await this.acceptPitchDeck({
         id: pitchDeckId,
+        adminComments: this.submitComments,
       });
+      this.submitComments = '';
       await this.fetchPitchDecks();
     },
     async onReworkButtonOk (pitchDeckId) {
       await this.reworkPitchDeck({
         id: pitchDeckId,
+        adminComments: this.submitComments,
       });
+      this.submitComments = '';
       await this.fetchPitchDecks();
     },
     async onRejectButtonOk (pitchDeckId) {
       await this.rejectPitchDeck({
         id: pitchDeckId,
+        adminComments: this.submitComments,
       });
+      this.submitComments = '';
       await this.fetchPitchDecks();
     },
   },
@@ -260,12 +267,23 @@ export default {
               :id="acceptModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Accept Pitch Deck"
               @ok="onAcceptButtonOk(row.item.id)"
             >
               <p class="mod-text">
                 Are you sure you want to accept {{ row.item.company }}'s pitch deck?
               </p>
+              <b-form-group
+                id="input-group-accept-comments"
+                label="Please enter any last comments before the pitch deck is approved:"
+                label-for="input-accept-comments"
+              >
+                <b-form-input
+                  id="input-accept-comments"
+                  v-model="submitComments"
+                  placeholder="Your Response"
+                />
+              </b-form-group>
             </b-modal>
 
             <b-dropdown-item
@@ -279,11 +297,22 @@ export default {
               :id="reworkModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Send Pitch Deck Back For Rework"
               @ok="onReworkButtonOk(row.item.id)"
             >
               <p class="mod-text">
                 Are you sure you want to send {{ row.item.company }}'s pitch deck back for rework?
+                <b-form-group
+                  id="input-group-rework-comments"
+                  label="Please enter why this pitch deck is needs rework:"
+                  label-for="input-rework-comments"
+                >
+                  <b-form-input
+                    id="input-rework-comments"
+                    v-model="submitComments"
+                    placeholder="Your Response"
+                  />
+                </b-form-group>
               </p>
             </b-modal>
 
@@ -298,12 +327,23 @@ export default {
               :id="rejectModalId(row.item.id)"
               size="lg"
               centered
-              title="Suspend User"
+              title="Reject Pitch Deck"
               @ok="onRejectButtonOk(row.item.id)"
             >
               <p class="mod-text">
                 Are you sure you want to reject {{ row.item.company }}'s pitch deck?
               </p>
+              <b-form-group
+                id="input-group-reject-comments"
+                label="Please enter why this pitch deck is being rejected:"
+                label-for="input-reject-comments"
+              >
+                <b-form-input
+                  id="input-reject-comments"
+                  v-model="submitComments"
+                  placeholder="Your Response"
+                />
+              </b-form-group>
             </b-modal>
 
             <b-dropdown-item
